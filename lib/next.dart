@@ -10,7 +10,7 @@ class Next extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('result2'),
+              Text('next page'),
             ],
           )
       ),

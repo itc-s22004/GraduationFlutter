@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "142294469883",
+    "project_id": "fluttergrad-9c464",
+    "storage_bucket": "fluttergrad-9c464.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142294469883:android:1c92315c04b4a00d2a345e",
+        "android_client_info": {
+          "package_name": "com.s22004.fluttergrad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVc3S8nDSKIhvTjRldEYp0hoNUoz9hQKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
