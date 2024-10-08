@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class loginValidate extends StatefulWidget {
-  const loginValidate({Key? key}) : super(key: key);
+class LoginValidate extends StatefulWidget {
+  const LoginValidate({Key? key}) : super(key: key);
 
   @override
-  State<loginValidate> createState() => _loginValidateState();
+  State<LoginValidate> createState() => _LoginValidateState();
 }
 
-class _loginValidateState extends State<loginValidate> {
+class _LoginValidateState extends State<LoginValidate> {
   bool _isObscure = true;
 
   final _formkey = GlobalKey<FormState>();
@@ -38,7 +38,7 @@ class _loginValidateState extends State<loginValidate> {
                       return null;
                     },
                     decoration: const InputDecoration(
-                      labelText: 'ユーザー名を入力してください',
+                      labelText: 'MAIL ADDRESS',
                     ),
                   ),
                 ),

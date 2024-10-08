@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:omg/mbti/mbti.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,23 +53,23 @@ class CreateAccountPageState extends State<CreateAccountPage> {
               obscureText: true,
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _confirmPasswordController,
-              decoration: const InputDecoration(
-                labelText: 'パスワード（確認用）',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'ユーザー名',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
+            // TextField(
+            //   controller: _confirmPasswordController,
+            //   decoration: const InputDecoration(
+            //     labelText: 'パスワード（確認用）',
+            //     border: OutlineInputBorder(),
+            //   ),
+            //   obscureText: true,
+            // ),
+            // const SizedBox(height: 16),
+            // TextField(
+            //   controller: _usernameController,
+            //   decoration: const InputDecoration(
+            //     labelText: 'ユーザー名',
+            //     border: OutlineInputBorder(),
+            //   ),
+            // ),
+            // const SizedBox(height: 16),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue, width: 2),
@@ -164,12 +165,12 @@ class CreateAccountPageState extends State<CreateAccountPage> {
   }
 
   Future<void> _createAccount() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('パスワードが一致しません')),
-      );
-      return;
-    }
+    // if (_passwordController.text != _confirmPasswordController.text) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('パスワードが一致しません')),
+    //   );
+    //   return;
+    // }
 
     if (!_agreeToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -197,10 +198,12 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       // });
 
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'username': username,
+        // 'username': username,
         'email': _emailController.text.trim(),
-        'createdAt': FieldValue.serverTimestamp(),
-        'profileImage': null,
+        // 'createdAt': FieldValue.serverTimestamp(),
+        'diagnosis': null,
+        'gender': null,
+        'school': null
       });
 
       await userCredential.user?.updateDisplayName(username);
@@ -209,7 +212,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       // Navigator.pop(context, true);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Next()),
+        MaterialPageRoute(builder: (context) => Diagnosis(data: _emailController.text)), //diagnosis画面に移動
       );
 
     } on FirebaseAuthException catch (e) {

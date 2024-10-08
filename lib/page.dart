@@ -21,10 +21,10 @@ class Home extends StatelessWidget {
             ElevatedButton(
               // onPressed: _toChat,
               // onPressed: _toLogin,
-              // onPressed: _toRegistration,
+              onPressed: _toRegistration,
               // onPressed: _toNext,
-              onLongPress: _toWith,
-              onPressed: _toWith,
+              // onLongPress: _toWith,
+              // onPressed: _toWith,
               child: const Text('Go to NextPage'),
             ),
           ],
@@ -42,7 +42,7 @@ class Home extends StatelessWidget {
   }
 
   void _toLogin() {
-    Get.to(() => const loginValidate());
+    Get.to(() => const LoginValidate());
   }
 
   void _toWith() {
