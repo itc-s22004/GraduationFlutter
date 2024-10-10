@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:omg/login/loginNext.dart';
+import 'package:omg/with.dart';
 
 class LoginValidate extends StatefulWidget {
   const LoginValidate({Key? key}) : super(key: key);
@@ -9,8 +12,9 @@ class LoginValidate extends StatefulWidget {
 
 class _LoginValidateState extends State<LoginValidate> {
   bool _isObscure = true;
-
   final _formkey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +32,9 @@ class _LoginValidateState extends State<LoginValidate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
+                    controller: emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'ユーザー名が入力されていません!';
@@ -43,9 +47,9 @@ class _LoginValidateState extends State<LoginValidate> {
                   ),
                 ),
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
+                    controller: passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'パスワードが入力されていません!';
@@ -54,27 +58,56 @@ class _LoginValidateState extends State<LoginValidate> {
                     },
                     obscureText: _isObscure,
                     decoration: InputDecoration(
-                        labelText: 'Password',
-                        suffixIcon: IconButton(
-                            icon: Icon(_isObscure
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () {
-                              setState(() {
-                                _isObscure = !_isObscure;
-                              });
-                            })),
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
+                      ),
+                    ),
                   ),
                 ),
                 Center(
                   child: ElevatedButton(
-                      onPressed: () {
-                        if (_formkey.currentState!.validate()) {
+                    onPressed: () async {
+                      if (_formkey.currentState!.validate()) {
+                        try {
+                          // Firebase Authenticationでログイン
+                          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+
+                          // ログイン成功後の処理
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Processing Data')),
+                            SnackBar(content: Text('ログイン成功')),
+                          );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const MainApp()
+                              )
+                          );
+                        } on FirebaseAuthException catch (e) {
+                          // エラー処理
+                          String message;
+                          if (e.code == 'user-not-found') {
+                            message = 'ユーザーが見つかりません';
+                          } else if (e.code == 'wrong-password') {
+                            message = 'パスワードが間違っています';
+                          } else {
+                            message = 'ログインに失敗しました';
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(message)),
                           );
                         }
-                      }, child: Text('ログイン')),
+                      }
+                    },
+                    child: Text('ログイン'),
+                  ),
                 ),
               ],
             ),

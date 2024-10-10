@@ -186,21 +186,17 @@ class CreateAccountPageState extends State<CreateAccountPage> {
         password: _passwordController.text.trim(),
       );
 
-      String uid = userCredential.user!.uid;
+      final userCollection = FirebaseFirestore.instance.collection('users');
+      final snapshot = await userCollection.get();
+      final userCount = snapshot.size + 1;
+
+      String userId = 'user$userCount';
       String username = _usernameController.text.trim();
 
-      // await FirebaseFirestore.instance.collection('users').doc(uid).set({
-      //   // 'username': username,
-      //   'email': _emailController.text.trim(),
-      //   'password': _passwordController.text.trim()
-      //   // 'createdAt': FieldValue.serverTimestamp(),
-      //   // 'profileImage': null,
-      // });
-
-      await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        // 'username': username,
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'userId': userCount,
         'email': _emailController.text.trim(),
-        // 'createdAt': FieldValue.serverTimestamp(),
+        // 'username': username,
         'diagnosis': null,
         'gender': null,
         'school': null

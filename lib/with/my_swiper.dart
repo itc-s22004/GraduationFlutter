@@ -20,23 +20,4 @@ class MySwiper extends StatelessWidget {
   }
 }
 
-
-
-// class MySwiper extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: AppinioSwiper(
-//         itemBuilder: (context, index) {
-//           return Card(
-//             child: Center(
-//               child: Text('Item $index'),
-//             ),
-//           );
-//         },
-//         itemCount: 10,
-//         // direction: AppinioSwiperDirection.left, // この行が必要な場合
-//       ),
-//     );
-//   }
-// }
+//なくてもいいかな

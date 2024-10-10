@@ -58,7 +58,7 @@ class _MainAppState extends ConsumerState<MainApp> {
                 list: data,
                 controller: _swiperController, // スワイプ制御
                 onSwiping: (card.AppinioSwiperDirection direction) async =>
-                await swipeNotifier.swipeOnCard(direction as notifier.AppinioSwiperDirection), // スワイプ処理
+                await swipeNotifier.swipeOnCard(direction as notifier.AppinioSwiperDirection),
               );
             },
           ),

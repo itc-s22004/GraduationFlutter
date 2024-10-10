@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:omg/next.dart';
 import 'package:omg/with.dart';
 
 class Diagnosis extends StatefulWidget {
