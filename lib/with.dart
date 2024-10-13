@@ -4,10 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omg/with/swipeAsyncNotifier.dart' as notifier;
 import 'package:omg/with/swipeCard.dart' as card;
 
-// void main() {
-//   runApp(const ProviderScope(child: MainApp()));
-// }
-
 class MainApp extends ConsumerStatefulWidget {
   const MainApp({super.key});
 
@@ -56,9 +52,10 @@ class _MainAppState extends ConsumerState<MainApp> {
               // カードウィジェットの表示
               return card.SwipeCard(
                 list: data,
+                onSwiping: (index, direction) async {
+                  await swipeNotifier.swipeOnCard(direction as notifier.AppinioSwiperDirection);
+                },
                 controller: _swiperController, // スワイプ制御
-                onSwiping: (card.AppinioSwiperDirection direction) async =>
-                await swipeNotifier.swipeOnCard(direction as notifier.AppinioSwiperDirection),
               );
             },
           ),

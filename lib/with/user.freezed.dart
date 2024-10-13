@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$User {
   List<String> get profileImageURL => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  int get userId => throw _privateConstructorUsedError;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -30,7 +31,7 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call({List<String> profileImageURL, String name});
+  $Res call({List<String> profileImageURL, String name, int userId});
 }
 
 /// @nodoc
@@ -50,6 +51,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   $Res call({
     Object? profileImageURL = null,
     Object? name = null,
+    Object? userId = null,
   }) {
     return _then(_value.copyWith(
       profileImageURL: null == profileImageURL
@@ -60,6 +62,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -71,7 +77,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<String> profileImageURL, String name});
+  $Res call({List<String> profileImageURL, String name, int userId});
 }
 
 /// @nodoc
@@ -88,6 +94,7 @@ class __$$UserImplCopyWithImpl<$Res>
   $Res call({
     Object? profileImageURL = null,
     Object? name = null,
+    Object? userId = null,
   }) {
     return _then(_$UserImpl(
       profileImageURL: null == profileImageURL
@@ -98,6 +105,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -106,7 +117,9 @@ class __$$UserImplCopyWithImpl<$Res>
 
 class _$UserImpl extends _User {
   const _$UserImpl(
-      {final List<String> profileImageURL = const [], this.name = ""})
+      {final List<String> profileImageURL = const [],
+      this.name = "",
+      required this.userId})
       : _profileImageURL = profileImageURL,
         super._();
 
@@ -122,10 +135,12 @@ class _$UserImpl extends _User {
   @override
   @JsonKey()
   final String name;
+  @override
+  final int userId;
 
   @override
   String toString() {
-    return 'User(profileImageURL: $profileImageURL, name: $name)';
+    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId)';
   }
 
   @override
@@ -135,12 +150,13 @@ class _$UserImpl extends _User {
             other is _$UserImpl &&
             const DeepCollectionEquality()
                 .equals(other._profileImageURL, _profileImageURL) &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.userId, userId) || other.userId == userId));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_profileImageURL), name);
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_profileImageURL), name, userId);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -152,14 +168,18 @@ class _$UserImpl extends _User {
 }
 
 abstract class _User extends User {
-  const factory _User({final List<String> profileImageURL, final String name}) =
-      _$UserImpl;
+  const factory _User(
+      {final List<String> profileImageURL,
+      final String name,
+      required final int userId}) = _$UserImpl;
   const _User._() : super._();
 
   @override
   List<String> get profileImageURL;
   @override
   String get name;
+  @override
+  int get userId;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

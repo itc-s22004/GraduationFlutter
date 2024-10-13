@@ -194,7 +194,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       String username = _usernameController.text.trim();
 
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
-        'userId': userCount,
+        'id': userCount,
         'email': _emailController.text.trim(),
         // 'username': username,
         'diagnosis': null,
