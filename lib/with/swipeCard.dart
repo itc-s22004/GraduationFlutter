@@ -1,16 +1,20 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:omg/with/swipeAsyncNotifier.dart';
 import 'user.dart';
 import 'package:flutter/material.dart';
+import 'package:omg/with/swipeAsyncNotifier.dart' as asyncNotifier; // エイリアスを追加
 
 
-enum AppinioSwiperDirection {
-  left,
-  right,
-  top,
-  bottom,
-}
 
-class SwipeCard extends StatelessWidget {
+// enum AppinioSwiperDirection {
+//   left,
+//   right,
+//   top,
+//   bottom,
+// }
+
+class SwipeCard extends ConsumerWidget {
   const SwipeCard({
     super.key,
     required this.list,
@@ -21,11 +25,13 @@ class SwipeCard extends StatelessWidget {
   final List<User> list;
   final AppinioSwiperController controller;
   // final void Function(AppinioSwiperDirection direction) onSwiping;
-  final void Function(int index, AppinioSwiperDirection direction) onSwiping; // 修正
+  final void Function(AppinioSwiperDirection direction) onSwiping; // 修正
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final swipeNotifier = ref.read(asyncNotifier.swipeAsyncNotifierProvider.notifier); // Notifierを取得
+
     return Column(
       children: [
         Expanded(
@@ -33,25 +39,25 @@ class SwipeCard extends StatelessWidget {
             controller: controller, // スワイプを制御するコントローラー
             cardCount: list.length, // カードの数
             onSwipeEnd: (int previousIndex, int targetIndex, SwiperActivity activity) {
-              // スワイプが進行中かどうかを確認
               if (activity is Swipe) {
-                print("スワイプが進行中です。");
-                return;
-              }
+                print("スワイプが終了しました（Swipe）");
 
-              // スワイプが終了した場合の処理
-              if (activity is DrivenActivity) {
-                // スワイプの方向を適切に処理する
-                onSwiping(targetIndex, activity.direction as AppinioSwiperDirection); // directionを取得
-
+                // AxisDirectionをAppinioSwiperDirectionに変換
+                AppinioSwiperDirection direction;
+                switch (activity.direction) {
+                  case AxisDirection.left:
+                    direction = AppinioSwiperDirection.left;
+                    break;
+                  case AxisDirection.right:
+                    direction = AppinioSwiperDirection.right;
+                    break;
+                  default:
+                    print("未知の方向です");
+                    return;
+                }
+                swipeNotifier.swipeOnCard(direction);
               }
             },
-            // onSwipeEnd: (int index, AppinioSwiperDirection? direction) {
-            //   if (direction != null) {
-            //     onSwiping(index, direction);
-            //   }
-            // },
-            // onSwipeEnd: onSwiping,
             cardBuilder: (BuildContext context, int index) {
               final user = list[index];
               return list.isNotEmpty

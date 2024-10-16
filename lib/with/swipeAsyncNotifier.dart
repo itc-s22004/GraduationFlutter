@@ -80,23 +80,22 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
   }
 
   void _handleRightSwipe() async {
-    // 現在スワイプしているユーザーの情報を取得
     if (state is AsyncData<List<User>>) {
-      // final userToLike = state.value!.first; // 最初のユーザーを取得
+      try {
+        await FirebaseFirestore.instance.collection('likes').add({
+          'likeFrom': 7,
+          'likeTo': 5, // 最初のユーザーのID
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        print("ユーザーにいいねが追加されました");
 
-      // Firestoreに「いいね」情報を保存
-      await FirebaseFirestore.instance.collection('likes').add({
-        'likeFrom': authController.userId.value, // 現在のユーザーIDを取得
-        // 'likeTo': userToLike.userId, // いいねするユーザーのID
-        'likeTo': 3, // いいねするユーザーのID
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-
-      // 最初のユーザーをリストから削除
-      state = AsyncValue.data([
-        for (var i = 1; i < state.value!.length; i++) state.value![i],
-      ]);
-      // print("右にスワイプされ、ユーザー ${userToLike.name} にいいねが追加されました");
+        // 最初のユーザーをリストから削除
+        state = AsyncValue.data([
+          for (var i = 1; i < state.value!.length; i++) state.value![i],
+        ]);
+      } catch (e) {
+        print("Firebaseへの保存中にエラーが発生しました: $e");
+      }
     } else {
       print("データがロードされていません");
     }

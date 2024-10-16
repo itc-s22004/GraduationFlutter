@@ -52,8 +52,8 @@ class _MainAppState extends ConsumerState<MainApp> {
               // カードウィジェットの表示
               return card.SwipeCard(
                 list: data,
-                onSwiping: (index, direction) async {
-                  await swipeNotifier.swipeOnCard(direction as notifier.AppinioSwiperDirection);
+                onSwiping: (direction) async {
+                  await swipeNotifier.swipeOnCard(direction);
                 },
                 controller: _swiperController, // スワイプ制御
               );
