@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -33,7 +34,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         return User(
           profileImageURL: ["assets/images/flutter.png"], // 固定値の画像
           name: data['email'] ?? 'No Email', // 'email'フィールドを使用
-          userId: data['userId'] ?? 0, // FirestoreからuserIdを取得
+          userId: data['id'] ?? 0, // FirestoreからuserIdを取得
         );
       }).toList();
 
@@ -60,7 +61,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         print("左スライド");
         break;
       case AppinioSwiperDirection.right:
-        _handleRightSwipe();
+        // _handleRightSwipe();
         print("右スライド");
         break;
       default:
@@ -70,9 +71,11 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
 
   void _handleLeftSwipe() {
     if (state is AsyncData<List<User>>) {
+      print("現在のユーザーリスト: ${state.value!.map((user) => user.name)}");
       state = AsyncValue.data([
         for (var i = 1; i < state.value!.length; i++) state.value![i],
       ]);
+      print("左にスワイプ後のユーザーリスト: ${state.value!.map((user) => user.name)}");
       print("左にスワイプされ、最初のユーザーが削除されました");
     } else {
       print("データがロードされていません");
@@ -80,16 +83,28 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
   }
 
   void _handleRightSwipe() async {
+    final userCollection = FirebaseFirestore.instance.collection('likes');
+    final snapshot = await userCollection.get();
+    final likeCount = snapshot.size + 1;
+
+    String likeId = 'like$likeCount';
+
     if (state is AsyncData<List<User>>) {
       try {
-        await FirebaseFirestore.instance.collection('likes').add({
-          'likeFrom': 7,
-          'likeTo': 5, // 最初のユーザーのID
+        // 現在ログインしているユーザーIDとスワイプされたユーザーIDを取得
+        int currentUserId = authController.userId.value ?? 0;
+        int swipedUserId = state.value!.first.userId;
+
+        // Firestoreに「いいね」を追加
+        await FirebaseFirestore.instance.collection('likes').doc(likeId).set({
+          'likeFrom': currentUserId,
+          'likeTo': swipedUserId,
           'timestamp': FieldValue.serverTimestamp(),
         });
-        print("ユーザーにいいねが追加されました");
 
-        // 最初のユーザーをリストから削除
+        print("ユーザーにいいねが追加されました");
+        print("ログイン中のUser：$currentUserId, 送られた人：$swipedUserId");
+
         state = AsyncValue.data([
           for (var i = 1; i < state.value!.length; i++) state.value![i],
         ]);
@@ -100,4 +115,5 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
       print("データがロードされていません");
     }
   }
+
 }

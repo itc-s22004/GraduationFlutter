@@ -139,21 +139,14 @@ class _LoginValidateState extends State<LoginValidate> {
   }
 }
 
-
 // import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:get/get.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:omg/login/loginNext.dart';
-// import 'package:omg/with.dart';
 //
-// // Controller class
-// class AuthController extends GetxController {
-//   var email = ''.obs; // Emailを保持するRx
-//
-//   void updateEmail(String newEmail) {
-//     email.value = newEmail; // Emailの値を更新
-//   }
-// }
+// import '../auth_controller.dart';
+// import '../with.dart';
 //
 // class LoginValidate extends StatefulWidget {
 //   const LoginValidate({Key? key}) : super(key: key);
@@ -168,14 +161,14 @@ class _LoginValidateState extends State<LoginValidate> {
 //   final TextEditingController emailController = TextEditingController();
 //   final TextEditingController passwordController = TextEditingController();
 //
-//   // AuthControllerのインスタンスを作成
+//   // AuthControllerのインスタンスを取得
 //   final AuthController authController = Get.put(AuthController());
 //
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
-//         title: Text('JboyApp'),
+//         title: const Text('JboyApp'),
 //         backgroundColor: Colors.blue,
 //       ),
 //       body: Center(
@@ -236,21 +229,31 @@ class _LoginValidateState extends State<LoginValidate> {
 //                             password: passwordController.text,
 //                           );
 //
-//                           // ログイン成功後の処理
-//                           ScaffoldMessenger.of(context).showSnackBar(
-//                             SnackBar(content: Text('ログイン成功')),
-//                           );
-//
-//                           // メールアドレスをRxに保存
+//                           // ログイン成功後、メールアドレスを保存
 //                           authController.updateEmail(emailController.text);
 //
+//                           // FirestoreからユーザーIDを取得
+//                           final snapshot = await FirebaseFirestore.instance
+//                               .collection('users')
+//                               .where('email', isEqualTo: emailController.text)
+//                               .get();
+//
+//                           if (snapshot.docs.isNotEmpty) {
+//                             final userId = snapshot.docs.first.data()['id'] ?? 0;
+//                             authController.updateUserId(userId); // ユーザーIDを保存
+//                           }
+//
+//                           // ログイン成功メッセージ
+//                           ScaffoldMessenger.of(context).showSnackBar(
+//                             const SnackBar(content: Text('ログイン成功')),
+//                           );
+//
+//                           // 次のページへ遷移
 //                           Navigator.push(
 //                               context,
-//                               MaterialPageRoute(builder: (context) => const MainApp()
-//                               )
+//                               MaterialPageRoute(builder: (context) => const MainApp())
 //                           );
 //                         } on FirebaseAuthException catch (e) {
-//                           // エラー処理
 //                           String message;
 //                           if (e.code == 'user-not-found') {
 //                             message = 'ユーザーが見つかりません';
@@ -265,7 +268,7 @@ class _LoginValidateState extends State<LoginValidate> {
 //                         }
 //                       }
 //                     },
-//                     child: Text('ログイン'),
+//                     child: const Text('ログイン'),
 //                   ),
 //                 ),
 //               ],
@@ -276,4 +279,3 @@ class _LoginValidateState extends State<LoginValidate> {
 //     );
 //   }
 // }
-

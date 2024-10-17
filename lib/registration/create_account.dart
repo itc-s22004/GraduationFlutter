@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:omg/auth_controller.dart';
 import 'package:omg/mbti/mbti.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +24,8 @@ class CreateAccountPageState extends State<CreateAccountPage> {
   final _usernameController = TextEditingController();
   bool _agreeToTerms = false;
 
+  // final AuthController authController = Get.put(AuthController());
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,7 +213,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       // Navigator.pop(context, true);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Diagnosis(data: _emailController.text)), //diagnosis画面に移動
+        MaterialPageRoute(builder: (context) => Diagnosis(data: _emailController.text)),
       );
 
     } on FirebaseAuthException catch (e) {

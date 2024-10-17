@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:omg/login/loginNext.dart';
+import 'package:omg/login/login_validate.dart';
 import 'package:omg/next.dart';
 import 'package:omg/with.dart';
 
@@ -14,7 +16,7 @@ class Diagnosis extends StatefulWidget {
 class _DiagnosisState extends State<Diagnosis> {
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
-  final TextEditingController _diagnosisController = TextEditingController(); 
+  final TextEditingController _diagnosisController = TextEditingController();
 
   @override
   void dispose() {
@@ -65,13 +67,17 @@ class _DiagnosisState extends State<Diagnosis> {
               child: const Text('情報を更新'),
             ),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MainApp())
-                  );
-                },
-                child: const Text("登録")
+              onPressed: () {
+                // Navigatorのpushを使用する際に異なるキーが必要
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // builder: (context) => const MainApp(), // 次のページへ遷移
+                    builder: (context) => const LoginNext()
+                  ),
+                );
+              },
+              child: const Text("登録"),
             )
           ],
         ),
@@ -103,6 +109,4 @@ class _DiagnosisState extends State<Diagnosis> {
       );
     }
   }
-
-  // Future<void> _
 }
