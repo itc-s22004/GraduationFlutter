@@ -5,7 +5,7 @@ import 'user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
-
+import 'dart:math'; // ランダム化のために追加
 
 enum AppinioSwiperDirection {
   left,
@@ -16,11 +16,13 @@ enum AppinioSwiperDirection {
 
 final swipeAsyncNotifierProvider =
 AsyncNotifierProvider<SwipeAsyncNotifier, List<User>>(
-    SwipeAsyncNotifier.new);
+  SwipeAsyncNotifier.new,
+);
 
 class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
   late final int currentUserId; // 現在のユーザーIDを保持するフィールド
   final AuthController authController = Get.find<AuthController>(); // AuthControllerのインスタンスを取得
+  int currentIndex = 0; // 現在表示しているユーザーのインデックス
 
   Future<List<User>> fetchUsersFromFirestore() async {
     try {
@@ -38,8 +40,10 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         );
       }).toList();
 
+      // ユーザーリストをランダムにシャッフル
+      users.shuffle(Random());
+
       print("Fetched users: $users"); // 追加: 取得したユーザーリストを表示
-      print("aldsfja;lsdfj;lasjd;lfajs;ldfja;lsdjf;lkasjdlkfajsldkfjas------------------------------");
       return users;
     } catch (e) {
       print("Error fetching users from Firestore: $e");
@@ -61,7 +65,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         print("左スライド");
         break;
       case AppinioSwiperDirection.right:
-        // _handleRightSwipe();
+        _handleRightSwipe();
         print("右スライド");
         break;
       default:
@@ -70,50 +74,37 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
   }
 
   void _handleLeftSwipe() {
-    if (state is AsyncData<List<User>>) {
-      print("現在のユーザーリスト: ${state.value!.map((user) => user.name)}");
-      state = AsyncValue.data([
-        for (var i = 1; i < state.value!.length; i++) state.value![i],
-      ]);
-      print("左にスワイプ後のユーザーリスト: ${state.value!.map((user) => user.name)}");
-      print("左にスワイプされ、最初のユーザーが削除されました");
-    } else {
-      print("データがロードされていません");
-    }
+    _showNextUser();
   }
 
   void _handleRightSwipe() async {
-    final userCollection = FirebaseFirestore.instance.collection('likes');
-    final snapshot = await userCollection.get();
-    final likeCount = snapshot.size + 1;
+    try {
+      // 現在ログインしているユーザーIDとスワイプされたユーザーIDを取得
+      int currentUserId = authController.userId.value ?? 0;
+      int swipedUserId = state.value![currentIndex].userId;
 
-    String likeId = 'like$likeCount';
+      // Firestoreに「いいね」を追加
+      await FirebaseFirestore.instance.collection('likes').add({
+        'likeFrom': currentUserId,
+        'likeTo': swipedUserId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
-    if (state is AsyncData<List<User>>) {
-      try {
-        // 現在ログインしているユーザーIDとスワイプされたユーザーIDを取得
-        int currentUserId = authController.userId.value ?? 0;
-        int swipedUserId = state.value!.first.userId;
-
-        // Firestoreに「いいね」を追加
-        await FirebaseFirestore.instance.collection('likes').doc(likeId).set({
-          'likeFrom': currentUserId,
-          'likeTo': swipedUserId,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-
-        print("ユーザーにいいねが追加されました");
-        print("ログイン中のUser：$currentUserId, 送られた人：$swipedUserId");
-
-        state = AsyncValue.data([
-          for (var i = 1; i < state.value!.length; i++) state.value![i],
-        ]);
-      } catch (e) {
-        print("Firebaseへの保存中にエラーが発生しました: $e");
-      }
-    } else {
-      print("データがロードされていません");
+      print("いいねを追加しました: $currentUserId -> $swipedUserId");
+      _showNextUser();
+    } catch (e) {
+      print("Firebaseへの保存中にエラーが発生しました: $e");
     }
   }
 
+  void _showNextUser() {
+    // インデックスを進めて次のユーザーを表示
+    if (currentIndex < state.value!.length - 1) {
+      currentIndex++;
+      print("次のユーザーを表示: ${state.value![currentIndex].name}");
+      state = AsyncValue.data(state.value!); // インデックスが進むだけでユーザーリストはそのまま
+    } else {
+      print("全ユーザーを表示しました");
+    }
+  }
 }

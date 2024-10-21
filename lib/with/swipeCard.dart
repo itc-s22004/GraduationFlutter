@@ -5,15 +5,6 @@ import 'user.dart';
 import 'package:flutter/material.dart';
 import 'package:omg/with/swipeAsyncNotifier.dart' as asyncNotifier; // エイリアスを追加
 
-
-
-// enum AppinioSwiperDirection {
-//   left,
-//   right,
-//   top,
-//   bottom,
-// }
-
 class SwipeCard extends ConsumerWidget {
   const SwipeCard({
     super.key,
@@ -24,9 +15,7 @@ class SwipeCard extends ConsumerWidget {
 
   final List<User> list;
   final AppinioSwiperController controller;
-  // final void Function(AppinioSwiperDirection direction) onSwiping;
-  final void Function(AppinioSwiperDirection direction) onSwiping; // 修正
-
+  final void Function(AppinioSwiperDirection direction) onSwiping;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
