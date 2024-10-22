@@ -79,12 +79,18 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
 
   void _handleRightSwipe() async {
     try {
+      final likeCollection = FirebaseFirestore.instance.collection('likes');
+      final snapshot = await likeCollection.get();
+      final likeCount = snapshot.size + 1;
+
+      String likeId = 'like$likeCount';
+
       // 現在ログインしているユーザーIDとスワイプされたユーザーIDを取得
       int currentUserId = authController.userId.value ?? 0;
       int swipedUserId = state.value![currentIndex].userId;
 
       // Firestoreに「いいね」を追加
-      await FirebaseFirestore.instance.collection('likes').add({
+      await FirebaseFirestore.instance.collection('likes').doc(likeId).set({
         'likeFrom': currentUserId,
         'likeTo': swipedUserId,
         'timestamp': FieldValue.serverTimestamp(),

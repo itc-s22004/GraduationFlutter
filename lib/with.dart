@@ -37,6 +37,10 @@ class _MainAppState extends ConsumerState<MainApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Swipe'),
+        ),
         body: SafeArea(
           child: asyncValue.when(
             // ローディング中の処理

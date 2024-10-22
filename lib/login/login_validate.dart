@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:omg/login/loginNext.dart';
 
 import '../auth_controller.dart';
+import '../screens/navigation.dart';
 import '../with.dart';
 
 class LoginValidate extends StatefulWidget {
@@ -108,10 +109,15 @@ class _LoginValidateState extends State<LoginValidate> {
                           );
 
                           // 次のページへ遷移
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MainApp())
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(builder: (context) => const MainApp())
+                          // );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const BottomNavigation()),
                           );
+
                         } on FirebaseAuthException catch (e) {
                           String message;
                           if (e.code == 'user-not-found') {
