@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:omg/chat.dart';
-// import 'package:get/get_core/src/get_main.dart';
+import 'package:omg/chat/chat.dart';
 import 'package:omg/login/login_validate.dart';
 import 'package:omg/registration/create_account.dart';
 import 'package:omg/with.dart';
@@ -33,9 +32,9 @@ class Home extends StatelessWidget {
     );
   }
 
-  void _toChat() {
-    Get.to(() => const ChatRoom());
-  }
+  // void _toChat() {
+  //   Get.to(() => const ChatRoom());
+  // }
 
   void _toRegistration() {
     Get.to(() => const CreateAccountPage());

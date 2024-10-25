@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omg/with/swipeAsyncNotifier.dart';
 import 'user.dart';
 import 'package:flutter/material.dart';
-import 'package:omg/with/swipeAsyncNotifier.dart' as asyncNotifier; // エイリアスを追加
+import 'package:omg/with/swipeAsyncNotifier.dart' as asyncNotifier;
 
 class SwipeCard extends ConsumerWidget {
   const SwipeCard({
@@ -19,19 +19,18 @@ class SwipeCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final swipeNotifier = ref.read(asyncNotifier.swipeAsyncNotifierProvider.notifier); // Notifierを取得
+    final swipeNotifier = ref.read(asyncNotifier.swipeAsyncNotifierProvider.notifier);
 
     return Column(
       children: [
         Expanded(
           child: AppinioSwiper(
-            controller: controller, // スワイプを制御するコントローラー
-            cardCount: list.length, // カードの数
+            controller: controller,
+            cardCount: list.length,
             onSwipeEnd: (int previousIndex, int targetIndex, SwiperActivity activity) {
               if (activity is Swipe) {
                 print("スワイプが終了しました（Swipe）");
 
-                // AxisDirectionをAppinioSwiperDirectionに変換
                 AppinioSwiperDirection direction;
                 switch (activity.direction) {
                   case AxisDirection.left:
@@ -50,18 +49,17 @@ class SwipeCard extends ConsumerWidget {
             cardBuilder: (BuildContext context, int index) {
               final user = list[index];
               return list.isNotEmpty
-                  ? _buildCard(user: user) // カード型ウィジェット
+                  ? _buildCard(user: user)
                   : Center(child: _buildText("No Data"));
             },
           ),
         ),
-        _buildActionButton(controller), // アクションボタン
+        _buildActionButton(controller),
         const SizedBox(height: 10),
       ],
     );
   }
 
-  // カード型コンポーネント
   Widget _buildCard({required User user}) {
     return Container(
       width: double.infinity,
@@ -86,7 +84,6 @@ class SwipeCard extends ConsumerWidget {
     );
   }
 
-  // アクションボタンコンポーネント
   Widget _buildActionButton(AppinioSwiperController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -116,7 +113,6 @@ class SwipeCard extends ConsumerWidget {
     );
   }
 
-  // ボタンコンポーネント
   Widget _buildCustomBtn({
     required void Function()? onPressed,
     required IconData iconData,
@@ -138,7 +134,6 @@ class SwipeCard extends ConsumerWidget {
     );
   }
 
-  // テキストコンポーネント
   Widget _buildText(String text) {
     return Text(
       text,
