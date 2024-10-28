@@ -8,8 +8,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../next.dart';
-
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({super.key});
 
@@ -24,8 +22,8 @@ class CreateAccountPageState extends State<CreateAccountPage> {
   final _usernameController = TextEditingController();
   bool _agreeToTerms = false;
 
-  // final AuthController authController = Get.put(AuthController());
-  //
+  final AuthController authController = Get.put(AuthController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +145,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _createAccount, // 後に作成
+              onPressed: _createAccount,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 minimumSize: const Size(double.infinity, 50),
@@ -201,7 +199,6 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'id': userCount,
         'email': _emailController.text.trim(),
-        // 'username': username,
         'diagnosis': null,
         'gender': null,
         'school': null
@@ -210,7 +207,6 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       await userCredential.user?.updateDisplayName(username);
       await userCredential.user?.sendEmailVerification();
 
-      // Navigator.pop(context, true);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Diagnosis(data: _emailController.text)),
@@ -226,5 +222,4 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       );
     }
   }
-
 }

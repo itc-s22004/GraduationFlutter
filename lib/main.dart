@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:omg/login/login_validate.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:omg/registration/create_account.dart';
 
 import 'auth_controller.dart';
 import 'firebase_options.dart';
@@ -29,6 +30,7 @@ import 'firebase_options.dart';
 // }
 
 void main() async {
+  Get.put(AuthController());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -36,12 +38,11 @@ void main() async {
 
   runApp(
     const ProviderScope(
-      child: MyApp(), // MyAppを呼び出す
+      child: MyApp(),
     ),
   );
 }
 
-// メインアプリウィジェット
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -53,7 +54,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginValidate(), // ログイン画面をホームに設定
+      // home: const LoginValidate(),
+      home: const CreateAccountPage(),
       debugShowCheckedModeBanner: false,
     );
   }

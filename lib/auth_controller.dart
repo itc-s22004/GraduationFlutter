@@ -1,16 +1,25 @@
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthController extends GetxController {
-  var email = ''.obs; // Emailを保持するRx
-  var userId = 0.obs; // userIdを保持するRx
+  RxString email = ''.obs;
+  RxInt userId = 0.obs;
 
-  // Emailの値を更新
   void updateEmail(String newEmail) {
     email.value = newEmail;
   }
 
-  // userIdの値を更新
   void updateUserId(int newUserId) {
     userId.value = newUserId;
+  }
+
+  Future<void> saveUserInfo(String userEmail, int userId) async {
+    updateEmail(userEmail);
+    updateUserId(userId);
+
+    await FirebaseFirestore.instance.collection('users').doc(userEmail).set({
+      'email': userEmail,
+      'userId': userId,
+    });
   }
 }

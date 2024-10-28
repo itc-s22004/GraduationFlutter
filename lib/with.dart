@@ -17,22 +17,18 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   void initState() {
     super.initState();
-    // コントローラーの初期化
     _swiperController = AppinioSwiperController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    // コントローラーの破棄
     _swiperController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Userデータの取得
     final asyncValue = ref.watch(notifier.swipeAsyncNotifierProvider);
-    // ViewModelの取得
     final swipeNotifier = ref.read(notifier.swipeAsyncNotifierProvider.notifier);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -43,23 +39,19 @@ class _MainAppState extends ConsumerState<MainApp> {
         ),
         body: SafeArea(
           child: asyncValue.when(
-            // ローディング中の処理
             loading: () => const Center(
               child: CircularProgressIndicator(),
             ),
-            // データ時の処理
             error: (error, _) => const Center(
               child: Text("Error"),
             ),
-            // データ取得後の処理
             data: (data) {
-              // カードウィジェットの表示
               return card.SwipeCard(
                 list: data,
                 onSwiping: (direction) async {
                   await swipeNotifier.swipeOnCard(direction);
                 },
-                controller: _swiperController, // スワイプ制御
+                controller: _swiperController,
               );
             },
           ),

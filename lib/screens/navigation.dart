@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:omg/chat/chatList.dart';
 import 'package:omg/screens/setting.dart';
 import 'package:omg/with.dart';
-
-import '../chat/chat.dart';
-
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
