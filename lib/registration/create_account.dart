@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/mbti/mbti.dart';
+import 'package:omg/registration/addinfo.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -209,7 +210,8 @@ class CreateAccountPageState extends State<CreateAccountPage> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Diagnosis(data: _emailController.text)),
+        // MaterialPageRoute(builder: (context) => AddInfo(data: _emailController.text)),
+        MaterialPageRoute(builder: (context) => Mbti(data: _emailController.text)),
       );
 
     } on FirebaseAuthException catch (e) {

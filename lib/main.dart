@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:omg/login/login_validate.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:omg/mbti/mbti.dart';
 import 'package:omg/registration/create_account.dart';
 
 import 'auth_controller.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: const LoginValidate(),
       home: const CreateAccountPage(),
+      // home: ButtonScrollExample(),
       debugShowCheckedModeBanner: false,
     );
   }
