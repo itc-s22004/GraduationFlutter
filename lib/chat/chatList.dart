@@ -54,7 +54,6 @@ class ChatListScreen extends StatelessWidget {
     final List<ChatUser> matchedUsers = [];
 
     try {
-      // `matches` コレクションから currentUserId が `user1` または `user2` のものを取得
       final user1Matches = await FirebaseFirestore.instance
           .collection('matches')
           .where('user1', isEqualTo: currentUserId)

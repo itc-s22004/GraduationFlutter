@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
+import '../mbti/mbti.dart';
 import '../screens/navigation.dart';
 
 class LoginValidate extends StatefulWidget {
@@ -100,10 +101,17 @@ class _LoginValidateState extends State<LoginValidate> {
                             authController.updateUserId(userId); // ユーザーIDを保存
                           }
 
-                          // 次のページへ遷移
-                          Navigator.pushReplacement(
+                          // これに書き換えないと、ナビゲーションにならない
+                          // Navigator.pushReplacement(
+                          //   context,
+                          //   MaterialPageRoute(builder: (context) => const BottomNavigation()),
+                          // );
+
+                          //一旦確認するために、ログインからMBTIに飛ばしている
+                          Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const BottomNavigation()),
+                            // MaterialPageRoute(builder: (context) => AddInfo(data: _emailController.text)),
+                            MaterialPageRoute(builder: (context) => Mbti(data: emailController.text)),
                           );
 
                         } on FirebaseAuthException catch (e) {

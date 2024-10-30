@@ -67,12 +67,29 @@ class _MbtiState extends State<Mbti> {
   }
 
   void _onConfirm() {
+    // 選択結果を4つのリストに分割
+    List<int> selected = _selectedIndexes.whereType<int>().toList();
+    List<List<int>> groupedSelections = [
+      selected.sublist(0, 3),  // EI
+      selected.sublist(3, 6),  // SN
+      selected.sublist(6, 9),  // TF
+      selected.sublist(9, 12), // JP
+    ];
+
+    // 各グループでE/I, J/P, S/N, T/Fを判定
+    List<String> results = [
+      _determineType(groupedSelections[0], 'E', 'I'),
+      _determineType(groupedSelections[1], 'S', 'N'),
+      _determineType(groupedSelections[2], 'T', 'F'),
+      _determineType(groupedSelections[3], 'J', 'P'),
+    ];
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("選択結果"),
-          content: Text("選択されたボタン: ${_selectedIndexes.where((index) => index != null).map((index) => index! + 1).toList().join(', ')}"),
+          content: Text("結果: $results"),
           actions: [
             TextButton(
               onPressed: () {
@@ -85,6 +102,14 @@ class _MbtiState extends State<Mbti> {
       },
     );
   }
+
+// 特性判定関数
+  String _determineType(List<int> group, String typeA, String typeB) {
+    int countTypeA = group.where((index) => index == 0 || index == 1).length;
+    int countTypeB = group.where((index) => index == 2 || index == 3).length;
+    return countTypeA >= 2 ? typeA : countTypeB >= 2 ? typeB : '';
+  }
+
 
   @override
   Widget build(BuildContext context) {
