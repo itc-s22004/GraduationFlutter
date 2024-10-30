@@ -57,7 +57,6 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginValidate(),
       // home: const CreateAccountPage(),
-      // home: ButtonScrollExample(),
       debugShowCheckedModeBanner: false,
     );
   }

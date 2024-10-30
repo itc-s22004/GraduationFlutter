@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:omg/registration/create_account.dart';
 import '../auth_controller.dart';
 import '../mbti/mbti.dart';
+import '../registration/addinfo.dart';
 import '../screens/navigation.dart';
 
 class LoginValidate extends StatefulWidget {
@@ -102,17 +104,16 @@ class _LoginValidateState extends State<LoginValidate> {
                           }
 
                           // これに書き換えないと、ナビゲーションにならない
-                          // Navigator.pushReplacement(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => const BottomNavigation()),
-                          // );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const BottomNavigation()),
+                          );
 
                           //一旦確認するために、ログインからMBTIに飛ばしている
-                          Navigator.push(
-                            context,
-                            // MaterialPageRoute(builder: (context) => AddInfo(data: _emailController.text)),
-                            MaterialPageRoute(builder: (context) => Mbti(data: emailController.text)),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   // MaterialPageRoute(builder: (context) => Mbti(data: emailController.text)),
+                          // );
 
                         } on FirebaseAuthException catch (e) {
                           String message;
@@ -130,6 +131,18 @@ class _LoginValidateState extends State<LoginValidate> {
                       }
                     },
                     child: const Text('ログイン'),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CreateAccountPage()), // create_account.dartへ遷移
+                      );
+                    },
+                    child: const Text('アカウント作成'),
                   ),
                 ),
               ],

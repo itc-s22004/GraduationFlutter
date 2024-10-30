@@ -210,8 +210,8 @@ class CreateAccountPageState extends State<CreateAccountPage> {
 
       Navigator.push(
         context,
-        // MaterialPageRoute(builder: (context) => AddInfo(data: _emailController.text)),
-        MaterialPageRoute(builder: (context) => Mbti(data: _emailController.text)),
+        MaterialPageRoute(builder: (context) => AddInfo(data: _emailController.text)),
+        // MaterialPageRoute(builder: (context) => Mbti(data: _emailController.text)),
       );
 
     } on FirebaseAuthException catch (e) {

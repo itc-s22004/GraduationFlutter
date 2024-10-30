@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/login/loginNext.dart';
+import 'package:omg/mbti/mbti.dart';
 import 'package:omg/with.dart';
 
 class AddInfo extends StatefulWidget {
@@ -57,8 +58,7 @@ class _AddInfoState extends State<AddInfo> {
 
       Navigator.push(
         context,
-        // MaterialPageRoute(builder: (context) => const LoginNext()),
-        MaterialPageRoute(builder: (context) => const MainApp()),
+        MaterialPageRoute(builder: (context) => Mbti(data: widget.data)),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -107,9 +107,21 @@ class _AddInfoState extends State<AddInfo> {
               onPressed: _updateUserData,
               child: const Text('情報を更新'),
             ),
+            const SizedBox(height: 16), // スペースを追加
+            ElevatedButton(
+              onPressed: () {
+                // Mbti画面に遷移
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Mbti(data: widget.data)),
+                );
+              },
+              child: const Text('MBTIへ進む'),
+            ),
           ],
         ),
       ),
     );
   }
+
 }

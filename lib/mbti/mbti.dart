@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
-
-import '../auth_controller.dart';
+import 'package:omg/screens/navigation.dart';
+import 'package:omg/with.dart';
 
 class Mbti extends StatefulWidget {
   final String data;
@@ -33,6 +33,29 @@ class _MbtiState extends State<Mbti> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _updateUserDate(String diagnosisResult) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: widget.data)
+          .get()
+          .then((querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          var userDoc = querySnapshot.docs.first;
+          String docId = userDoc.id;
+
+          FirebaseFirestore.instance.collection('users').doc(docId).update({
+            'diagnosis': diagnosisResult
+          });
+        }
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('エラーが発生しました: $e')),
+      );
+    }
   }
 
   Future<void> _fetchQuestions() async {
@@ -67,8 +90,8 @@ class _MbtiState extends State<Mbti> {
   }
 
   void _onConfirm() {
-    // 選択結果を4つのリストに分割
     List<int> selected = _selectedIndexes.whereType<int>().toList();
+    String resultStr;
     List<List<int>> groupedSelections = [
       selected.sublist(0, 3),  // EI
       selected.sublist(3, 6),  // SN
@@ -76,7 +99,6 @@ class _MbtiState extends State<Mbti> {
       selected.sublist(9, 12), // JP
     ];
 
-    // 各グループでE/I, J/P, S/N, T/Fを判定
     List<String> results = [
       _determineType(groupedSelections[0], 'E', 'I'),
       _determineType(groupedSelections[1], 'S', 'N'),
@@ -84,16 +106,24 @@ class _MbtiState extends State<Mbti> {
       _determineType(groupedSelections[3], 'J', 'P'),
     ];
 
+    resultStr = results.join('');
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("選択結果"),
-          content: Text("結果: $results"),
+          content: Text("結果: $resultStr"),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // ダイアログを閉じる
+                _updateUserDate(resultStr); // ユーザーデータを更新
+                Navigator.push(
+                  context,
+                  // MaterialPageRoute(builder: (context) => MainApp()),
+                  MaterialPageRoute(builder: (context) => const BottomNavigation()),
+                ); // WithPageへ遷移
               },
               child: const Text("閉じる"),
             ),
@@ -103,13 +133,12 @@ class _MbtiState extends State<Mbti> {
     );
   }
 
-// 特性判定関数
+  // 特性判定関数
   String _determineType(List<int> group, String typeA, String typeB) {
     int countTypeA = group.where((index) => index == 0 || index == 1).length;
     int countTypeB = group.where((index) => index == 2 || index == 3).length;
     return countTypeA >= 2 ? typeA : countTypeB >= 2 ? typeB : '';
   }
-
 
   @override
   Widget build(BuildContext context) {
