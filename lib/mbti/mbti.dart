@@ -118,7 +118,7 @@ class _MbtiState extends State<Mbti> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // ダイアログを閉じる
-                _updateUserDate(resultStr);
+                _updateUserDate(resultStr);  // -----------------------------
                 Navigator.push(
                   context,
                   // MaterialPageRoute(builder: (context) => MainApp()),

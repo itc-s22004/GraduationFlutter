@@ -29,7 +29,7 @@ class _AddInfoState extends State<AddInfo> {
     super.dispose();
   }
 
-  Future<void> _updateUserData() async {
+  Future<void> _updateUserData() async {  // ------------------------------------------
     try {
       await FirebaseFirestore.instance
           .collection('users')
@@ -42,24 +42,21 @@ class _AddInfoState extends State<AddInfo> {
           String email = userDoc['email'];
           int userId = userDoc['id'];
 
-          authController.saveUserInfo(email, userId);
+          // authController.saveUserInfo(email, userId);
 
           FirebaseFirestore.instance.collection('users').doc(docId).update({
             'gender': _genderController.text.trim(),
             'school': _schoolController.text.trim(),
             'diagnosis': _diagnosisController.text.trim(),
           });
+          print("addInfo.dart docId: $docId");
         }
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('ユーザー情報が更新されました')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('ユーザー情報が更新されました')),
+      // );
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Mbti(data: widget.data)),
-      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('エラーが発生しました: $e')),
@@ -122,5 +119,4 @@ class _AddInfoState extends State<AddInfo> {
       ),
     );
   }
-
 }

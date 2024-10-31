@@ -13,13 +13,13 @@ class AuthController extends GetxController {
     userId.value = newUserId;
   }
 
-  Future<void> saveUserInfo(String userEmail, int userId) async {
-    updateEmail(userEmail);
-    updateUserId(userId);
-
-    await FirebaseFirestore.instance.collection('users').doc(userEmail).set({
-      'email': userEmail,
-      'userId': userId,
-    });
-  }
+  // Future<void> saveUserInfo(String userEmail, int userId) async {
+  //   updateEmail(userEmail);
+  //   updateUserId(userId);
+  //
+  //   await FirebaseFirestore.instance.collection('users').doc(userEmail).set({
+  //     'email': userEmail,
+  //     'userId': userId,
+  //   });
+  // }
 }
