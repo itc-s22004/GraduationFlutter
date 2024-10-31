@@ -110,7 +110,6 @@ class _AddInfoState extends State<AddInfo> {
             const SizedBox(height: 16), // スペースを追加
             ElevatedButton(
               onPressed: () {
-                // Mbti画面に遷移
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Mbti(data: widget.data)),

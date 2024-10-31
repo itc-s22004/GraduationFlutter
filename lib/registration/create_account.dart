@@ -17,7 +17,8 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class CreateAccountPageState extends State<CreateAccountPage> {
-  final _emailController = TextEditingController();
+  // final _emailController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -41,7 +42,8 @@ class CreateAccountPageState extends State<CreateAccountPage> {
         child: Column(
           children: [
             TextField(
-              controller: _emailController,
+              // controller: _emailController,
+              controller: emailController,
               decoration: const InputDecoration(
                 labelText: 'メールアドレス',
                 border: OutlineInputBorder(),
@@ -161,7 +163,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _usernameController.dispose();
@@ -186,20 +188,22 @@ class CreateAccountPageState extends State<CreateAccountPage> {
     try {
       UserCredential userCredential =
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
+        email: emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      final userCollection = FirebaseFirestore.instance.collection('users');
-      final snapshot = await userCollection.get();
-      final userCount = snapshot.size + 1;
+      // authController.updateEmail(emailController.text.trim());
+
+      final userCollection = await FirebaseFirestore.instance.collection('users').get();
+      // final snapshot = await userCollection.get();
+      final userCount = userCollection.size + 1;
 
       String userId = 'user$userCount';
       String username = _usernameController.text.trim();
 
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'id': userCount,
-        'email': _emailController.text.trim(),
+        'email': emailController.text.trim(),
         'diagnosis': null,
         'gender': null,
         'school': null
@@ -208,9 +212,21 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       await userCredential.user?.updateDisplayName(username);
       await userCredential.user?.sendEmailVerification();
 
+      authController.updateEmail(emailController.text.trim());
+
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: emailController.text)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final userId = snapshot.docs.first.data()['id'] ?? 0;
+        authController.updateUserId(userId);
+      }
+
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AddInfo(data: _emailController.text)),
+        MaterialPageRoute(builder: (context) => AddInfo(data: emailController.text)),
         // MaterialPageRoute(builder: (context) => Mbti(data: _emailController.text)),
       );
 
