@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/login/loginNext.dart';
 import 'package:omg/mbti/mbti.dart';
-import 'package:omg/with.dart';
+import 'package:omg/with/with.dart';
 
 class AddInfo extends StatefulWidget {
   final String data; // emailを保持
@@ -29,7 +29,7 @@ class _AddInfoState extends State<AddInfo> {
     super.dispose();
   }
 
-  Future<void> _updateUserData() async {  // ------------------------------------------
+  Future<void> _updateUserData() async {
     try {
       await FirebaseFirestore.instance
           .collection('users')

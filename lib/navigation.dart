@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omg/chat/chatList.dart';
-import 'package:omg/screens/setting.dart';
-import 'package:omg/with.dart';
+import 'package:omg/setting/setting.dart';
+import 'package:omg/with/with.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -11,9 +11,9 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  static const List<Widget> _screens = [
-    MainApp(),
-    ChatListScreen(),
+  static final List<Widget> _screens = [
+    const MainApp(),
+    const ChatListScreen(),
     SettingScreen(),
   ];
 

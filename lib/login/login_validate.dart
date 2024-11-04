@@ -6,7 +6,7 @@ import 'package:omg/registration/create_account.dart';
 import '../auth_controller.dart';
 import '../mbti/mbti.dart';
 import '../registration/addinfo.dart';
-import '../screens/navigation.dart';
+import '../navigation.dart';
 
 class LoginValidate extends StatefulWidget {
   const LoginValidate({Key? key}) : super(key: key);
@@ -109,12 +109,6 @@ class _LoginValidateState extends State<LoginValidate> {
                             MaterialPageRoute(builder: (context) => const BottomNavigation()),
                           );
 
-                          //一旦確認するために、ログインからMBTIに飛ばしている
-                          // Navigator.push(
-                          //   context,
-                          //   // MaterialPageRoute(builder: (context) => Mbti(data: emailController.text)),
-                          // );
-
                         } on FirebaseAuthException catch (e) {
                           String message;
                           if (e.code == 'user-not-found') {
@@ -139,7 +133,7 @@ class _LoginValidateState extends State<LoginValidate> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const CreateAccountPage()), // create_account.dartへ遷移
+                        MaterialPageRoute(builder: (context) => const CreateAccountPage()),
                       );
                     },
                     child: const Text('アカウント作成'),

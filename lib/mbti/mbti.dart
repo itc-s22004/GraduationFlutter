@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
-import 'package:omg/screens/navigation.dart';
-import 'package:omg/with.dart';
+import 'package:omg/navigation.dart';
+import 'package:omg/with/with.dart';
 
 class Mbti extends StatefulWidget {
   final String data;

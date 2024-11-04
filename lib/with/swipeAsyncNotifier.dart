@@ -5,7 +5,7 @@ import '../auth_controller.dart';
 import 'user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'dart:math'; // ランダム化のために追加
+import 'dart:math';
 
 enum AppinioSwiperDirection {
   left,
@@ -75,21 +75,27 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
     }
   }
 
-  Future<void> _handle() async {
+  void _showNextUser() {
+    if (currentIndex < state.value!.length - 1) {
+      currentIndex++;
+      print("次のユーザーを表示: ${state.value![currentIndex].name}");
+      state = AsyncValue.data(state.value!);
+    } else {
+      print("全ユーザーを表示しました");
+    }
+  }
+
+  void _handleLeftSwipe() {
     try {
       int currentUserId = authController.userId.value ?? 0;
       int swipedUserId = state.value![currentIndex].userId;
 
       print("NOT: X $currentUserId -> $swipedUserId");
 
+      _showNextUser();
     } catch (e) {
       print(e);
     }
-  }
-
-  void _handleLeftSwipe() {
-    _handle();
-    _showNextUser();
   }
 
   Future<void> _handleRightSwipe() async {
@@ -130,13 +136,5 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
     }
   }
 
-  void _showNextUser() {
-    if (currentIndex < state.value!.length - 1) {
-      currentIndex++;
-      print("次のユーザーを表示: ${state.value![currentIndex].name}");
-      state = AsyncValue.data(state.value!);
-    } else {
-      print("全ユーザーを表示しました");
-    }
-  }
+
 }
