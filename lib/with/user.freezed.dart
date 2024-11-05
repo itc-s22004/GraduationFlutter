@@ -19,6 +19,7 @@ mixin _$User {
   List<String> get profileImageURL => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get userId => throw _privateConstructorUsedError;
+  List<String> get tags => throw _privateConstructorUsedError;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -31,7 +32,11 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call({List<String> profileImageURL, String name, int userId});
+  $Res call(
+      {List<String> profileImageURL,
+      String name,
+      int userId,
+      List<String> tags});
 }
 
 /// @nodoc
@@ -52,6 +57,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? profileImageURL = null,
     Object? name = null,
     Object? userId = null,
+    Object? tags = null,
   }) {
     return _then(_value.copyWith(
       profileImageURL: null == profileImageURL
@@ -66,6 +72,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      tags: null == tags
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -77,7 +87,11 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<String> profileImageURL, String name, int userId});
+  $Res call(
+      {List<String> profileImageURL,
+      String name,
+      int userId,
+      List<String> tags});
 }
 
 /// @nodoc
@@ -95,6 +109,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? profileImageURL = null,
     Object? name = null,
     Object? userId = null,
+    Object? tags = null,
   }) {
     return _then(_$UserImpl(
       profileImageURL: null == profileImageURL
@@ -109,6 +124,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      tags: null == tags
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -119,8 +138,10 @@ class _$UserImpl extends _User {
   const _$UserImpl(
       {final List<String> profileImageURL = const [],
       this.name = "",
-      required this.userId})
+      required this.userId,
+      final List<String> tags = const []})
       : _profileImageURL = profileImageURL,
+        _tags = tags,
         super._();
 
   final List<String> _profileImageURL;
@@ -137,10 +158,18 @@ class _$UserImpl extends _User {
   final String name;
   @override
   final int userId;
+  final List<String> _tags;
+  @override
+  @JsonKey()
+  List<String> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tags);
+  }
 
   @override
   String toString() {
-    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId)';
+    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId, tags: $tags)';
   }
 
   @override
@@ -151,12 +180,17 @@ class _$UserImpl extends _User {
             const DeepCollectionEquality()
                 .equals(other._profileImageURL, _profileImageURL) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.userId, userId) || other.userId == userId));
+            (identical(other.userId, userId) || other.userId == userId) &&
+            const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_profileImageURL), name, userId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_profileImageURL),
+      name,
+      userId,
+      const DeepCollectionEquality().hash(_tags));
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -171,7 +205,8 @@ abstract class _User extends User {
   const factory _User(
       {final List<String> profileImageURL,
       final String name,
-      required final int userId}) = _$UserImpl;
+      required final int userId,
+      final List<String> tags}) = _$UserImpl;
   const _User._() : super._();
 
   @override
@@ -180,6 +215,8 @@ abstract class _User extends User {
   String get name;
   @override
   int get userId;
+  @override
+  List<String> get tags;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

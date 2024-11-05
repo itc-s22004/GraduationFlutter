@@ -40,6 +40,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
           profileImageURL: ["assets/images/flutter.png"],
           name: data['email'] ?? 'No Email',
           userId: data['id'] ?? 0,
+          tags: List<String>.from(data['tag'] ?? [])
         );
       }).toList();
 
