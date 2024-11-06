@@ -21,7 +21,6 @@ class _LoginValidateState extends State<LoginValidate> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // AuthControllerのインスタンスを取得
   final AuthController authController = Get.put(AuthController());
 
   @override
@@ -89,21 +88,28 @@ class _LoginValidateState extends State<LoginValidate> {
                             password: passwordController.text,
                           );
 
-                          // ログイン成功後、メールアドレスを保存
                           authController.updateEmail(emailController.text);
 
-                          // FirestoreからユーザーIDを取得
                           final snapshot = await FirebaseFirestore.instance
                               .collection('users')
                               .where('email', isEqualTo: emailController.text)
                               .get();
 
                           if (snapshot.docs.isNotEmpty) {
-                            final userId = snapshot.docs.first.data()['id'] ?? 0;
-                            authController.updateUserId(userId); // ユーザーIDを保存
+                            final userData = snapshot.docs.first.data();
+                            final userId = userData['id'] ?? 0;
+                            authController.updateUserId(userId);
+
+                            authController.updateSchool(userData['school'] ?? '');
+                            authController.updateDiagnosis(userData['diagnosis'] ?? '');
+                            authController.updateGender(userData['gender'] ?? '');
+
+                            if (userData['tag'] != null) {
+                              List<String> userTags = List<String>.from(userData['tag']);
+                              authController.updateTags(userTags);
+                            }
                           }
 
-                          // これに書き換えないと、ナビゲーションにならない
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => const BottomNavigation()),
@@ -127,6 +133,8 @@ class _LoginValidateState extends State<LoginValidate> {
                     child: const Text('ログイン'),
                   ),
                 ),
+
+
                 const SizedBox(height: 16.0),
                 Center(
                   child: ElevatedButton(

@@ -1,32 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
-import '../comp/tag.dart' as tag;
+import 'editProf.dart';
 
 class SettingScreen extends StatelessWidget {
   final AuthController authController = Get.find<AuthController>();
-
-  Future<Map<String, dynamic>?> fetchUserData() async {
-    try {
-      final email = authController.email.value ?? '';
-      if (email != '') {
-        final snapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .where('email', isEqualTo: email)
-            .get();
-
-        if (snapshot.docs.isNotEmpty) {
-          return snapshot.docs.first.data();
-        }
-      }
-      return null;
-    } catch (e) {
-      print("エラーが発生しました: $e");
-      return null;
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,50 +14,41 @@ class SettingScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('プロフィール'),
       ),
-      body: FutureBuilder<Map<String, dynamic>?>(
-        future: fetchUserData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(child: Text('ユーザー情報が見つかりません'));
-          }
-
-          final userData = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage("assets/images/flutter.png"),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  userData['email'],
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 24),
-                Divider(color: Colors.grey[300]),
-
-                _buildProfileItem(Icons.person, '性別', userData['gender']),
-                _buildProfileItem(Icons.school, '学校', userData['school']),
-                _buildProfileItem(Icons.book, '診断', userData['diagnosis']),
-                const tag.Tag(),
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.black, shape: const StadiumBorder(),
-                    side: const BorderSide(color: Colors.green),
-                  ),
-                  onPressed: () {},
-                  child: const Text('編集'),
-                ),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage("assets/images/flutter.png"),
             ),
-          );
-        },
+            const SizedBox(height: 16),
+            Obx(() => Text(
+              authController.email.value,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )),
+            const SizedBox(height: 24),
+            Divider(color: Colors.grey[300]),
+
+            Obx(() => _buildProfileItem(Icons.person, '性別', authController.gender.value)),
+            Obx(() => _buildProfileItem(Icons.school, '学校', authController.school.value)),
+            Obx(() => _buildProfileItem(Icons.book, '診断', authController.diagnosis.value)),
+
+            Obx(() => _buildTagsSection(authController.tags)),
+
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.black,
+                shape: const StadiumBorder(),
+                side: const BorderSide(color: Colors.green),
+              ),
+              onPressed: () {
+                Get.to(() => EditProfileScreen());
+              },
+              child: const Text('編集'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -105,6 +74,26 @@ class SettingScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTagsSection(List<String> tags) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'タグ:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8.0,
+          runSpacing: 4.0,
+          children: tags.map((tag) => Chip(
+            label: Text(tag),
+          )).toList(),
+        ),
+      ],
     );
   }
 }

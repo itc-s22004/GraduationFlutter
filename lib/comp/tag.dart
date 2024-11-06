@@ -101,7 +101,7 @@ class _TagState extends State<Tag> {
                   selectedTags = List.of(tags);
                 });
               },
-              child: const Text('ぜんぶ'),
+              child: const Text('すべて'),
             ),
             const SizedBox(width: 16),
             ElevatedButton(
