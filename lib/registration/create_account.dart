@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
+import 'package:omg/comp/tag.dart';
 import 'package:omg/mbti/mbti.dart';
 import 'package:omg/registration/addinfo.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -177,59 +178,36 @@ class CreateAccountPageState extends State<CreateAccountPage> {
     //   );
     //   return;
     // }
-
-    if (!_agreeToTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('利用規約に同意してください')),
-      );
-      return;
-    }
-
     try {
-      UserCredential userCredential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      // authController.updateEmail(emailController.text.trim());
-
-      final userCollection = await FirebaseFirestore.instance.collection('users').get();
-      // final snapshot = await userCollection.get();
-      final userCount = userCollection.size + 1;
+      final userCollection = FirebaseFirestore.instance.collection('users');
+      final userCount = (await userCollection.get()).size + 1;
 
       String userId = 'user$userCount';
-      String username = _usernameController.text.trim();
 
-      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+      await userCollection.doc(userId).set({
         'id': userCount,
         'email': emailController.text.trim(),
         'diagnosis': null,
         'gender': null,
-        'school': null
+        'school': null,
       });
 
-      await userCredential.user?.updateDisplayName(username);
-      await userCredential.user?.sendEmailVerification();
-
       authController.updateEmail(emailController.text.trim());
+      authController.updateUserId(userCount);
 
-      final snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('email', isEqualTo: emailController.text)
-          .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        final userId = snapshot.docs.first.data()['id'] ?? 0;
-        authController.updateUserId(userId);
-      }
+      await authController.fetchUserData(); // 登録後すぐにデータを取得し更新
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AddInfo(data: emailController.text)),
-        // MaterialPageRoute(builder: (context) => Mbti(data: _emailController.text)),
+        MaterialPageRoute(
+            builder: (context) => AddInfo(data: emailController.text)),
       );
-
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('アカウント作成に失敗しました: ${e.message}')),

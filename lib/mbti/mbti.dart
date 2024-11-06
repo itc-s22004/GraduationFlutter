@@ -47,8 +47,11 @@ class _MbtiState extends State<Mbti> {
           String docId = userDoc.id;
 
           FirebaseFirestore.instance.collection('users').doc(docId).update({
-            'diagnosis': diagnosisResult
+            'diagnosis': diagnosisResult,
           });
+
+          // AuthControllerに診断結果を保存
+          authController.updateDiagnosis(diagnosisResult);
         }
       });
     } catch (e) {

@@ -6,6 +6,8 @@ import 'package:omg/login/loginNext.dart';
 import 'package:omg/mbti/mbti.dart';
 import 'package:omg/with/with.dart';
 
+import '../comp/tag.dart';
+
 class AddInfo extends StatefulWidget {
   final String data; // emailを保持
   const AddInfo({super.key, required this.data});
@@ -39,31 +41,25 @@ class _AddInfoState extends State<AddInfo> {
         if (querySnapshot.docs.isNotEmpty) {
           var userDoc = querySnapshot.docs.first;
           String docId = userDoc.id;
-          String email = userDoc['email'];
-          int userId = userDoc['id'];
-
-          // authController.saveUserInfo(email, userId);
 
           FirebaseFirestore.instance.collection('users').doc(docId).update({
             'gender': _genderController.text.trim(),
             'school': _schoolController.text.trim(),
             'diagnosis': _diagnosisController.text.trim(),
           });
-          print("addInfo.dart docId: $docId");
+
+          // AuthControllerに情報を反映
+          authController.updateGender(_genderController.text.trim());
+          authController.updateSchool(_schoolController.text.trim());
+          authController.updateDiagnosis(_diagnosisController.text.trim());
         }
       });
-
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('ユーザー情報が更新されました')),
-      // );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('エラーが発生しました: $e')),
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +105,9 @@ class _AddInfoState extends State<AddInfo> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Mbti(data: widget.data)),
+                  // MaterialPageRoute(builder: (context) => Mbti(data: widget.data)),
+                  MaterialPageRoute(builder: (context) => Tag(email: widget.data,)),
+
                 );
               },
               child: const Text('MBTIへ進む'),
