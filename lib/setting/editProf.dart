@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
+import '../mbti/mbti.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -9,6 +10,9 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  String? _selectedGender;
+  String? _selectedSchool;
+
   final AuthController authController = Get.find<AuthController>();
 
   final TextEditingController genderController = TextEditingController();
@@ -57,8 +61,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .then((snapshot) => snapshot.docs.first.reference);
 
         await userRef.then((ref) => ref.update({
-          'gender': genderController.text,
-          'school': schoolController.text,
+          'gender': _selectedGender,
+          'school': _selectedSchool,
           'diagnosis': diagnosisController.text,
           'introduction': introductionController.text,
           'tag': selectedTags,
@@ -104,25 +108,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: genderController,
-              decoration: const InputDecoration(labelText: '性別'),
+            DropdownButtonFormField<String>(
+              value: _selectedGender,
+              items: ['男性', '女性', 'その他'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedGender = newValue;
+                });
+              },
+              decoration: const InputDecoration(
+                labelText: '性別',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: _selectedSchool,
+              items: ['ITカレッジ', '外語学院'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedSchool = newValue;
+                });
+              },
+              decoration: const InputDecoration(
+                labelText: '学校',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            // const SizedBox(height: 16),
+            // TextField(
+            //   controller: diagnosisController,
+            //   decoration: const InputDecoration(labelText: '診断'),
+            // ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Mbti(data: authController.email.value, fromEditProf: true),
+                  ),
+                );
+              },
+              child: const Text('診断を受ける'),
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: schoolController,
-              decoration: const InputDecoration(labelText: '学校'),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: diagnosisController,
-              decoration: const InputDecoration(labelText: '診断'),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: introductionController, // 自己紹介用テキストフィールド
+              controller: introductionController,
               decoration: const InputDecoration(labelText: '自己紹介'),
-              maxLines: 3, // 自己紹介を複数行で表示
+              maxLines: 3,
             ),
             const SizedBox(height: 16),
             Wrap(

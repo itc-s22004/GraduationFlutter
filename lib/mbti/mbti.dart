@@ -7,9 +7,13 @@ import 'package:omg/auth_controller.dart';
 import 'package:omg/navigation.dart';
 import 'package:omg/with/with.dart';
 
+import '../setting/setting.dart';
+
 class Mbti extends StatefulWidget {
   final String data;
-  const Mbti({super.key, required this.data});
+  final bool fromEditProf;
+
+  const Mbti({super.key, required this.data, required this.fromEditProf});
 
   @override
   _MbtiState createState() => _MbtiState();
@@ -120,13 +124,22 @@ class _MbtiState extends State<Mbti> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // ダイアログを閉じる
-                _updateUserDate(resultStr);  // -----------------------------
-                Navigator.push(
-                  context,
-                  // MaterialPageRoute(builder: (context) => MainApp()),
-                  MaterialPageRoute(builder: (context) => const BottomNavigation()),
-                ); // WithPageへ遷移
+                Navigator.of(context).pop();
+                _updateUserDate(resultStr);
+
+                if (widget.fromEditProf) {
+                  // `editProf`からアクセスした場合、`settings`に遷移
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingScreen()),
+                  );
+                } else {
+                  // 通常の画面に遷移
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const BottomNavigation()),
+                  );
+                }
               },
               child: const Text("閉じる"),
             ),

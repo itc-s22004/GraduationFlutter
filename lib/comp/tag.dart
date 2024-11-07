@@ -58,7 +58,7 @@ class _TagState extends State<Tag> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Mbti(data: widget.email),
+        builder: (context) => Mbti(data: widget.email, fromEditProf: false,),
       ),
     );
   }

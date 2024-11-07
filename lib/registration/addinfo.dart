@@ -2,14 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omg/auth_controller.dart';
-import 'package:omg/login/loginNext.dart';
-import 'package:omg/mbti/mbti.dart';
-import 'package:omg/with/with.dart';
-
-import '../comp/tag.dart';
+import 'package:omg/comp/tag.dart';
 
 class AddInfo extends StatefulWidget {
-  final String data; // emailを保持
+  final String data;
   const AddInfo({super.key, required this.data});
 
   @override
@@ -17,8 +13,8 @@ class AddInfo extends StatefulWidget {
 }
 
 class _AddInfoState extends State<AddInfo> {
-  final TextEditingController _genderController = TextEditingController();
-  final TextEditingController _schoolController = TextEditingController();
+  String? _selectedGender;
+  String? _selectedSchool;
   final TextEditingController _diagnosisController = TextEditingController();
   final TextEditingController _introductionController = TextEditingController();
 
@@ -26,8 +22,6 @@ class _AddInfoState extends State<AddInfo> {
 
   @override
   void dispose() {
-    _genderController.dispose();
-    _schoolController.dispose();
     _diagnosisController.dispose();
     _introductionController.dispose();
     super.dispose();
@@ -45,17 +39,14 @@ class _AddInfoState extends State<AddInfo> {
           String docId = userDoc.id;
 
           FirebaseFirestore.instance.collection('users').doc(docId).update({
-            'gender': _genderController.text.trim(),
-            'school': _schoolController.text.trim(),
+            'gender': _selectedGender,
+            'school': _selectedSchool,
             'diagnosis': _diagnosisController.text.trim(),
-            // 'introduction': _introductionController.text.trim()
           });
 
-          // AuthControllerに情報を反映
-          authController.updateGender(_genderController.text.trim());
-          authController.updateSchool(_schoolController.text.trim());
+          authController.updateGender(_selectedGender ?? '');
+          authController.updateSchool(_selectedSchool ?? '');
           authController.updateDiagnosis(_diagnosisController.text.trim());
-          // authController.updateIntroduction(_introductionController.text.trim());
         }
       });
     } catch (e) {
@@ -64,6 +55,7 @@ class _AddInfoState extends State<AddInfo> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,16 +68,38 @@ class _AddInfoState extends State<AddInfo> {
           children: [
             Text('email: ${widget.data}'),
             const SizedBox(height: 16),
-            TextField(
-              controller: _genderController,
+            DropdownButtonFormField<String>(
+              value: _selectedGender,
+              items: ['男性', '女性', 'その他'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedGender = newValue;
+                });
+              },
               decoration: const InputDecoration(
                 labelText: '性別',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _schoolController,
+            DropdownButtonFormField<String>(
+              value: _selectedSchool,
+              items: ['ITカレッジ', '外語学院'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedSchool = newValue;
+                });
+              },
               decoration: const InputDecoration(
                 labelText: '学校',
                 border: OutlineInputBorder(),
@@ -104,14 +118,12 @@ class _AddInfoState extends State<AddInfo> {
               onPressed: _updateUserData,
               child: const Text('情報を更新'),
             ),
-            const SizedBox(height: 16), // スペースを追加
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  // MaterialPageRoute(builder: (context) => Mbti(data: widget.data)),
-                  MaterialPageRoute(builder: (context) => Tag(email: widget.data,)),
-
+                  MaterialPageRoute(builder: (context) => Tag(email: widget.data)),
                 );
               },
               child: const Text('MBTIへ進む'),

@@ -33,7 +33,7 @@ class SettingScreen extends StatelessWidget {
             Obx(() => _buildProfileItem(Icons.person, '性別', authController.gender.value)),
             Obx(() => _buildProfileItem(Icons.school, '学校', authController.school.value)),
             Obx(() => _buildProfileItem(Icons.book, '診断', authController.diagnosis.value)),
-            Obx(() => _buildProfileItem(Icons.info, '自己紹介', authController.introduction.value)),
+            Obx(() => _buildProfileItem(Icons.book, '自己紹介', authController.introduction.value)),
 
             Obx(() => _buildTagsSection(authController.tags)),
 

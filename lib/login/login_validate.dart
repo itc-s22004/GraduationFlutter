@@ -103,6 +103,7 @@ class _LoginValidateState extends State<LoginValidate> {
                             authController.updateSchool(userData['school'] ?? '');
                             authController.updateDiagnosis(userData['diagnosis'] ?? '');
                             authController.updateGender(userData['gender'] ?? '');
+                            authController.updateIntroduction(userData['introduction'] ?? '');
 
                             if (userData['tag'] != null) {
                               List<String> userTags = List<String>.from(userData['tag']);
