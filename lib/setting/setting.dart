@@ -33,6 +33,7 @@ class SettingScreen extends StatelessWidget {
             Obx(() => _buildProfileItem(Icons.person, '性別', authController.gender.value)),
             Obx(() => _buildProfileItem(Icons.school, '学校', authController.school.value)),
             Obx(() => _buildProfileItem(Icons.book, '診断', authController.diagnosis.value)),
+            Obx(() => _buildProfileItem(Icons.info, '自己紹介', authController.introduction.value)),
 
             Obx(() => _buildTagsSection(authController.tags)),
 
@@ -78,22 +79,39 @@ class SettingScreen extends StatelessWidget {
   }
 
   Widget _buildTagsSection(List<String> tags) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'タグ:',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8.0,
-          runSpacing: 4.0,
-          children: tags.map((tag) => Chip(
-            label: Text(tag),
-          )).toList(),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.label, color: Colors.blueGrey),
+              SizedBox(width: 16),
+              Text(
+                'タグ:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8.0,
+            runSpacing: 4.0,
+            children: tags.map((tag) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                tag,
+                style: const TextStyle(fontSize: 18),
+              ),
+            )).toList(),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -193,9 +193,10 @@ class CreateAccountPageState extends State<CreateAccountPage> {
       await userCollection.doc(userId).set({
         'id': userCount,
         'email': emailController.text.trim(),
-        'diagnosis': null,
-        'gender': null,
-        'school': null,
+        'diagnosis': '',
+        'gender': '',
+        'school': '',
+        'introduction': '',
       });
 
       authController.updateEmail(emailController.text.trim());

@@ -7,6 +7,7 @@ class AuthController extends GetxController {
   RxString gender = ''.obs;
   RxString school = ''.obs;
   RxString diagnosis = ''.obs;
+  RxString introduction = ''.obs;
   RxList<String> tags = <String>[].obs;
 
   void updateEmail(String newEmail) {
@@ -29,6 +30,10 @@ class AuthController extends GetxController {
     diagnosis.value = value;
   }
 
+  void updateIntroduction(String value) {
+    introduction.value = value;
+  }
+
   void updateTags(List<String> value) {
     tags.value = value;
   }
@@ -37,11 +42,13 @@ class AuthController extends GetxController {
     required String newGender,
     required String newSchool,
     required String newDiagnosis,
+    required String newIntroduction,
     required List<String> newTags,
   }) {
     gender.value = newGender;
     school.value = newSchool;
     diagnosis.value = newDiagnosis;
+    introduction.value = newIntroduction;
     tags.assignAll(newTags);
   }
 

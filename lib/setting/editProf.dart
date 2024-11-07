@@ -14,6 +14,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController genderController = TextEditingController();
   final TextEditingController schoolController = TextEditingController();
   final TextEditingController diagnosisController = TextEditingController();
+  final TextEditingController introductionController = TextEditingController();
 
   final tags = [
     'ビール', 'ワイン', '日本酒', '焼酎', 'ウィスキー',
@@ -35,6 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           genderController.text = data['gender'] ?? '';
           schoolController.text = data['school'] ?? '';
           diagnosisController.text = data['diagnosis'] ?? '';
+          introductionController.text = data['introduction'] ?? '';
           selectedTags = List<String>.from(data['tag'] ?? []);
           setState(() {});
         }
@@ -58,6 +60,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'gender': genderController.text,
           'school': schoolController.text,
           'diagnosis': diagnosisController.text,
+          'introduction': introductionController.text,
           'tag': selectedTags,
         }));
 
@@ -65,6 +68,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           newGender: genderController.text,
           newSchool: schoolController.text,
           newDiagnosis: diagnosisController.text,
+          newIntroduction: introductionController.text,
           newTags: selectedTags,
         );
 
@@ -86,6 +90,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     genderController.dispose();
     schoolController.dispose();
     diagnosisController.dispose();
+    introductionController.dispose();
     super.dispose();
   }
 
@@ -112,6 +117,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             TextField(
               controller: diagnosisController,
               decoration: const InputDecoration(labelText: '診断'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: introductionController, // 自己紹介用テキストフィールド
+              decoration: const InputDecoration(labelText: '自己紹介'),
+              maxLines: 3, // 自己紹介を複数行で表示
             ),
             const SizedBox(height: 16),
             Wrap(

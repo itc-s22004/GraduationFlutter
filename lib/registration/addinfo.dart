@@ -20,6 +20,7 @@ class _AddInfoState extends State<AddInfo> {
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _diagnosisController = TextEditingController();
+  final TextEditingController _introductionController = TextEditingController();
 
   final AuthController authController = Get.find<AuthController>();
 
@@ -28,6 +29,7 @@ class _AddInfoState extends State<AddInfo> {
     _genderController.dispose();
     _schoolController.dispose();
     _diagnosisController.dispose();
+    _introductionController.dispose();
     super.dispose();
   }
 
@@ -46,12 +48,14 @@ class _AddInfoState extends State<AddInfo> {
             'gender': _genderController.text.trim(),
             'school': _schoolController.text.trim(),
             'diagnosis': _diagnosisController.text.trim(),
+            // 'introduction': _introductionController.text.trim()
           });
 
           // AuthControllerに情報を反映
           authController.updateGender(_genderController.text.trim());
           authController.updateSchool(_schoolController.text.trim());
           authController.updateDiagnosis(_diagnosisController.text.trim());
+          // authController.updateIntroduction(_introductionController.text.trim());
         }
       });
     } catch (e) {
