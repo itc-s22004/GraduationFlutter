@@ -86,13 +86,24 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
     }
   }
 
-  void _handleLeftSwipe() {
+  Future<void> _handleLeftSwipe() async {
     try {
-      int currentUserId = authController.userId.value ?? 0;
+      final nopeCollection = FirebaseFirestore.instance.collection('nope');
+      final snapshot = await nopeCollection.get();
+      final nopeCount = snapshot.size + 1;
+
+      String nopeId = 'nope$nopeCount';
+
+      int currentUserId = authController.userId.value ?? 0;  //--------------------------
       int swipedUserId = state.value![currentIndex].userId;
 
-      print("NOT: X $currentUserId -> $swipedUserId");
+      await FirebaseFirestore.instance.collection('nope').doc(nopeId).set({
+        'nopeFrom': currentUserId,
+        'nopeTo': swipedUserId,
+        'timestamp': FieldValue.serverTimestamp()
+      });
 
+      print("NOT: X $currentUserId -> $swipedUserId");
       _showNextUser();
     } catch (e) {
       print(e);
