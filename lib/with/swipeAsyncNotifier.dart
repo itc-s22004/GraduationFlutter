@@ -88,16 +88,10 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
 
   Future<void> _handleLeftSwipe() async {
     try {
-      final nopeCollection = FirebaseFirestore.instance.collection('nope');
-      final snapshot = await nopeCollection.get();
-      final nopeCount = snapshot.size + 1;
-
-      String nopeId = 'nope$nopeCount';
-
-      int currentUserId = authController.userId.value ?? 0;  //--------------------------
+      int currentUserId = authController.userId.value ?? 0;
       int swipedUserId = state.value![currentIndex].userId;
 
-      await FirebaseFirestore.instance.collection('nope').doc(nopeId).set({
+      await FirebaseFirestore.instance.collection('nope').add({
         'nopeFrom': currentUserId,
         'nopeTo': swipedUserId,
         'timestamp': FieldValue.serverTimestamp()
@@ -147,6 +141,4 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
       print("Firebaseへの保存中にエラーが発生しました: $e");
     }
   }
-
-
 }
