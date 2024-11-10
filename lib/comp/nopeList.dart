@@ -53,7 +53,7 @@ class _NopeListState extends State<NopeList> {
 
   Future<void> _likeUser(int likeToUserId, NopeUser user) async {
     try {
-      final likeCollection = FirebaseFirestore.instance.collection('nope');
+      final likeCollection = FirebaseFirestore.instance.collection('likes');
       final snapshot = await likeCollection.get();
       final likeCount = snapshot.size + 1;
 

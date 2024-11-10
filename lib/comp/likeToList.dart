@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class LikeToList extends StatefulWidget {
   final int currentUserId;
@@ -11,18 +13,17 @@ class LikeToList extends StatefulWidget {
 }
 
 class _LikeToListState extends State<LikeToList> {
-  late Future<List<LikeToUser>> _likeToUsersFuture;
+  final RxList<LikeToUser> _likeToUsers = <LikeToUser>[].obs;
 
   @override
   void initState() {
     super.initState();
-    _likeToUsersFuture = _fetchLikeToUsers();
+    _fetchLikeToUsers();
   }
 
-  Future<List<LikeToUser>> _fetchLikeToUsers() async {
-    final List<LikeToUser> likeToUsers = [];
-
+  Future<void> _fetchLikeToUsers() async {
     try {
+      final likeToUsers = <LikeToUser>[];
       final likes = await FirebaseFirestore.instance
           .collection('likes')
           .where('likeTo', isEqualTo: widget.currentUserId)
@@ -45,10 +46,61 @@ class _LikeToListState extends State<LikeToList> {
           ));
         }
       }
+
+      _likeToUsers.assignAll(likeToUsers);
     } catch (e) {
       print("エラーが発生しました: $e");
     }
-    return likeToUsers;
+  }
+
+  Future<void> _likeUser(int likeToUserId) async {
+    try {
+      final likeCollection = FirebaseFirestore.instance.collection('likes');
+      final snapshot = await likeCollection.get();
+      final likeCount = snapshot.size + 1;
+
+      String likeId = 'like$likeCount';
+
+      await FirebaseFirestore.instance.collection('likes').doc(likeId).set({
+        'likeFrom': widget.currentUserId,
+        'likeTo': likeToUserId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      print("ユーザー ${likeToUserId} にいいねを送りました");
+
+      final reverseLikeSnapshot = await likeCollection
+          .where('likeFrom', isEqualTo: likeToUserId)
+          .where('likeTo', isEqualTo: widget.currentUserId)
+          .get();
+
+      if (reverseLikeSnapshot.docs.isNotEmpty) {
+        await FirebaseFirestore.instance.collection('matches').add({
+          'user1': widget.currentUserId,
+          'user2': likeToUserId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        print("マッチングしました: ${widget.currentUserId} と $likeToUserId");
+
+        for (var doc in reverseLikeSnapshot.docs) {
+          await likeCollection.doc(doc.id).delete();
+        }
+
+        final userLikeSnapshot = await likeCollection
+            .where('likeFrom', isEqualTo: widget.currentUserId)
+            .where('likeTo', isEqualTo: likeToUserId)
+            .get();
+        for (var doc in userLikeSnapshot.docs) {
+          await likeCollection.doc(doc.id).delete();
+        }
+
+        print("マッチしたユーザーのいいねドキュメントを削除しました");
+
+        _likeToUsers.removeWhere((user) => user.userId == likeToUserId);
+      }
+    } catch (e) {
+      print("エラーが発生しました: $e");
+    }
   }
 
   @override
@@ -57,35 +109,32 @@ class _LikeToListState extends State<LikeToList> {
       appBar: AppBar(
         title: const Text('あなたをLIKEしたユーザー'),
       ),
-      body: FutureBuilder<List<LikeToUser>>(
-        future: _likeToUsersFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text("エラーが発生しました"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("あなたをLIKEしたユーザーがいません"));
-          } else {
-            final likeToUsers = snapshot.data!;
-            return ListView.builder(
-              itemCount: likeToUsers.length,
-              itemBuilder: (context, index) {
-                final likeToUser = likeToUsers[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Text(likeToUser.name),
-                      subtitle: Text('ユーザーID: ${likeToUser.userId}'),
-                    ),
-                    const Divider(),
-                  ],
-                );
-              },
+      body: Obx(() {
+        if (_likeToUsers.isEmpty) {
+          return const Center(child: Text("あなたをLIKEしたユーザーがいません"));
+        }
+        return ListView.builder(
+          itemCount: _likeToUsers.length,
+          itemBuilder: (context, index) {
+            final likeToUser = _likeToUsers[index];
+            return Column(
+              children: [
+                ListTile(
+                  title: Text(likeToUser.name),
+                  subtitle: Text('ユーザーID: ${likeToUser.userId}'),
+                  trailing: ElevatedButton(
+                    onPressed: () async {
+                      await _likeUser(likeToUser.userId);
+                    },
+                    child: const Text('いいね'),
+                  ),
+                ),
+                const Divider(),
+              ],
             );
-          }
-        },
-      ),
+          },
+        );
+      }),
     );
   }
 }
