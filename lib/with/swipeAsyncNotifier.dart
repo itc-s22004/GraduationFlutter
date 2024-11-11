@@ -115,7 +115,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
       int currentUserId = authController.userId.value ?? 0;
       int swipedUserId = state.value![currentIndex].userId;
 
-      await FirebaseFirestore.instance.collection('likes').doc(likeId).set({
+      await FirebaseFirestore.instance.collection('likes').add({
         'likeFrom': currentUserId,
         'likeTo': swipedUserId,
         'timestamp': FieldValue.serverTimestamp(),

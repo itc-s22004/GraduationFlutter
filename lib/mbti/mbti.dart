@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/navigation.dart';
+import 'package:omg/setting/editProf.dart';
 import 'package:omg/with/with.dart';
 
 import '../setting/setting.dart';
@@ -125,20 +126,16 @@ class _MbtiState extends State<Mbti> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _updateUserDate(resultStr);
+                _updateUserDate(resultStr); // Firestoreの更新
+
+                // AuthControllerに診断結果を保存
+                authController.updateDiagnosis(resultStr);
 
                 if (widget.fromEditProf) {
-                  // `editProf`からアクセスした場合、`settings`に遷移
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingScreen()),
-                  );
+                  Get.back(); // 編集画面に戻る
                 } else {
-                  // 通常の画面に遷移
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const BottomNavigation()),
-                  );
+                  // BottomNavigationに遷移
+                  Get.offAll(() => const BottomNavigation());
                 }
               },
               child: const Text("閉じる"),
@@ -148,6 +145,7 @@ class _MbtiState extends State<Mbti> {
       },
     );
   }
+
 
   // 特性判定関数
   String _determineType(List<int> group, String typeA, String typeB) {
