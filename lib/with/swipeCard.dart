@@ -59,7 +59,7 @@ class SwipeCard extends ConsumerWidget {
   Widget _buildCard(BuildContext context, User user) {
     return GestureDetector(
       onTap: () {
-        _showUserDetails(context, user); // スライドパネル
+        _showUserDetails(context, user);
       },
       child: Container(
         width: double.infinity,
@@ -78,10 +78,11 @@ class SwipeCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildText(user.name),
+              _buildText(user.mbti),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
-                children: user.tags.map((tag) => Chip(label: Text(tag))).toList(), // タグ
+                children: user.tags.map((tag) => Chip(label: Text(tag))).toList(),
               ),
             ],
           ),

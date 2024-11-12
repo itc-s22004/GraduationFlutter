@@ -8,6 +8,7 @@ class User with _$User {
     @Default([]) List<String> profileImageURL,
     @Default("") String name,
     required int userId,
+    @Default("") String mbti,
     @Default([]) List<String> tags,
   }) = _User;
 

@@ -19,6 +19,7 @@ mixin _$User {
   List<String> get profileImageURL => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get userId => throw _privateConstructorUsedError;
+  String get mbti => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
 
   /// Create a copy of User
@@ -36,6 +37,7 @@ abstract class $UserCopyWith<$Res> {
       {List<String> profileImageURL,
       String name,
       int userId,
+      String mbti,
       List<String> tags});
 }
 
@@ -57,6 +59,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? profileImageURL = null,
     Object? name = null,
     Object? userId = null,
+    Object? mbti = null,
     Object? tags = null,
   }) {
     return _then(_value.copyWith(
@@ -72,6 +75,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      mbti: null == mbti
+          ? _value.mbti
+          : mbti // ignore: cast_nullable_to_non_nullable
+              as String,
       tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -91,6 +98,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       {List<String> profileImageURL,
       String name,
       int userId,
+      String mbti,
       List<String> tags});
 }
 
@@ -109,6 +117,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? profileImageURL = null,
     Object? name = null,
     Object? userId = null,
+    Object? mbti = null,
     Object? tags = null,
   }) {
     return _then(_$UserImpl(
@@ -124,6 +133,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
+      mbti: null == mbti
+          ? _value.mbti
+          : mbti // ignore: cast_nullable_to_non_nullable
+              as String,
       tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -139,6 +152,7 @@ class _$UserImpl extends _User {
       {final List<String> profileImageURL = const [],
       this.name = "",
       required this.userId,
+      this.mbti = "",
       final List<String> tags = const []})
       : _profileImageURL = profileImageURL,
         _tags = tags,
@@ -158,6 +172,9 @@ class _$UserImpl extends _User {
   final String name;
   @override
   final int userId;
+  @override
+  @JsonKey()
+  final String mbti;
   final List<String> _tags;
   @override
   @JsonKey()
@@ -169,7 +186,7 @@ class _$UserImpl extends _User {
 
   @override
   String toString() {
-    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId, tags: $tags)';
+    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId, mbti: $mbti, tags: $tags)';
   }
 
   @override
@@ -181,6 +198,7 @@ class _$UserImpl extends _User {
                 .equals(other._profileImageURL, _profileImageURL) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.mbti, mbti) || other.mbti == mbti) &&
             const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
@@ -190,6 +208,7 @@ class _$UserImpl extends _User {
       const DeepCollectionEquality().hash(_profileImageURL),
       name,
       userId,
+      mbti,
       const DeepCollectionEquality().hash(_tags));
 
   /// Create a copy of User
@@ -206,6 +225,7 @@ abstract class _User extends User {
       {final List<String> profileImageURL,
       final String name,
       required final int userId,
+      final String mbti,
       final List<String> tags}) = _$UserImpl;
   const _User._() : super._();
 
@@ -215,6 +235,8 @@ abstract class _User extends User {
   String get name;
   @override
   int get userId;
+  @override
+  String get mbti;
   @override
   List<String> get tags;
 

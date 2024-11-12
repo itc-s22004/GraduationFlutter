@@ -35,16 +35,19 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         return userId != loggedInUserId;
       }).map((doc) {
         final data = doc.data();
+        final String dataMBTI;
         print("Fetched user data: $data");
         return User(
-          profileImageURL: ["assets/images/flutter.png"],
+          // profileImageURL: ["assets/images/flutter.png"],
           name: data['email'] ?? 'No Email',
+          mbti: dataMBTI = data['diagnosis'] ?? '不明',
+          profileImageURL: ["assets/images/${dataMBTI}.jpg"],
           userId: data['id'] ?? 0,
           tags: List<String>.from(data['tag'] ?? [])
         );
       }).toList();
 
-      users.shuffle(Random());
+      users.shuffle(Random());  // 順番ランダム
 
       print("Filtered users (excluding logged in user): $users");
       return users;
@@ -107,10 +110,6 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
   Future<void> _handleRightSwipe() async {
     try {
       final likeCollection = FirebaseFirestore.instance.collection('likes');
-      final snapshot = await likeCollection.get();
-      final likeCount = snapshot.size + 1;
-
-      String likeId = 'like$likeCount';
 
       int currentUserId = authController.userId.value ?? 0;
       int swipedUserId = state.value![currentIndex].userId;
