@@ -42,6 +42,11 @@ class _NopeListState extends State<NopeList> {
             name: userData['email'] ?? '名前なし',
             userId: nopeToUserId,
             nopeDocId: doc.id,
+            gender: userData['gender'] ?? '未設定',
+            introduction: userData['introduction'] ?? '未設定',
+            mbti: userData['mbti'] ?? '未設定',
+            school: userData['school'] ?? '未設定',
+            tags: List<String>.from(userData['tags'] ?? []),
           ));
         }
       }
@@ -53,13 +58,7 @@ class _NopeListState extends State<NopeList> {
 
   Future<void> _likeUser(int likeToUserId, NopeUser user) async {
     try {
-      final likeCollection = FirebaseFirestore.instance.collection('likes');
-      final snapshot = await likeCollection.get();
-      final likeCount = snapshot.size + 1;
-
-      String likeId = 'like$likeCount';
-
-      await FirebaseFirestore.instance.collection('likes').doc(likeId).set({
+      await FirebaseFirestore.instance.collection('likes').add({
         'likeFrom': widget.currentUserId,
         'likeTo': likeToUserId,
         'timestamp': FieldValue.serverTimestamp(),
@@ -89,6 +88,71 @@ class _NopeListState extends State<NopeList> {
     }
   }
 
+  void _showUserDetails(BuildContext context, NopeUser user) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return FractionallySizedBox(
+          widthFactor: 0.9,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('名前: ${user.name}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                Text('ユーザーID: ${user.userId}'),
+                const SizedBox(height: 10),
+                Text('性別: ${user.gender}'),
+                const SizedBox(height: 10),
+                Text('自己紹介: ${user.introduction}'),
+                const SizedBox(height: 10),
+                Text('MBTI: ${user.mbti}'),
+                const SizedBox(height: 10),
+                Text('学校: ${user.school}'),
+                const SizedBox(height: 10),
+                Text('タグ: ${user.tags.join(', ')}'),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _likeUser(user.userId, user);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('いいね'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _deleteUserFromList(user);
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      child: const Text('削除'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +179,9 @@ class _NopeListState extends State<NopeList> {
                     ListTile(
                       title: Text(nopeUser.name),
                       subtitle: Text('ユーザーID: ${nopeUser.userId}'),
+                      onTap: () {
+                        _showUserDetails(context, nopeUser);
+                      },
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -153,10 +220,20 @@ class NopeUser {
   final String name;
   final int userId;
   final String nopeDocId;
+  final String gender;
+  final String introduction;
+  final String mbti;
+  final String school;
+  final List<String> tags;
 
   NopeUser({
     required this.name,
     required this.userId,
     required this.nopeDocId,
+    required this.gender,
+    required this.introduction,
+    required this.mbti,
+    required this.school,
+    required this.tags,
   });
 }
