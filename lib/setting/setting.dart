@@ -18,10 +18,10 @@ class SettingScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const CircleAvatar(
+            Obx(() => CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage("assets/images/flutter.png"),
-            ),
+              backgroundImage: AssetImage("assets/images/${authController.diagnosis.value}.jpg"),
+            )),
             const SizedBox(height: 16),
             Obx(() => Text(
               authController.email.value,
