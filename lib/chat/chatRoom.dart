@@ -9,6 +9,8 @@ class ChatRoom extends StatelessWidget {
 
   ChatRoom({required this.userId, required this.userName});
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final TextEditingController messageController = TextEditingController();
@@ -28,7 +30,13 @@ class ChatRoom extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
                 final messages = snapshot.data!.docs.reversed.toList();
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _scrollToBottom();
+                });
+
                 return ListView.builder(
+                  controller: _scrollController,
                   reverse: false,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
@@ -67,6 +75,7 @@ class ChatRoom extends StatelessWidget {
                     if (messageController.text.isNotEmpty) {
                       _sendMessage(messageController.text, authController);
                       messageController.clear();
+                      _scrollToBottom();
                     }
                   },
                 ),
@@ -103,5 +112,15 @@ class ChatRoom extends StatelessWidget {
   String _getChatRoomId(AuthController authController) {
     final currentUserId = authController.userId.value;
     return currentUserId < userId ? '$currentUserId-$userId' : '$userId-$currentUserId';
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 }
