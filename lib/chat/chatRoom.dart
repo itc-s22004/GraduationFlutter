@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 import '../auth_controller.dart';
 
 class ChatRoom extends StatelessWidget {
@@ -14,28 +12,39 @@ class ChatRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController messageController = TextEditingController();
+    final AuthController authController = Get.find<AuthController>();
 
     return Scaffold(
-    appBar: AppBar(
-    title: Text('チャット - $userName'),
+      appBar: AppBar(
+        title: Text('チャット - $userName'),
       ),
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _getMessagesStream(),
+              stream: _getMessagesStream(authController),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                final messages = snapshot.data!.docs;
+                final messages = snapshot.data!.docs.reversed.toList();
                 return ListView.builder(
+                  reverse: false,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final messageData = messages[index].data() as Map<String, dynamic>;
-                    return ListTile(
-                      title: Text('${messageData['senderId']}に送信'),
-                      subtitle: Text(messageData['message']),
+                    final bool isCurrentUser = messageData['senderId'] == authController.userId.value;
+                    return Align(
+                      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: isCurrentUser ? Colors.blue[100] : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(messageData['message']),
+                      ),
                     );
                   },
                 );
@@ -49,14 +58,14 @@ class ChatRoom extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: messageController,
-                    decoration: InputDecoration(hintText: "メッセージを入力..."),
+                    decoration: const InputDecoration(hintText: "メッセージを入力..."),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
                     if (messageController.text.isNotEmpty) {
-                      _sendMessage(messageController.text);
+                      _sendMessage(messageController.text, authController);
                       messageController.clear();
                     }
                   },
@@ -69,98 +78,30 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  /// メッセージをリアルタイムで取得するためのストリーム
-  Stream<QuerySnapshot> _getMessagesStream() {
+  Stream<QuerySnapshot> _getMessagesStream(AuthController authController) {
     return FirebaseFirestore.instance
         .collection('chatRooms')
-        .doc(_getChatRoomId())
+        .doc(_getChatRoomId(authController))
         .collection('messages')
         .orderBy('timestamp', descending: true)
         .snapshots();
   }
 
-  /// メッセージをFirestoreに送信する関数
-  Future<void> _sendMessage(String message) async {
+  Future<void> _sendMessage(String message, AuthController authController) async {
+    final currentUserId = authController.userId.value;
     await FirebaseFirestore.instance
         .collection('chatRooms')
-        .doc(_getChatRoomId())
+        .doc(_getChatRoomId(authController))
         .collection('messages')
         .add({
       'message': message,
-      'senderId': userId, // 送信者のIDを使用
+      'senderId': currentUserId,
       'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
-  /// チャットルームIDを生成する関数
-  /// 例えば、userIdと現在ログインしているユーザーのIDを結合してチャットルームのIDを決定
-  String _getChatRoomId() {
-    final AuthController authController = Get.find();
+  String _getChatRoomId(AuthController authController) {
     final currentUserId = authController.userId.value;
-
-    return currentUserId < userId
-        ? '$currentUserId-$userId'
-        : '$userId-$currentUserId';
+    return currentUserId < userId ? '$currentUserId-$userId' : '$userId-$currentUserId';
   }
 }
-
-
-// import 'dart:convert';
-// import 'dart:math';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-// import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-//
-// String randomString() {
-//   final random = Random.secure();
-//   final values = List<int>.generate(16, (i) => random.nextInt(255));
-//   return base64UrlEncode(values);
-// }
-//
-// class ChatRoom extends StatefulWidget {
-//   final int userId;
-//   final String userName;
-//
-//   const ChatRoom({
-//     Key? key,
-//     required this.userId,   // ユーザーIDを受け取る
-//     required this.userName, // ユーザー名を受け取る
-//   }) : super(key: key);
-//
-//   @override
-//   ChatRoomState createState() => ChatRoomState();
-// }
-//
-// class ChatRoomState extends State<ChatRoom> {
-//   final List<types.Message> _messages = [];
-//   final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
-//
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//     appBar: AppBar(
-//       title: Text('${widget.userName}さんとのチャット'), // ユーザー名をタイトルに表示
-//     ),
-//     body: Chat(
-//       user: _user,
-//       messages: _messages,
-//       onSendPressed: _handleSendPressed,
-//     ),
-//   );
-//
-//   void _addMessage(types.Message message) {
-//     setState(() {
-//       _messages.insert(0, message);
-//     });
-//   }
-//
-//   void _handleSendPressed(types.PartialText message) {
-//     final textMessage = types.TextMessage(
-//       author: _user,
-//       createdAt: DateTime.now().millisecondsSinceEpoch,
-//       id: randomString(),
-//       text: message.text,
-//     );
-//
-//     _addMessage(textMessage);
-//   }
-// }
