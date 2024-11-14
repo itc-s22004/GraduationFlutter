@@ -31,32 +31,43 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
 
       final snapshot = await FirebaseFirestore.instance.collection('users').get();
 
-      final users = snapshot.docs.where((doc) {
+      List<User> highScoreUsers = [];
+      List<User> lowScoreUsers = [];
+
+      snapshot.docs.forEach((doc) {
         final data = doc.data();
         int userId = data['id'] ?? 0;
-        return userId != loggedInUserId; // ログイン中のユーザーは除外
-      }).map((doc) {
-        final data = doc.data();
+        if (userId == loggedInUserId) return;
+
         final String dataMBTI = data['diagnosis'] ?? '不明';
-        return User(
+        User user = User(
           name: data['email'] ?? 'No Email',
           mbti: dataMBTI,
           profileImageURL: ["assets/images/${dataMBTI}.jpg"],
-          userId: data['id'] ?? 0,
+          userId: userId,
           tags: List<String>.from(data['tag'] ?? []),
         );
-      }).where((user) {
-        // MBTIスコアとタグスコアの合計が3以上のユーザーをフィルタリング
+
         int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
         int tagScore = _getTagScore(currentUserTags, user.tags);
         int totalScore = mbtiScore + tagScore;
-        return totalScore >= 3;
-      }).toList();
 
-      users.shuffle(Random()); // 順番ランダム
+        print("ユーザー ${user.name} (ID: ${user.userId}): MBTIスコア = $mbtiScore, タグスコア = $tagScore, 合計スコア = $totalScore");
 
-      print("Filtered users (excluding logged in user): $users");
-      return users;
+        if (totalScore >= 3) {
+          highScoreUsers.add(user);
+        } else {
+          lowScoreUsers.add(user);
+        }
+      });
+      highScoreUsers.shuffle(Random());
+      lowScoreUsers.shuffle(Random());
+
+      List<User> sortedUsers = [...highScoreUsers, ...lowScoreUsers];
+      // sortedUsers.shuffle(Random()); // 順番ランダム
+
+      print("Filtered and sorted users: $sortedUsers");
+      return sortedUsers;
     } catch (e) {
       print("Error fetching users from Firestore: $e");
       return [];
