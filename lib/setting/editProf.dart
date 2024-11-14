@@ -13,22 +13,24 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final authController = Get.find<AuthController>();
 
-  // コントローラー
   final TextEditingController emailController = TextEditingController();
   final TextEditingController diagnosisController = TextEditingController();
   final TextEditingController introductionController = TextEditingController();
 
-  // プルダウンメニューの選択肢
   final List<String> genderOptions = ['男性', '女性', 'その他'];
   final List<String> schoolOptions = ['ITカレッジ沖縄', '外語学院'];
+  final List<String> tags = [
+    'ビール', 'ワイン', '日本酒', '焼酎', 'ウィスキー',
+    'ジン', 'ウォッカ', '紹興酒', 'マッコリ', 'カクテル', '果実酒',
+  ];
 
   String? selectedGender;
   String? selectedSchool;
+  var selectedTags = <String>[];
 
   @override
   void initState() {
     super.initState();
-    // 初期データの読み込み
     loadUserData();
   }
 
@@ -36,27 +38,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     emailController.text = authController.email.value;
     diagnosisController.text = authController.diagnosis.value;
     introductionController.text = authController.introduction.value;
-
-    // genderとschoolがそれぞれのリスト内に存在するか確認
-    selectedGender = genderOptions.contains(authController.gender.value) ? authController.gender.value : null;
-    selectedSchool = schoolOptions.contains(authController.school.value) ? authController.school.value : null;
+    selectedGender = authController.gender.value;
+    selectedSchool = authController.school.value;
+    selectedTags = authController.tags.value;
   }
 
   Future<void> refreshDiagnosis() async {
-    // AuthControllerの最新の診断結果でdiagnosisControllerを更新
     diagnosisController.text = authController.diagnosis.value;
   }
 
   void saveProfile() {
-    // 入力したデータをAuthControllerに更新
     authController.updateGender(selectedGender ?? '');
     authController.updateSchool(selectedSchool ?? '');
     authController.updateDiagnosis(diagnosisController.text);
     authController.updateIntroduction(introductionController.text);
+    authController.updateTags(selectedTags);
 
-    // Firestoreに保存
     authController.saveUserData();
-    Get.back(); // 前の画面に戻る
+    Get.back();
   }
 
   @override
@@ -75,7 +74,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               readOnly: true,
               decoration: const InputDecoration(labelText: 'Email'),
             ),
-            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               value: selectedGender,
               items: genderOptions.map((String gender) {
@@ -91,7 +89,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               },
               decoration: const InputDecoration(labelText: 'Gender'),
             ),
-            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
               value: selectedSchool,
               items: schoolOptions.map((String school) {
@@ -107,7 +104,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               },
               decoration: const InputDecoration(labelText: 'School'),
             ),
-            const SizedBox(height: 10),
             TextField(
               controller: diagnosisController,
               readOnly: true,
@@ -118,9 +114,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               decoration: const InputDecoration(labelText: '自己紹介'),
             ),
             const SizedBox(height: 20),
+
+            // タグの選択
+            const Text("タグを選択"),
+            Wrap(
+              spacing: 8.0,
+              children: tags.map((tag) {
+                final isSelected = selectedTags.contains(tag);
+                return ChoiceChip(
+                  label: Text(tag),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    setState(() {
+                      isSelected ? selectedTags.remove(tag) : selectedTags.add(tag);
+                    });
+                  },
+                  selectedColor: Colors.pink,
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+
+            // MBTI診断ボタン
             ElevatedButton(
               onPressed: () async {
-                // 診断ページに遷移
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -130,12 +147,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                 );
-
-                // 診断結果をリフレッシュ
                 refreshDiagnosis();
               },
               child: const Text('診断を受ける'),
             ),
+
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: saveProfile,
@@ -149,7 +165,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
-    // コントローラーのリソース解放
     emailController.dispose();
     diagnosisController.dispose();
     introductionController.dispose();

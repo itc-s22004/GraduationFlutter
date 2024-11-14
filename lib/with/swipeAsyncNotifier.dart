@@ -26,28 +26,34 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
   Future<List<User>> fetchUsersFromFirestore() async {
     try {
       int loggedInUserId = authController.userId.value ?? 0;
+      String currentUserMBTI = authController.diagnosis.value;
+      List<String> currentUserTags = authController.tags.value;
 
       final snapshot = await FirebaseFirestore.instance.collection('users').get();
 
       final users = snapshot.docs.where((doc) {
         final data = doc.data();
         int userId = data['id'] ?? 0;
-        return userId != loggedInUserId;
+        return userId != loggedInUserId; // ログイン中のユーザーは除外
       }).map((doc) {
         final data = doc.data();
-        final String dataMBTI;
-        print("Fetched user data: $data");
+        final String dataMBTI = data['diagnosis'] ?? '不明';
         return User(
-          // profileImageURL: ["assets/images/flutter.png"],
           name: data['email'] ?? 'No Email',
-          mbti: dataMBTI = data['diagnosis'] ?? '不明',
+          mbti: dataMBTI,
           profileImageURL: ["assets/images/${dataMBTI}.jpg"],
           userId: data['id'] ?? 0,
-          tags: List<String>.from(data['tag'] ?? [])
+          tags: List<String>.from(data['tag'] ?? []),
         );
+      }).where((user) {
+        // MBTIスコアとタグスコアの合計が3以上のユーザーをフィルタリング
+        int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
+        int tagScore = _getTagScore(currentUserTags, user.tags);
+        int totalScore = mbtiScore + tagScore;
+        return totalScore >= 3;
       }).toList();
 
-      users.shuffle(Random());  // 順番ランダム
+      users.shuffle(Random()); // 順番ランダム
 
       print("Filtered users (excluding logged in user): $users");
       return users;
@@ -56,6 +62,41 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
       return [];
     }
   }
+
+  int _getMBTIScore(String currentUserMBTI, String userMBTI) {
+    final Map<String, List<String>> mbtiCompatibility = {
+      'INTJ': ['ENFP', 'ENTP', 'INFJ', 'INTJ', 'ENTJ'],
+      'INFJ': ['ENTP', 'ENFP', 'INTJ', 'INFJ', 'INFP'],
+      'ENTP': ['INFJ', 'INTJ', 'ENFP', 'ENTP', 'INFP'],
+      'ENFP': ['INTJ', 'INFJ', 'INFP', 'ENTP', 'ENFP'],
+      'ISTJ': ['ESTP', 'ESFP', 'ISTJ', 'ISFJ', 'ESTJ'],
+      'ISFJ': ['ESFP', 'ESTP', 'ISTJ', 'ISFJ', 'ESTJ'],
+      'ESTJ': ['ISFP', 'ISTP', 'ESFJ', 'ESTP', 'ISFJ'],
+      'ESFJ': ['ISFP', 'ISTP', 'ESFP', 'ESTP', 'ISFJ'],
+    };
+
+    List<String> compatibleTypes = mbtiCompatibility[currentUserMBTI] ?? [];
+    int score = 0;
+
+    for (int i = 0; i < compatibleTypes.length; i++) {
+      if (userMBTI == compatibleTypes[i]) {
+        score = 3 - i;
+        break;
+      }
+    }
+    return score;
+  }
+
+  int _getTagScore(List<String> currentUserTags, List<String> userTags) {
+    int score = 0;
+    for (var tag in currentUserTags) {
+      if (userTags.contains(tag)) {
+        score += 1;
+      }
+    }
+    return score;
+  }
+
 
 
   @override
