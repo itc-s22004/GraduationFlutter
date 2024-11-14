@@ -108,11 +108,16 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
     return score;
   }
 
-
-
   @override
   FutureOr<List<User>> build() async {
+    authController.diagnosis.listen((_) => _refreshUserData()); // AuthControllerの変更の監視
+    authController.tags.listen((_) => _refreshUserData());
     return await fetchUsersFromFirestore();
+  }
+
+  Future<void> _refreshUserData() async {
+    final updatedUsers = await fetchUsersFromFirestore();
+    state = AsyncValue.data(updatedUsers);
   }
 
   Future<void> swipeOnCard(AppinioSwiperDirection direction) async {

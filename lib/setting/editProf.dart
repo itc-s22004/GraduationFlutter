@@ -55,6 +55,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     authController.updateTags(selectedTags);
 
     authController.saveUserData();
+
     Get.back();
   }
 
