@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:omg/login/login_validate.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:omg/question/questionScreen.dart';
 import 'auth_controller.dart';
 import 'firebase_options.dart';
+import 'login/login_validate.dart';
 
 void main() async {
   Get.put(AuthController());
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const LoginValidate(),
+      // home: QuestionScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

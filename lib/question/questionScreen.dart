@@ -10,9 +10,10 @@ class QuestionScreen extends StatelessWidget {
     final AuthController authController = Get.find<AuthController>();
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('question一覧'),
+        title: const Text('質問一覧'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('questions').snapshots(),
@@ -35,7 +36,6 @@ class QuestionScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
                   onTap: () {
-                    // Navigate to FullQuestionScreen with question details
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -52,47 +52,46 @@ class QuestionScreen extends StatelessWidget {
                       children: <Widget>[
                         Container(
                           height: 180,
-                          width: 450,
+                          width: MediaQuery.of(context).size.width * 0.9,
                           decoration: BoxDecoration(
-                            color: Colors.lime,
-                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                offset: const Offset(10, 10),
-                                color: Theme.of(context).scaffoldBackgroundColor,
-                                blurRadius: 20,
+                                offset: const Offset(4, 4),
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 10,
                               ),
                               BoxShadow(
-                                offset: const Offset(-10, -10),
-                                color: Theme.of(context).scaffoldBackgroundColor,
-                                blurRadius: 20,
+                                offset: const Offset(-4, -4),
+                                color: Colors.white.withOpacity(0.8),
+                                blurRadius: 10,
                               ),
                             ],
+                            border: Border.all(color: Colors.grey.withOpacity(0.2)),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 60, left: 10),
+                            padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
                             child: QuestionCard(question: question, userId: userId),
                           ),
                         ),
                         Positioned(
                           top: 15,
-                          left: 0,
+                          left: 15,
                           child: Container(
                             alignment: Alignment.center,
-                            height: 40,
-                            width: 80,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15),
-                              ),
+                            height: 35,
+                            width: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlueAccent,
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               genre,
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -125,28 +124,31 @@ class QuestionCard extends StatelessWidget {
     const int truncateLength = 41;
     final isLongText = question.length > truncateLength;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            question.length > truncateLength ? '${question.substring(0, truncateLength)}...' : question,
-            style: const TextStyle(fontSize: 20),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'ユーザーID: $userId',
-            style: const TextStyle(fontSize: 14),
-          ),
-          if (isLongText)
-            const Text(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          question.length > truncateLength ? '${question.substring(0, truncateLength)}...' : question,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'ユーザーID: $userId',
+          style: const TextStyle(fontSize: 14, color: Colors.grey),
+        ),
+        if (isLongText)
+          GestureDetector(
+            onTap: () {
+              // 質問の詳細画面に移動する処理
+            },
+            child: const Text(
               'もっと見る',
               style: TextStyle(color: Colors.blue, fontSize: 14),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }
