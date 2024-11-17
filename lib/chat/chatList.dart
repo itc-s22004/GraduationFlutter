@@ -6,7 +6,7 @@ import 'chatRoom.dart';
 
 class ChatListScreen extends StatelessWidget {
   // const ChatListScreen({super.key});
-  final AuthController authController = Get.find<AuthController>();
+  // final AuthController authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
