@@ -27,6 +27,8 @@ class User with _$User {
     required int userId,
     @Default("") String mbti,
     @Default([]) List<String> tags,
+    @Default("") String school,
+    @Default("") String introduction,
   }) = _User;
 
   const User._();

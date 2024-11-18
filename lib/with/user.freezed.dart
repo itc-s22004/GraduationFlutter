@@ -21,6 +21,8 @@ mixin _$User {
   int get userId => throw _privateConstructorUsedError;
   String get mbti => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
+  String get school => throw _privateConstructorUsedError;
+  String get introduction => throw _privateConstructorUsedError;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -38,7 +40,9 @@ abstract class $UserCopyWith<$Res> {
       String name,
       int userId,
       String mbti,
-      List<String> tags});
+      List<String> tags,
+      String school,
+      String introduction});
 }
 
 /// @nodoc
@@ -61,6 +65,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? userId = null,
     Object? mbti = null,
     Object? tags = null,
+    Object? school = null,
+    Object? introduction = null,
   }) {
     return _then(_value.copyWith(
       profileImageURL: null == profileImageURL
@@ -83,6 +89,14 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      school: null == school
+          ? _value.school
+          : school // ignore: cast_nullable_to_non_nullable
+              as String,
+      introduction: null == introduction
+          ? _value.introduction
+          : introduction // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -99,7 +113,9 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String name,
       int userId,
       String mbti,
-      List<String> tags});
+      List<String> tags,
+      String school,
+      String introduction});
 }
 
 /// @nodoc
@@ -119,6 +135,8 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? userId = null,
     Object? mbti = null,
     Object? tags = null,
+    Object? school = null,
+    Object? introduction = null,
   }) {
     return _then(_$UserImpl(
       profileImageURL: null == profileImageURL
@@ -141,6 +159,14 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      school: null == school
+          ? _value.school
+          : school // ignore: cast_nullable_to_non_nullable
+              as String,
+      introduction: null == introduction
+          ? _value.introduction
+          : introduction // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -153,7 +179,9 @@ class _$UserImpl extends _User {
       this.name = "",
       required this.userId,
       this.mbti = "",
-      final List<String> tags = const []})
+      final List<String> tags = const [],
+      this.school = "",
+      this.introduction = ""})
       : _profileImageURL = profileImageURL,
         _tags = tags,
         super._();
@@ -185,8 +213,15 @@ class _$UserImpl extends _User {
   }
 
   @override
+  @JsonKey()
+  final String school;
+  @override
+  @JsonKey()
+  final String introduction;
+
+  @override
   String toString() {
-    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId, mbti: $mbti, tags: $tags)';
+    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId, mbti: $mbti, tags: $tags, school: $school, introduction: $introduction)';
   }
 
   @override
@@ -199,7 +234,10 @@ class _$UserImpl extends _User {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.mbti, mbti) || other.mbti == mbti) &&
-            const DeepCollectionEquality().equals(other._tags, _tags));
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.school, school) || other.school == school) &&
+            (identical(other.introduction, introduction) ||
+                other.introduction == introduction));
   }
 
   @override
@@ -209,7 +247,9 @@ class _$UserImpl extends _User {
       name,
       userId,
       mbti,
-      const DeepCollectionEquality().hash(_tags));
+      const DeepCollectionEquality().hash(_tags),
+      school,
+      introduction);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -226,7 +266,9 @@ abstract class _User extends User {
       final String name,
       required final int userId,
       final String mbti,
-      final List<String> tags}) = _$UserImpl;
+      final List<String> tags,
+      final String school,
+      final String introduction}) = _$UserImpl;
   const _User._() : super._();
 
   @override
@@ -239,6 +281,10 @@ abstract class _User extends User {
   String get mbti;
   @override
   List<String> get tags;
+  @override
+  String get school;
+  @override
+  String get introduction;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

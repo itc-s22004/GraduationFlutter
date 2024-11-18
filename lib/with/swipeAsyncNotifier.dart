@@ -46,6 +46,8 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
           profileImageURL: ["assets/images/${dataMBTI}.jpg"],
           userId: userId,
           tags: List<String>.from(data['tag'] ?? []),
+          school: data['school'] ?? 'No School',
+          introduction: data['introduction'] ?? 'No introduction',
         );
 
         int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
