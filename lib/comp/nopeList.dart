@@ -56,7 +56,7 @@ class _NopeListState extends State<NopeList> {
     return nopeUsers;
   }
 
-  Future<void> _likeUser(int likeToUserId, NopeUser user) async {
+  Future<void> _likeUser(int likeToUserId, NopeUser user) async { //-----
     try {
       await FirebaseFirestore.instance.collection('likes').add({
         'likeFrom': widget.currentUserId,
@@ -65,13 +65,24 @@ class _NopeListState extends State<NopeList> {
       });
       print("ユーザー ${likeToUserId} にいいねを送りました");
 
-      _deleteUserFromList(user);
+      // _deleteUserFromList(user);
+      await FirebaseFirestore.instance
+          .collection('nope')
+          .doc(user.nopeDocId)
+          .delete();
+      print("ユーザー ${user.userId} の左スワイプデータを削除しました");
+
+      setState(() {
+        _nopeUsersFuture =
+            _nopeUsersFuture.then((users) => users..remove(user));
+      });
+
     } catch (e) {
       print("エラーが発生しました: $e");
     }
   }
 
-  Future<void> _deleteUserFromList(NopeUser user) async {
+  Future<void> _deleteUserFromList(int nopeToUserId, NopeUser user) async {
     try {
       await FirebaseFirestore.instance
           .collection('nope')
@@ -83,6 +94,13 @@ class _NopeListState extends State<NopeList> {
         _nopeUsersFuture =
             _nopeUsersFuture.then((users) => users..remove(user));
       });
+
+      await FirebaseFirestore.instance.collection('nope2').add({
+        'nopeFrom': widget.currentUserId,
+        'nopeTo': nopeToUserId,
+        'timestamp': FieldValue.serverTimestamp()
+      });
+      print("ユーザ${user.userId}をnope２に入れました。");
     } catch (e) {
       print("削除中にエラーが発生しました: $e");
     }
@@ -135,7 +153,7 @@ class _NopeListState extends State<NopeList> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _deleteUserFromList(user);
+                        _deleteUserFromList(user.userId, user);
                         Navigator.of(context).pop();
                       },
                       style: ElevatedButton.styleFrom(
@@ -194,7 +212,7 @@ class _NopeListState extends State<NopeList> {
                           const SizedBox(width: 8),
                           ElevatedButton(
                             onPressed: () {
-                              _deleteUserFromList(nopeUser);
+                              _deleteUserFromList(nopeUser.userId, nopeUser);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
