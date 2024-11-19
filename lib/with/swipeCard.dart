@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:omg/with/swipeAsyncNotifier.dart' as asyncNotifier;
 import 'package:omg/with/swipeAsyncNotifier.dart';
 import 'user.dart';
-import 'package:omg/with/user_details.dart';
 
 class SwipeCard extends ConsumerWidget {
   const SwipeCard({
@@ -127,7 +126,7 @@ class SwipeCard extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return FractionallySizedBox(
-          heightFactor: 0.8, // パネルの高さを調整
+          heightFactor: 0.8,
           child: Container(
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
@@ -167,7 +166,6 @@ class SwipeCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
 
-                // その他の詳細
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -180,12 +178,11 @@ class SwipeCard extends ConsumerWidget {
                   ),
                 ),
 
-                // アクションボタン
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildActionBtn(Icons.chat, "削除", Colors.blue),
-                    _buildActionBtn(Icons.favorite, "いいね", Colors.red),
+                    _buildActionBtn(Icons.chat, "いいね", Colors.blue),
+                    _buildActionBtn(Icons.favorite, "削除", Colors.red),
                   ],
                 ),
               ],
@@ -201,38 +198,21 @@ class SwipeCard extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // アイコンとテキストを上揃え
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: Colors.teal),
           const SizedBox(width: 8),
-          Flexible( // 改行対応
+          Flexible(
             child: Text(
               "$title: $detail",
               style: const TextStyle(fontSize: 16),
-              softWrap: true, // 改行を許可
+              softWrap: true,
             ),
           ),
         ],
       ),
     );
   }
-
-
-  // Widget _buildDetailRow(IconData icon, String title, String detail) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
-  //     child: Row(
-  //       children: [
-  //         Icon(icon, color: Colors.teal),
-  //         const SizedBox(width: 8),
-  //         Text(
-  //           "$title: $detail",
-  //           style: const TextStyle(fontSize: 16),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildActionBtn(IconData icon, String label, Color color) {
     return ElevatedButton.icon(
