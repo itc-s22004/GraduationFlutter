@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:omg/auth_controller.dart';
 
 class NopeList extends StatefulWidget {
   final int currentUserId;
@@ -38,16 +41,19 @@ class _NopeListState extends State<NopeList> {
 
         if (userSnapshot.docs.isNotEmpty) {
           final userData = userSnapshot.docs.first.data();
+
           nopeUsers.add(NopeUser(
             name: userData['email'] ?? '名前なし',
             userId: nopeToUserId,
             nopeDocId: doc.id,
             gender: userData['gender'] ?? '未設定',
             introduction: userData['introduction'] ?? '未設定',
-            mbti: userData['mbti'] ?? '未設定',
+            mbti: userData['diagnosis'] ?? 'marmot',
             school: userData['school'] ?? '未設定',
             tags: List<String>.from(userData['tags'] ?? []),
           ));
+        } else {
+          print("User with ID $nopeToUserId not found.");
         }
       }
     } catch (e) {
@@ -56,7 +62,8 @@ class _NopeListState extends State<NopeList> {
     return nopeUsers;
   }
 
-  Future<void> _likeUser(int likeToUserId, NopeUser user) async { //-----
+
+  Future<void> _likeUser(int likeToUserId, NopeUser user) async {
     try {
       await FirebaseFirestore.instance.collection('likes').add({
         'likeFrom': widget.currentUserId,
@@ -127,7 +134,7 @@ class _NopeListState extends State<NopeList> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('名前: ${user.name}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text('名前: ${user.name}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
                 Text('ユーザーID: ${user.userId}'),
                 const SizedBox(height: 10),
@@ -173,6 +180,8 @@ class _NopeListState extends State<NopeList> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.find<AuthController>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('左スワイプしたユーザー'),
@@ -188,44 +197,45 @@ class _NopeListState extends State<NopeList> {
             return const Center(child: Text("左スワイプしたユーザーがいません"));
           } else {
             final nopeUsers = snapshot.data!;
-            return ListView.builder(
-              itemCount: nopeUsers.length,
-              itemBuilder: (context, index) {
-                final nopeUser = nopeUsers[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      title: Text(nopeUser.name),
-                      subtitle: Text('ユーザーID: ${nopeUser.userId}'),
-                      onTap: () {
-                        _showUserDetails(context, nopeUser);
-                      },
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              await _likeUser(nopeUser.userId, nopeUser);
-                            },
-                            child: const Text('いいね'),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              _deleteUserFromList(nopeUser.userId, nopeUser);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                            ),
-                            child: const Text('削除'),
-                          ),
-                        ],
-                      ),
+            return ListView.separated(
+                itemCount: nopeUsers.length,
+                itemBuilder: (context, index) {
+                  final user = nopeUsers[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
+                      backgroundColor: Colors.grey[200],
+                      radius: 24,
                     ),
-                    const Divider(),
-                  ],
-                );
-              },
+                    title: Text(user.name),
+                    subtitle: Text('ユーザID: ${user.userId}\nMBTI: ${user.mbti}'),
+                    onTap: () {
+                      _showUserDetails(context, user);
+                    },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            await _likeUser(user.userId, user);
+                            },
+                          child: const Text('いいね'),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                            _deleteUserFromList(user.userId, user);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text('削除'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              separatorBuilder: (context, index) => const Divider()
             );
           }
         },

@@ -201,17 +201,38 @@ class SwipeCard extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // アイコンとテキストを上揃え
         children: [
           Icon(icon, color: Colors.teal),
           const SizedBox(width: 8),
-          Text(
-            "$title: $detail",
-            style: const TextStyle(fontSize: 16),
+          Flexible( // 改行対応
+            child: Text(
+              "$title: $detail",
+              style: const TextStyle(fontSize: 16),
+              softWrap: true, // 改行を許可
+            ),
           ),
         ],
       ),
     );
   }
+
+
+  // Widget _buildDetailRow(IconData icon, String title, String detail) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //     child: Row(
+  //       children: [
+  //         Icon(icon, color: Colors.teal),
+  //         const SizedBox(width: 8),
+  //         Text(
+  //           "$title: $detail",
+  //           style: const TextStyle(fontSize: 16),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildActionBtn(IconData icon, String label, Color color) {
     return ElevatedButton.icon(

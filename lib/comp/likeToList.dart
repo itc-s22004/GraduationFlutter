@@ -44,7 +44,7 @@ class _LikeToListState extends State<LikeToList> {
             likeDocId: doc.id,
             gender: userData['gender'] ?? '未設定',
             introduction: userData['introduction'] ?? '未設定',
-            mbti: userData['mbti'] ?? '未設定',
+            mbti: userData['diagnosis'] ?? 'marmot',
             school: userData['school'] ?? '未設定',
             tags: List<String>.from(userData['tags'] ?? []),
           ));
@@ -57,13 +57,56 @@ class _LikeToListState extends State<LikeToList> {
     }
   }
 
+  Future<void> _likeUser(int likeToUserId) async {
+    try {
+      final likeCollection = FirebaseFirestore.instance.collection('likes');
+
+      await FirebaseFirestore.instance.collection('likes').add({
+        'likeFrom': widget.currentUserId,
+        'likeTo': likeToUserId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      print("ユーザー ${likeToUserId} にいいねを送りました");
+
+      final reverseLikeSnapshot = await likeCollection
+          .where('likeFrom', isEqualTo: likeToUserId)
+          .where('likeTo', isEqualTo: widget.currentUserId)
+          .get();
+
+      if (reverseLikeSnapshot.docs.isNotEmpty) {
+        await FirebaseFirestore.instance.collection('matches').add({
+          'user1': widget.currentUserId,
+          'user2': likeToUserId,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        print("マッチングしました: ${widget.currentUserId} と $likeToUserId");
+
+        for (var doc in reverseLikeSnapshot.docs) {
+          await likeCollection.doc(doc.id).delete();
+        }
+
+        final userLikeSnapshot = await likeCollection
+            .where('likeFrom', isEqualTo: widget.currentUserId)
+            .where('likeTo', isEqualTo: likeToUserId)
+            .get();
+        for (var doc in userLikeSnapshot.docs) {
+          await likeCollection.doc(doc.id).delete();
+        }
+
+        _likeToUsers.removeWhere((user) => user.userId == likeToUserId);
+      }
+    } catch (e) {
+      print("エラーが発生しました: $e");
+    }
+  }
+
   Future<void> _deleteUser(LikeToUser user) async {
     try {
       await FirebaseFirestore.instance
           .collection('likes')
           .doc(user.likeDocId)
           .delete();
-
       print("ユーザー ${user.userId} の左スワイプデータを削除しました");
 
       _likeToUsers.remove(user);
@@ -138,50 +181,6 @@ class _LikeToListState extends State<LikeToList> {
     );
   }
 
-  Future<void> _likeUser(int likeToUserId) async {
-    try {
-      final likeCollection = FirebaseFirestore.instance.collection('likes');
-
-      await FirebaseFirestore.instance.collection('likes').add({
-        'likeFrom': widget.currentUserId,
-        'likeTo': likeToUserId,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-
-      print("ユーザー ${likeToUserId} にいいねを送りました");
-
-      final reverseLikeSnapshot = await likeCollection
-          .where('likeFrom', isEqualTo: likeToUserId)
-          .where('likeTo', isEqualTo: widget.currentUserId)
-          .get();
-
-      if (reverseLikeSnapshot.docs.isNotEmpty) {
-        await FirebaseFirestore.instance.collection('matches').add({
-          'user1': widget.currentUserId,
-          'user2': likeToUserId,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-        print("マッチングしました: ${widget.currentUserId} と $likeToUserId");
-
-        for (var doc in reverseLikeSnapshot.docs) {
-          await likeCollection.doc(doc.id).delete();
-        }
-
-        final userLikeSnapshot = await likeCollection
-            .where('likeFrom', isEqualTo: widget.currentUserId)
-            .where('likeTo', isEqualTo: likeToUserId)
-            .get();
-        for (var doc in userLikeSnapshot.docs) {
-          await likeCollection.doc(doc.id).delete();
-        }
-
-        _likeToUsers.removeWhere((user) => user.userId == likeToUserId);
-      }
-    } catch (e) {
-      print("エラーが発生しました: $e");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,39 +194,37 @@ class _LikeToListState extends State<LikeToList> {
         return ListView.builder(
           itemCount: _likeToUsers.length,
           itemBuilder: (context, index) {
-            final likeToUser = _likeToUsers[index];
-            return Column(
-              children: [
-                ListTile(
-                  title: Text(likeToUser.name),
-                  subtitle: Text('ユーザーID: ${likeToUser.userId}'),
-                  onTap: () {
-                    _showUserDetails(context, likeToUser);
-                  },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            await _likeUser(likeToUser.userId);
-                          },
-                          child: const Text('いいね'),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            _deleteUser(likeToUser);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                          ),
-                          child: const Text('削除'),
-                        ),
-                      ],
-                    )
-                ),
-                const Divider(),
-              ],
+            final user = _likeToUsers[index];
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
+                backgroundColor: Colors.grey[200],
+                radius: 24,
+              ),
+              title: Text(user.name),
+              subtitle: Text('ユーザID: ${user.userId}\nMBTI: ${user.mbti}'),
+              onTap: () {
+                _showUserDetails(context, user);
+              },
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _likeUser(user.userId);
+                    }, child: const Text('いいね'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _deleteUser(user);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red
+                    ),
+                    child: const Text('削除'),
+                  ),
+                ],
+              ),
             );
           },
         );
