@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const LoginValidate(),
-      // home: QuestionScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

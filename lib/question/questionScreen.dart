@@ -22,7 +22,6 @@ class QuestionScreen extends StatelessWidget {
             child: Row(
               children: [
                 Text('ユーザー名: ${authController.email.value}', style: const TextStyle(fontSize: 18)),
-
               ],
             ),
           ),
@@ -42,7 +41,7 @@ class QuestionScreen extends StatelessWidget {
                     final questionData = questions[index].data() as Map<String, dynamic>;
                     final genre = questionData['Genre'] ?? '不明';
                     final question = questionData['question'] ?? 'No Question';
-                    final userId =questionData['userId'] ?? 0;
+                    final userId = questionData['userId'] ?? 0;
                     final questId = questionData['questId'] ?? 0;
 
                     return Padding(
@@ -65,7 +64,7 @@ class QuestionScreen extends StatelessWidget {
                           child: Stack(
                             children: <Widget>[
                               Container(
-                                height: 180,
+                                height: 200,
                                 width: MediaQuery.of(context).size.width * 0.9,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -86,7 +85,29 @@ class QuestionScreen extends StatelessWidget {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
-                                  child: QuestionCard(question: question, userId: userId),
+                                  child: FutureBuilder<DocumentSnapshot>(
+                                    future: FirebaseFirestore.instance
+                                        .collection('users')
+                                        // .doc(userId.toString())
+                                        .doc("user${userId}")
+                                        .get(),
+                                    builder: (context, userSnapshot) {
+                                      if (!userSnapshot.hasData) {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+
+                                      final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+                                      final mbti = userData?['diagnosis'] ?? '不明';
+                                      final profileImageUrl = 'assets/images/${mbti}.jpg';
+
+                                      return QuestionCard(
+                                        question: question,
+                                        userId: userId,
+                                        profileImageUrl: profileImageUrl,
+                                        mbtiType: mbti,
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -129,11 +150,15 @@ class QuestionScreen extends StatelessWidget {
 class QuestionCard extends StatelessWidget {
   final String question;
   final int userId;
+  final String profileImageUrl;
+  final String mbtiType;
 
   const QuestionCard({
     Key? key,
     required this.question,
     required this.userId,
+    required this.profileImageUrl,
+    required this.mbtiType,
   }) : super(key: key);
 
   @override
@@ -144,6 +169,21 @@ class QuestionCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage(profileImageUrl),
+              backgroundColor: Colors.grey,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              mbtiType,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
         Text(
           question.length > truncateLength ? '${question.substring(0, truncateLength)}...' : question,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
