@@ -15,95 +15,112 @@ class QuestionScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('質問一覧'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('questions').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Text('ユーザー名: ${authController.email.value}', style: const TextStyle(fontSize: 18)),
 
-          final questions = snapshot.data!.docs;
+              ],
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('questions').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          return ListView.builder(
-            itemCount: questions.length,
-            itemBuilder: (context, index) {
-              final questionData = questions[index].data() as Map<String, dynamic>;
-              final genre = questionData['Genre'] ?? '不明';
-              final question = questionData['question'] ?? 'No Question';
-              final userId = int.tryParse(questionData['userId'].toString()) ?? 0;
+                final questions = snapshot.data!.docs;
 
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FullQuestionScreen(
-                          question: question,
-                          genre: genre,
-                          userId: userId,
+                return ListView.builder(
+                  itemCount: questions.length,
+                  itemBuilder: (context, index) {
+                    final questionData = questions[index].data() as Map<String, dynamic>;
+                    final genre = questionData['Genre'] ?? '不明';
+                    final question = questionData['question'] ?? 'No Question';
+                    final userId =questionData['userId'] ?? 0;
+                    final questId = questionData['questId'] ?? 0;
+
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullQuestionScreen(
+                                question: question,
+                                genre: genre,
+                                userId: userId,
+                                questId: questId,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Center(
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                height: 180,
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: const Offset(4, 4),
+                                      color: Colors.grey.withOpacity(0.3),
+                                      blurRadius: 10,
+                                    ),
+                                    BoxShadow(
+                                      offset: const Offset(-4, -4),
+                                      color: Colors.white.withOpacity(0.8),
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
+                                  child: QuestionCard(question: question, userId: userId),
+                                ),
+                              ),
+                              Positioned(
+                                top: 15,
+                                left: 15,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 35,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlueAccent,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    genre,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
                   },
-                  child: Center(
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          height: 180,
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(4, 4),
-                                color: Colors.grey.withOpacity(0.3),
-                                blurRadius: 10,
-                              ),
-                              BoxShadow(
-                                offset: const Offset(-4, -4),
-                                color: Colors.white.withOpacity(0.8),
-                                blurRadius: 10,
-                              ),
-                            ],
-                            border: Border.all(color: Colors.grey.withOpacity(0.2)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
-                            child: QuestionCard(question: question, userId: userId),
-                          ),
-                        ),
-                        Positioned(
-                          top: 15,
-                          left: 15,
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 35,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.lightBlueAccent,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              genre,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -134,10 +151,10 @@ class QuestionCard extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 8),
-        Text(
-          'ユーザーID: $userId',
-          style: const TextStyle(fontSize: 14, color: Colors.grey),
-        ),
+        // Text(
+        //   'ユーザーID: $userId',
+        //   style: const TextStyle(fontSize: 14, color: Colors.grey),
+        // ),
         if (isLongText)
           GestureDetector(
             onTap: () {

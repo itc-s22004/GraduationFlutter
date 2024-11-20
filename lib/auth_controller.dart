@@ -9,6 +9,9 @@ class AuthController extends GetxController {
   RxString diagnosis = ''.obs;
   RxString introduction = ''.obs;
   RxList<String> tags = <String>[].obs;
+  RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
+
+
 
   void updateEmail(String newEmail) {
     email.value = newEmail;
@@ -74,7 +77,22 @@ class AuthController extends GetxController {
     }
   }
 
-  // Firestoreにプロファイルデータを保存するメソッド
+  Future<void> fetchQuestions() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('questions')
+          .get();
+
+      // 質問データを取得して保持
+      questions.assignAll(snapshot.docs.map((doc) {
+        return doc.data() as Map<String, dynamic>;
+      }).toList());
+    } catch (e) {
+      print("エラーが発生しました: $e");
+    }
+  }
+
+
   Future<void> saveUserData() async {
     try {
       if (email.value.isNotEmpty) {

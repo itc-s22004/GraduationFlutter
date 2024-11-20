@@ -89,7 +89,7 @@ class _AddInfoState extends State<AddInfo> {
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: _selectedSchool,
-              items: ['ITカレッジ', '外語学院'].map((String value) {
+              items: ['ITカレッジ沖縄', '外語学院'].map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
