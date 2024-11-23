@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import '../auth_controller.dart';
 
 class FullQuestionScreen extends StatelessWidget {
-  final String question;
-  final String genre;
-  final int questId;
-  final int userId;
+  late final String question;
+  late final String genre;
+  late final int questId;
+  late final int userId;
   final TextEditingController _commentController = TextEditingController();
 
   FullQuestionScreen({

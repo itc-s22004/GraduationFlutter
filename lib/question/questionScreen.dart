@@ -54,6 +54,7 @@ class QuestionScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: GestureDetector(
                         onTap: () {
+                          print('Question: $question, Genre: $genre, userId: $userId, questId: $questId');
                           Navigator.push(
                             context,
                             MaterialPageRoute(

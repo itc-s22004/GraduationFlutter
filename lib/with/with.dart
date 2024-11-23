@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/comp/likeToList.dart';
+import 'package:omg/utilities/constant.dart';
 import 'package:omg/with/swipeAsyncNotifier.dart' as notifier;
 import 'package:omg/with/swipeCard.dart' as card;
 
@@ -41,8 +42,13 @@ class _MainAppState extends ConsumerState<MainApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Swipe'),
+          leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+          title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.elliptical(90, 30),
+            ),
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.delete),
@@ -69,24 +75,55 @@ class _MainAppState extends ConsumerState<MainApp> {
               },
             ),
           ],
+          backgroundColor: kAppBarBackground,
+          elevation: 0,
         ),
         body: SafeArea(
-          child: asyncValue.when(
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            error: (error, _) => const Center(
-              child: Text("Error"),
-            ),
-            data: (data) {
-              return card.SwipeCard(
-                list: data,
-                onSwiping: (direction) async {
-                  await swipeNotifier.swipeOnCard(direction);
-                },
-                controller: _swiperController,
-              );
-            },
+          child: Stack(
+            children: [
+              // 背景色の部分
+              Container(
+                height: 500,
+                color: kAppBtmBackground,
+              ),
+              // 背景が丸くなる部分
+              Container(
+                height: 500,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(200), // 上左側に大きな丸み
+                  ),
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+              ),
+              // カードの部分
+              Align(
+                alignment: Alignment.topCenter,
+                child: asyncValue.when(
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (error, _) => const Center(
+                    child: Text("Error"),
+                  ),
+                  data: (data) {
+                    return Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.90,
+                        height: MediaQuery.of(context).size.height * 0.85,
+                        child: card.SwipeCard(
+                          list: data,
+                          onSwiping: (direction) async {
+                            await swipeNotifier.swipeOnCard(direction);
+                          },
+                          controller: _swiperController,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
