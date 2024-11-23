@@ -80,7 +80,7 @@ class FullQuestionScreen extends StatelessWidget {
         }
 
         final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-        final mbti = userData?['diagnosis'] ?? '不明';
+        final mbti = userData?['diagnosis'] ?? 'NotSet';
         final profileImageUrl = 'assets/images/${mbti}.jpg';
 
         return Row(
@@ -89,8 +89,7 @@ class FullQuestionScreen extends StatelessWidget {
               radius: 20,
               backgroundImage: AssetImage(profileImageUrl),
               backgroundColor: Colors.grey,
-              // エラーが発生した場合の処理
-              child: const Icon(Icons.person, color: Colors.white),
+              // child: const Icon(Icons.person, color: Colors.white),
             ),
             const SizedBox(width: 10),
             Text(
@@ -194,7 +193,7 @@ class FullQuestionScreen extends StatelessWidget {
                           radius: 20,
                           backgroundImage: AssetImage(profileImageUrl),
                           backgroundColor: Colors.grey,
-                          child: const Icon(Icons.person, color: Colors.white),
+                          // child: const Icon(Icons.person, color: Colors.white),
                         ),
                         const SizedBox(width: 10),
                         Expanded(

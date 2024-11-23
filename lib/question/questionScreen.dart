@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
 import 'fullQuestionScreen.dart';
 
 class QuestionScreen extends StatelessWidget {
+  late final String question;
+  late final String genre;
+  late final int userId;
+  final TextEditingController _commentController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
@@ -88,7 +94,6 @@ class QuestionScreen extends StatelessWidget {
                                   child: FutureBuilder<DocumentSnapshot>(
                                     future: FirebaseFirestore.instance
                                         .collection('users')
-                                        // .doc(userId.toString())
                                         .doc("user${userId}")
                                         .get(),
                                     builder: (context, userSnapshot) {
@@ -97,7 +102,7 @@ class QuestionScreen extends StatelessWidget {
                                       }
 
                                       final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-                                      final mbti = userData?['diagnosis'] ?? '不明';
+                                      final mbti = userData?['diagnosis'] ?? 'NotSet';
                                       final profileImageUrl = 'assets/images/${mbti}.jpg';
 
                                       return QuestionCard(
@@ -143,8 +148,92 @@ class QuestionScreen extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 24.0, bottom: 16.0),
+          child: FloatingActionButton(
+            onPressed: () => _showCommentDialog(context),
+            backgroundColor: Colors.lightBlueAccent,
+            child: const Icon(Icons.comment),
+          ),
+        ),
+      ),
     );
   }
+
+  void _showCommentDialog(BuildContext context) {
+    String genre = 'pg';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('コメントを追加'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButton<String>(
+                value: genre,
+                items: <String>['pg', 'lang'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    genre = newValue;
+                  }
+                },
+              ),
+              TextField(
+                controller: _commentController,
+                decoration: const InputDecoration(hintText: 'コメントを入力してください'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('キャンセル'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final commentText = _commentController.text;
+                if (commentText.isNotEmpty) {
+                  _addQuestion(commentText, genre);
+                  _commentController.clear();
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('送信'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addQuestion(String questionText, String genre) async {
+    try {
+      final questsCollection = FirebaseFirestore.instance.collection('questions');
+      final questsCount = (await questsCollection.get()).size + 1;
+
+      await FirebaseFirestore.instance.collection('questions').add({
+        'questId': questsCount,
+        'userId': Get.find<AuthController>().userId.value,
+        'question': questionText,
+        'timestamp': FieldValue.serverTimestamp(),
+        'Genre': genre,
+      });
+    } catch (e) {
+      print("failed to add question: $e");
+    }
+  }
+
 }
 
 class QuestionCard extends StatelessWidget {
@@ -191,10 +280,6 @@ class QuestionCard extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 8),
-        // Text(
-        //   'ユーザーID: $userId',
-        //   style: const TextStyle(fontSize: 14, color: Colors.grey),
-        // ),
         if (isLongText)
           GestureDetector(
             onTap: () {
