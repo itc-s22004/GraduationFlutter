@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:get/get.dart';
-import 'package:omg/registration/addinfo.dart'; // ユーザー登録後の画面に遷移
+import 'package:omg/registration/addinfo.dart';
 
 class GoogleSignUpPage extends StatefulWidget {
   const GoogleSignUpPage({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class _GoogleSignUpPageState extends State<GoogleSignUpPage> {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        return null;  // ユーザーがサインインしなかった場合
+        return null;
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -41,7 +41,6 @@ class _GoogleSignUpPageState extends State<GoogleSignUpPage> {
   void _handleGoogleSignUp() async {
     final user = await _signInWithGoogle();
     if (user != null) {
-      // Googleアカウントでのサインイン後、Firestoreに新規ユーザーを作成
       final userCollection = FirebaseFirestore.instance.collection('users');
       final userCount = (await userCollection.get()).size + 1;
       String userId = 'user$userCount';
@@ -58,12 +57,12 @@ class _GoogleSignUpPageState extends State<GoogleSignUpPage> {
       authController.updateEmail(user.email!);
       authController.updateUserId(userCount);
 
-      await authController.fetchUserData(); // 登録後すぐにデータを取得し更新
+      await authController.fetchUserData();
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => AddInfo(data: user.email!)), // ユーザー情報をAddInfoページに渡して遷移
+            builder: (context) => AddInfo(data: user.email!)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
