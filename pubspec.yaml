@@ -54,6 +54,8 @@ dependencies:
   flutter_chat_ui: ^1.6.15
 
   persistent_bottom_nav_bar: ^6.2.1
+  google_sign_in: ^6.2.2
+  font_awesome_flutter: ^10.8.0
 
 
 # --------------------------------------
@@ -103,6 +105,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/googleIcon.png
 
   fonts:
     - family: MyFlutterApp #アイコンセットのタイトル

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
@@ -9,6 +10,8 @@ import 'package:omg/registration/addinfo.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'google_account.dart';
 
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({super.key});
@@ -156,6 +159,31 @@ class CreateAccountPageState extends State<CreateAccountPage> {
               ),
               child: const Text('登録', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             ),
+            const SizedBox(height: 16),
+
+            // 新しいGoogleサインアップボタン
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GoogleSignUpPage(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                minimumSize: const Size(50, 50), // ボタンのサイズをアイコンに合わせて小さめに設定
+                shape: const CircleBorder(), // 丸いボタンにするための設定
+              ),
+              child: const FaIcon(
+                FontAwesomeIcons.google,
+                size: 24,
+                color: Colors.white,
+              ),
+            )
+
+
           ],
         ),
       ),
