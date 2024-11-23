@@ -2,57 +2,84 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth_controller.dart';
+import '../utilities/constant.dart';
 import 'chatRoom.dart';
 
 class ChatListScreen extends StatelessWidget {
-  // const ChatListScreen({super.key});
-  // final AuthController authController = Get.find<AuthController>();
-
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Chat一覧 - ${authController.email.value}'),
+        // leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+        title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(90, 30),
+          ),
+        ),
+        backgroundColor: kAppBarBackground,
+        elevation: 0,
       ),
-      body: FutureBuilder<List<ChatUser>>(
-        future: _fetchMatchedUsers(authController.userId.value),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('エラー: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('マッチングユーザーがいません'));
-          } else {
-            final matchedUsers = snapshot.data!;
-            return ListView.separated(
-              itemCount: matchedUsers.length,
-              itemBuilder: (context, index) {
-                final user = matchedUsers[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
-                    backgroundColor: Colors.grey[200],
-                    radius: 24,
-                  ),
-                  title: Text(user.name),
-                  subtitle: Text('ユーザーID: ${user.userId}\nMBTI: ${user.mbti}'),
-                  onTap: () {
-                    Get.to(() => ChatRoom(
-                      userId: user.userId,
-                      userName: user.name,
-                    ));
-                  },
-                );
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Stack(
+          children: [
+            // 背景色の部分
+            Container(
+              height: 500,
+              color: kAppBtmBackground,
+            ),
+            // 背景が丸くなる部分
+            Container(
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200), // 上左側に大きな丸み
+                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+            // チャットリスト部分
+            FutureBuilder<List<ChatUser>>(
+              future: _fetchMatchedUsers(authController.userId.value),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('エラー: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('マッチングユーザーがいません'));
+                } else {
+                  final matchedUsers = snapshot.data!;
+                  return ListView.separated(
+                    itemCount: matchedUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = matchedUsers[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
+                          backgroundColor: Colors.grey[200],
+                          radius: 24,
+                        ),
+                        title: Text(user.name),
+                        subtitle: Text('ユーザーID: ${user.userId}\nMBTI: ${user.mbti}'),
+                        onTap: () {
+                          Get.to(() => ChatRoom(
+                            userId: user.userId,
+                            userName: user.name,
+                          ));
+                        },
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(),
+                  );
+                }
               },
-              separatorBuilder: (context, index) => const Divider()
-            );
-          }
-        },
+            ),
+          ],
+        ),
       ),
     );
   }

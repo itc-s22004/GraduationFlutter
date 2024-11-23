@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../auth_controller.dart';
+import '../utilities/constant.dart';
 
 class FullQuestionScreen extends StatelessWidget {
   late final String question;
@@ -25,26 +26,55 @@ class FullQuestionScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('質問詳細'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildGenreTag(),
-              const SizedBox(height: 16),
-              _buildUserInfo(),
-              const SizedBox(height: 16),
-              _buildQuestionText(),
-              const SizedBox(height: 32),
-              _buildCommentInput(),
-              const SizedBox(height: 32),
-              _buildCommentsList(),
-            ],
+        title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(90, 30),
           ),
+        ),
+        backgroundColor: kAppBarBackground,
+        elevation: 0,
+      ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Stack(
+          children: [
+            // 背景のカラー
+            Container(
+              height: 500,
+              color: kAppBtmBackground,
+            ),
+            // 背景の角丸の白い部分
+            Container(
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200),
+                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+            // コンテンツ部分
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildGenreTag(),
+                    const SizedBox(height: 16),
+                    _buildUserInfo(),
+                    const SizedBox(height: 16),
+                    _buildQuestionText(),
+                    const SizedBox(height: 32),
+                    _buildCommentInput(),
+                    const SizedBox(height: 32),
+                    _buildCommentsList(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -89,7 +119,6 @@ class FullQuestionScreen extends StatelessWidget {
               radius: 20,
               backgroundImage: AssetImage(profileImageUrl),
               backgroundColor: Colors.grey,
-              // child: const Icon(Icons.person, color: Colors.white),
             ),
             const SizedBox(width: 10),
             Text(
@@ -101,7 +130,6 @@ class FullQuestionScreen extends StatelessWidget {
       },
     );
   }
-
 
   Widget _buildQuestionText() {
     return Text(
@@ -193,7 +221,6 @@ class FullQuestionScreen extends StatelessWidget {
                           radius: 20,
                           backgroundImage: AssetImage(profileImageUrl),
                           backgroundColor: Colors.grey,
-                          // child: const Icon(Icons.person, color: Colors.white),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -222,7 +249,6 @@ class FullQuestionScreen extends StatelessWidget {
       },
     );
   }
-
 
   void _addComment(String commentText) async {
     try {

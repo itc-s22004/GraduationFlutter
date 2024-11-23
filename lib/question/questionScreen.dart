@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
+import '../utilities/constant.dart';
 import 'fullQuestionScreen.dart';
 
 class QuestionScreen extends StatelessWidget {
@@ -18,136 +19,161 @@ class QuestionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('質問一覧'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text('ユーザー名: ${authController.email.value}', style: const TextStyle(fontSize: 18)),
-              ],
-            ),
+        title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(90, 30),
           ),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('questions').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+        ),
+        backgroundColor: kAppBarBackground,
+        elevation: 0,
+      ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Stack(
+          children: [
+            Container(
+              height: 500,
+              color: kAppBtmBackground,
+            ),
+            Container(
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200),
+                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Text('ユーザー名: ${authController.email.value}', style: const TextStyle(fontSize: 18)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance.collection('questions').snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                final questions = snapshot.data!.docs;
+                      final questions = snapshot.data!.docs;
 
-                return ListView.builder(
-                  itemCount: questions.length,
-                  itemBuilder: (context, index) {
-                    final questionData = questions[index].data() as Map<String, dynamic>;
-                    final genre = questionData['Genre'] ?? '不明';
-                    final question = questionData['question'] ?? 'No Question';
-                    final userId = questionData['userId'] ?? 0;
-                    final questId = questionData['questId'] ?? 0;
+                      return ListView.builder(
+                        itemCount: questions.length,
+                        itemBuilder: (context, index) {
+                          final questionData = questions[index].data() as Map<String, dynamic>;
+                          final genre = questionData['Genre'] ?? '不明';
+                          final question = questionData['question'] ?? 'No Question';
+                          final userId = questionData['userId'] ?? 0;
+                          final questId = questionData['questId'] ?? 0;
 
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          print('Question: $question, Genre: $genre, userId: $userId, questId: $questId');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullQuestionScreen(
-                                question: question,
-                                genre: genre,
-                                userId: userId,
-                                questId: questId,
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullQuestionScreen(
+                                      question: question,
+                                      genre: genre,
+                                      userId: userId,
+                                      questId: questId,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Center(
+                                child: Stack(
+                                  children: <Widget>[
+                                    Container(
+                                      height: 200,
+                                      width: MediaQuery.of(context).size.width * 0.9,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            offset: const Offset(4, 4),
+                                            color: Colors.grey.withOpacity(0.3),
+                                            blurRadius: 10,
+                                          ),
+                                          BoxShadow(
+                                            offset: const Offset(-4, -4),
+                                            color: Colors.white.withOpacity(0.8),
+                                            blurRadius: 10,
+                                          ),
+                                        ],
+                                        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
+                                        child: FutureBuilder<DocumentSnapshot>(
+                                          future: FirebaseFirestore.instance
+                                              .collection('users')
+                                              .doc("user${userId}")
+                                              .get(),
+                                          builder: (context, userSnapshot) {
+                                            if (!userSnapshot.hasData) {
+                                              return const Center(child: CircularProgressIndicator());
+                                            }
+
+                                            final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+                                            final mbti = userData?['diagnosis'] ?? 'NotSet';
+                                            final profileImageUrl = 'assets/images/${mbti}.jpg';
+
+                                            return QuestionCard(
+                                              question: question,
+                                              userId: userId,
+                                              profileImageUrl: profileImageUrl,
+                                              mbtiType: mbti,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 15,
+                                      left: 15,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        height: 35,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlueAccent,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          genre,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
                         },
-                        child: Center(
-                          child: Stack(
-                            children: <Widget>[
-                              Container(
-                                height: 200,
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: const Offset(4, 4),
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 10,
-                                    ),
-                                    BoxShadow(
-                                      offset: const Offset(-4, -4),
-                                      color: Colors.white.withOpacity(0.8),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
-                                  child: FutureBuilder<DocumentSnapshot>(
-                                    future: FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc("user${userId}")
-                                        .get(),
-                                    builder: (context, userSnapshot) {
-                                      if (!userSnapshot.hasData) {
-                                        return const Center(child: CircularProgressIndicator());
-                                      }
-
-                                      final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-                                      final mbti = userData?['diagnosis'] ?? 'NotSet';
-                                      final profileImageUrl = 'assets/images/${mbti}.jpg';
-
-                                      return QuestionCard(
-                                        question: question,
-                                        userId: userId,
-                                        profileImageUrl: profileImageUrl,
-                                        mbtiType: mbti,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 15,
-                                left: 15,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: 35,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlueAccent,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    genre,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: Align(
         alignment: Alignment.bottomRight,
@@ -234,7 +260,6 @@ class QuestionScreen extends StatelessWidget {
       print("failed to add question: $e");
     }
   }
-
 }
 
 class QuestionCard extends StatelessWidget {

@@ -42,7 +42,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+          // leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
           title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
