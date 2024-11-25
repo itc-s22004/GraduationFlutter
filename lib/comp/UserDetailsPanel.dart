@@ -53,7 +53,7 @@ class UserDetailsPanel extends StatelessWidget {
             Wrap(
               spacing: 8.0,
               runSpacing: 4.0,
-              children: user.tags.map((tag) => _buildTag(tag)).toList(),
+              children: user.tag.map((tag) => _buildTag(tag)).toList(),
             ),
             const SizedBox(height: 20),
             Expanded(

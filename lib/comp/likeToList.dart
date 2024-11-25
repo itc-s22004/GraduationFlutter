@@ -48,7 +48,7 @@ class _LikeToListState extends State<LikeToList> {
             introduction: userData['introduction'] ?? '未設定',
             mbti: userData['diagnosis'] ?? 'marmot',
             school: userData['school'] ?? '未設定',
-            tags: List<String>.from(userData['tags'] ?? []),
+            tag: List<String>.from(userData['tag'] ?? []),
           ));
         }
       }
@@ -205,7 +205,7 @@ class LikeToUser {
   final String introduction;
   final String mbti;
   final String school;
-  final List<String> tags;
+  final List<String> tag;
 
   LikeToUser({
     required this.name,
@@ -215,6 +215,6 @@ class LikeToUser {
     required this.introduction,
     required this.mbti,
     required this.school,
-    required this.tags,
+    required this.tag,
   });
 }

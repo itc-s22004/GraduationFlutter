@@ -69,6 +69,7 @@ class ChatListScreen extends StatelessWidget {
                           Get.to(() => ChatRoom(
                             userId: user.userId,
                             userName: user.name,
+                            mbti: user.mbti,
                           ));
                         },
                       );
