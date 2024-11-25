@@ -6,6 +6,7 @@ class AuthController extends GetxController {
   RxInt userId = 0.obs;
   RxString gender = ''.obs;
   RxString school = ''.obs;
+  RxString schoolNum = ''.obs;
   RxString diagnosis = ''.obs;
   RxString introduction = ''.obs;
   RxList<String> tags = <String>[].obs;
@@ -15,6 +16,10 @@ class AuthController extends GetxController {
 
   void updateEmail(String newEmail) {
     email.value = newEmail;
+  }
+
+  void updateSchoolNum(String value) {
+    schoolNum.value = value;
   }
 
   void updateUserId(int newUserId) {

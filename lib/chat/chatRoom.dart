@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
+import '../utilities/constant.dart';
 
 class ChatRoom extends StatelessWidget {
   final int userId;
@@ -11,6 +12,7 @@ class ChatRoom extends StatelessWidget {
   ChatRoom({required this.userId, required this.userName, required this.mbti});
 
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _numberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,90 +21,185 @@ class ChatRoom extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('チャット - $userName'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _getMessagesStream(authController),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final messages = snapshot.data!.docs.reversed.toList();
-
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _scrollToBottom();
-                });
-
-                return ListView.builder(
-                  controller: _scrollController,
-                  reverse: false,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final messageData = messages[index].data() as Map<String, dynamic>;
-                    final bool isCurrentUser = messageData['senderId'] == authController.userId.value;
-                    final profileImageUrl = 'assets/images/$mbti.jpg';
-
-                    return Align(
-                      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: isCurrentUser ? Colors.blue[100] : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (!isCurrentUser)
-                              GestureDetector(
-                                onTap: () => _showUserInfoPanel(context),
-                                child: CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage: AssetImage(profileImageUrl),
-                                  backgroundColor: Colors.grey,
-                                ),
-                              ),
-                            if (!isCurrentUser) const SizedBox(width: 8),
-                            Flexible(
-                              child: Text(messageData['message']),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+        title: const Text(
+          'ChatRoom',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(90, 30),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+        ),
+        backgroundColor: kAppBarBackground,
+        elevation: 0,
+      ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Stack(
+          children: [
+            Container(
+              height: 500,
+              color: kAppBtmBackground,
+            ),
+            Container(
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200),
+                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+            Column(
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: messageController,
-                    decoration: const InputDecoration(hintText: "メッセージを入力..."),
+                // Numberカード表示部分
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('chatRooms')
+                        .doc(_getChatRoomId(authController))
+                        .collection('number')
+                        .orderBy('timestamp', descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      final numberDocs = snapshot.data!.docs;
+
+                      // もし2つのnumberが存在する場合
+                      if (numberDocs.length >= 2) {
+                        final number1 = numberDocs[0]['number']; // 最初のnumber
+                        final number2 = numberDocs[1]['number']; // 2番目のnumber
+                        final receiverId1 = numberDocs[0]['receiverId'];
+                        final receiverId2 = numberDocs[1]['receiverId'];
+
+                        return Card(
+                          margin: const EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Number 1: $number1',
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Receiver ID: $receiverId1',
+                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Number 2: $number2',
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Receiver ID: $receiverId2',
+                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      return const SizedBox();
+                    },
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    if (messageController.text.isNotEmpty) {
-                      _sendMessage(messageController.text, authController);
-                      messageController.clear();
-                      _scrollToBottom();
-                    }
-                  },
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: _getMessagesStream(authController),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      final messages = snapshot.data!.docs.reversed.toList();
+
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _scrollToBottom();
+                      });
+
+                      return ListView.builder(
+                        controller: _scrollController,
+                        reverse: false,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          final messageData = messages[index].data() as Map<String, dynamic>;
+                          final bool isCurrentUser = messageData['senderId'] == authController.userId.value;
+                          final profileImageUrl = 'assets/images/$mbti.jpg';
+
+                          return Align(
+                            alignment: isCurrentUser
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: isCurrentUser ? Colors.blue[100] : Colors.grey[300],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (!isCurrentUser)
+                                    GestureDetector(
+                                      onTap: () => _showUserInfoPanel(context),
+                                      child: CircleAvatar(
+                                        radius: 15,
+                                        backgroundImage: AssetImage(profileImageUrl),
+                                        backgroundColor: Colors.grey,
+                                      ),
+                                    ),
+                                  if (!isCurrentUser) const SizedBox(width: 8),
+                                  Flexible(child: Text(messageData['message'])),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.account_box_outlined),
+                        onPressed: () => _showMyNumDialog(context, authController),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: messageController,
+                          decoration: const InputDecoration(hintText: "メッセージを入力..."),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: () {
+                          if (messageController.text.isNotEmpty) {
+                            _sendMessage(messageController.text, authController);
+                            messageController.clear();
+                            _scrollToBottom();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -174,20 +271,6 @@ class ChatRoom extends StatelessWidget {
                   ),
                 ))
               ],
-
-              // mainAxisSize: MainAxisSize.min,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // children: [
-              //   Text('ユーザー情報', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              //   SizedBox(height: 10),
-              //   Text('診断: ${userData['diagnosis']}'),
-              //   Text('メール: ${userData['email']}'),
-              //   Text('性別: ${userData['gender']}'),
-              //   Text('学校: ${userData['school']}'),
-              //   Text('自己紹介: ${userData['introduction']}'),
-              //   SizedBox(height: 10),
-              //   Text('タグ: ${userData['tag']?.join(', ')}'),
-              // ],
             ),
           );
         },
@@ -215,6 +298,84 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  void _showMyNumDialog(BuildContext context, AuthController authController) async {
+    final AuthController authController = Get.find<AuthController>();
+    String course = '学科を選んで';
+    int senderId = 0;
+
+    final chatRoomRef = FirebaseFirestore.instance
+        .collection('chatRooms')
+        .doc(_getChatRoomId(authController))
+        .collection('number');
+    final snapshot = await chatRoomRef.get();
+    for (var doc in snapshot.docs) {
+      senderId = doc['senderId'];  // senderId は数値型
+      print('Sender ID: $senderId');
+    }
+
+
+    // `authController.userId` と `senderId` を比較
+    if (authController.userId.value == senderId) {
+      // もし userId と senderId が同じなら、ダイアログを表示しない
+      return;
+    }
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AlertDialog(
+                title: const Text('自分の番号を入れて！！'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButton<String>(
+                      value: course,
+                      items: <String>['学科を選んで', 's', 'n', 'c'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            course = newValue;
+                          });
+                        }
+                      },
+                    ),
+                    TextField(
+                      controller: _numberController,
+                      decoration: const InputDecoration(hintText: '例: s22004 -> 「 22004 」'),
+                    )
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('キャンセル')
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        final myId = course + _numberController.text;
+                        if (myId.isNotEmpty) {
+                          _sendMyNum(myId, authController);
+                          _numberController.clear();
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: const Text('送信'))
+                ],
+              );
+            },
+          );
+        });
+  }
+
   Stream<QuerySnapshot> _getMessagesStream(AuthController authController) {
     return FirebaseFirestore.instance
         .collection('chatRooms')
@@ -235,6 +396,55 @@ class ChatRoom extends StatelessWidget {
       'senderId': currentUserId,
       'timestamp': FieldValue.serverTimestamp(),
     });
+  }
+
+  Future<void> _sendMyNum(String num, AuthController authController) async {
+    final currentUserId = authController.userId.value;
+    final chatRoomRef = FirebaseFirestore.instance
+        .collection('chatRooms')
+        .doc(_getChatRoomId(authController))
+        .collection('number');
+
+    // `users` コレクションから `schoolNumber` が一致するユーザーを検索
+    final matchedUsersSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('schoolNumber', isEqualTo: num)
+        .get();
+
+    // 一致するユーザーが存在する場合、通知を出す
+    if (matchedUsersSnapshot.docs.isNotEmpty) {
+      for (var doc in matchedUsersSnapshot.docs) {
+        final matchedUser = doc.data();
+        _showMatchNotification(matchedUser);
+
+        // 一致した場合にFirebaseに新しい情報を登録する
+        await chatRoomRef.add({
+          'number': num,
+          'senderId': currentUserId,
+          'receiverId': doc.id,  // 一致したユーザーのIDを追加
+          'timestamp': FieldValue.serverTimestamp(),
+          'userBool': true,  // 一致したことを示すフラグを true に設定
+        });
+      }
+    }
+  }
+
+// マッチングしたユーザーの情報を表示する通知
+  void _showMatchNotification(Map<String, dynamic> userData) {
+    Get.snackbar(
+      '一致したユーザーが見つかりました！',
+      'ユーザー: ${userData['email']} さん',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green.withOpacity(0.8),
+      colorText: Colors.white,
+      duration: const Duration(seconds: 5),
+      mainButton: TextButton(
+        onPressed: () {
+          // ここに詳細情報を見るアクションを実装する（例: プロフィール画面への遷移）
+        },
+        child: const Text('詳細を見る', style: TextStyle(color: Colors.white)),
+      ),
+    );
   }
 
   String _getChatRoomId(AuthController authController) {

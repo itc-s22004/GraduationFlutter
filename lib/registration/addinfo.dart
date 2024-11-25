@@ -17,6 +17,7 @@ class _AddInfoState extends State<AddInfo> {
   String? _selectedSchool;
   final TextEditingController _diagnosisController = TextEditingController();
   final TextEditingController _introductionController = TextEditingController();
+  final TextEditingController _schoolNumController = TextEditingController();
 
   final AuthController authController = Get.find<AuthController>();
 
@@ -41,12 +42,15 @@ class _AddInfoState extends State<AddInfo> {
           FirebaseFirestore.instance.collection('users').doc(docId).update({
             'gender': _selectedGender,
             'school': _selectedSchool,
-            'diagnosis': _diagnosisController.text.trim(),
+            // 'diagnosis': _diagnosisController.text.trim(),
+            'diagnosis': "",
+            'schoolNumber': _schoolNumController.text.trim()
           });
 
           authController.updateGender(_selectedGender ?? '');
           authController.updateSchool(_selectedSchool ?? '');
           authController.updateDiagnosis(_diagnosisController.text.trim());
+          authController.updateSchoolNum(_schoolNumController.text.trim());
         }
       });
     } catch (e) {
@@ -107,9 +111,9 @@ class _AddInfoState extends State<AddInfo> {
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: _diagnosisController,
+              controller: _schoolNumController,
               decoration: const InputDecoration(
-                labelText: '診断結果',
+                labelText: '学校の番号を入れて!!',
                 border: OutlineInputBorder(),
               ),
             ),
