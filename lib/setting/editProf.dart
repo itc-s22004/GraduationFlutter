@@ -111,6 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               decoration: const InputDecoration(labelText: '診断結果 (MBTI)'),
             ),
             TextField(
+              maxLines: 2,
               controller: introductionController,
               decoration: const InputDecoration(labelText: '自己紹介'),
             ),

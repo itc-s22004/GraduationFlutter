@@ -215,6 +215,7 @@ class QuestionScreen extends StatelessWidget {
                 },
               ),
               TextField(
+                maxLines: 2,
                 controller: _commentController,
                 decoration: const InputDecoration(hintText: 'コメントを入力してください'),
               ),
@@ -243,6 +244,60 @@ class QuestionScreen extends StatelessWidget {
       },
     );
   }
+  // void _showCommentDialog(BuildContext context) {
+  //   String genre = 'pg';
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('コメントを追加'),
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             DropdownButton<String>(
+  //               value: genre,
+  //               items: <String>['pg', 'lang'].map((String value) {
+  //                 return DropdownMenuItem<String>(
+  //                   value: value,
+  //                   child: Text(value),
+  //                 );
+  //               }).toList(),
+  //               onChanged: (String? newValue) {
+  //                 if (newValue != null) {
+  //                   genre = newValue;
+  //                 }
+  //               },
+  //             ),
+  //             TextField(
+  //               controller: _commentController,
+  //               decoration: const InputDecoration(hintText: 'コメントを入力してください'),
+  //             ),
+  //           ],
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: const Text('キャンセル'),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () {
+  //               final commentText = _commentController.text;
+  //               if (commentText.isNotEmpty) {
+  //                 _addQuestion(commentText, genre);
+  //                 _commentController.clear();
+  //                 Navigator.of(context).pop();
+  //               }
+  //             },
+  //             child: const Text('送信'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void _addQuestion(String questionText, String genre) async {
     try {

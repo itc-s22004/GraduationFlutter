@@ -177,9 +177,10 @@ class FullQuestionScreen extends StatelessWidget {
 
   Widget _buildCommentInput() {
     return TextField(
+      maxLines: 2,
       controller: _commentController,
       decoration: InputDecoration(
-        hintText: 'コメントを入力...',
+        hintText: '\nコメントを入力...',
         border: OutlineInputBorder(),
         suffixIcon: IconButton(
           icon: const Icon(Icons.send),
