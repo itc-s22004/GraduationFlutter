@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../utilities/constant.dart';
 import 'UserDetailsPanel.dart';
 
 class LikeToList extends StatefulWidget {
@@ -149,50 +150,81 @@ class _LikeToListState extends State<LikeToList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('あなたをLIKEしたユーザー'),
+        // title: const Text('あなたをLIKEしたユーザー'),
+        title: const Text(
+            'LIKEしてくれた人',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(90, 30),
+          ),
+        ),
+        backgroundColor: kAppBarBackground,
+        elevation: 0,
       ),
-      body: Obx(() {
-        if (_likeToUsers.isEmpty) {
-          return const Center(child: Text("あなたをLIKEしたユーザーがいません"));
-        }
-        return ListView.builder(
-          itemCount: _likeToUsers.length,
-          itemBuilder: (context, index) {
-            final user = _likeToUsers[index]; //-----------------
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
-                backgroundColor: Colors.grey[200],
-                radius: 24,
+      body: Align(
+        alignment: Alignment.topCenter,
+          child: Stack(
+            children: [
+              Container(
+                height: 500,
+                color: kAppBtmBackground,
               ),
-              title: Text(user.name),
-              subtitle: Text('ユーザID: ${user.userId}\nMBTI: ${user.mbti}'),
-              onTap: () {
-                _showUserDetails(context, user);
-              },
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      await _likeUser(user.userId);
-                    }, child: const Text('いいね'),
+              Container(
+                height: 500,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(200),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await _deleteUser(user);
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+              ),
+              Obx(() {
+                if (_likeToUsers.isEmpty) {
+                  return const Center(child: Text("あなたをLIKEしたユーザーがいません"));
+                }
+                return ListView.builder(
+                  itemCount: _likeToUsers.length,
+                  itemBuilder: (context, index) {
+                    final user = _likeToUsers[index]; //-----------------
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
+                        backgroundColor: Colors.grey[200],
+                        radius: 24,
+                      ),
+                      title: Text(user.name),
+                      subtitle: Text('ユーザID: ${user.userId}\nMBTI: ${user.mbti}'),
+                      onTap: () {
+                        _showUserDetails(context, user);
+                      },
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              await _likeUser(user.userId);
+                              }, child: const Text('いいね'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await _deleteUser(user);
+                              },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red
+                            ),
+                            child: const Text('削除'),
+                          ),
+                        ],
+                      ),
+                    );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red
-                    ),
-                    child: const Text('削除'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      }),
+                );
+              }),
+            ],
+          ),
+      ),
     );
   }
 }

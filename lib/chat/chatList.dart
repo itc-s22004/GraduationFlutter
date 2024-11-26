@@ -13,7 +13,10 @@ class ChatListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         // leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: const Text(
+            'チャット',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+        ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.elliptical(90, 30),

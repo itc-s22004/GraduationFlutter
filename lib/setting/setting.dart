@@ -12,7 +12,10 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: const Text(
+            'プロフィール',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+        ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.elliptical(90, 30),

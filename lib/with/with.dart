@@ -43,7 +43,10 @@ class _MainAppState extends ConsumerState<MainApp> {
       home: Scaffold(
         appBar: AppBar(
           // leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-          title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          title: const Text(
+              'スワイプ',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+          ),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               bottomRight: Radius.elliptical(90, 30),

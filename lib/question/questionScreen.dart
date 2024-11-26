@@ -19,7 +19,10 @@ class QuestionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
-        title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: const Text(
+            '質問',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+        ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.elliptical(90, 30),
@@ -47,14 +50,14 @@ class QuestionScreen extends StatelessWidget {
             ),
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Text('ユーザー名: ${authController.email.value}', style: const TextStyle(fontSize: 18)),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Row(
+                //     children: [
+                //       Text('ユーザー名: ${authController.email.value}', style: const TextStyle(fontSize: 18)),
+                //     ],
+                //   ),
+                // ),
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance.collection('questions').snapshots(),
@@ -94,7 +97,7 @@ class QuestionScreen extends StatelessWidget {
                                 child: Stack(
                                   children: <Widget>[
                                     Container(
-                                      height: 200,
+                                      height: 180,
                                       width: MediaQuery.of(context).size.width * 0.9,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
@@ -114,7 +117,7 @@ class QuestionScreen extends StatelessWidget {
                                         border: Border.all(color: Colors.grey.withOpacity(0.2)),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
+                                        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                                         child: FutureBuilder<DocumentSnapshot>(
                                           future: FirebaseFirestore.instance
                                               .collection('users')
@@ -134,32 +137,33 @@ class QuestionScreen extends StatelessWidget {
                                               userId: userId,
                                               profileImageUrl: profileImageUrl,
                                               mbtiType: mbti,
+                                              genre: genre,
                                             );
                                           },
                                         ),
                                       ),
                                     ),
-                                    Positioned(
-                                      top: 15,
-                                      left: 15,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 35,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                          color: Colors.lightBlueAccent,
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Text(
-                                          genre,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    // Positioned(
+                                    //   top: 15,
+                                    //   left: 15,
+                                    //   child: Container(
+                                    //     alignment: Alignment.center,
+                                    //     height: 35,
+                                    //     width: 100,
+                                    //     decoration: BoxDecoration(
+                                    //       color: Colors.lightBlueAccent,
+                                    //       borderRadius: BorderRadius.circular(8),
+                                    //     ),
+                                    //     child: Text(
+                                    //       genre,
+                                    //       style: const TextStyle(
+                                    //         fontSize: 16,
+                                    //         fontWeight: FontWeight.bold,
+                                    //         color: Colors.white,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -244,60 +248,6 @@ class QuestionScreen extends StatelessWidget {
       },
     );
   }
-  // void _showCommentDialog(BuildContext context) {
-  //   String genre = 'pg';
-  //
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('コメントを追加'),
-  //         content: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             DropdownButton<String>(
-  //               value: genre,
-  //               items: <String>['pg', 'lang'].map((String value) {
-  //                 return DropdownMenuItem<String>(
-  //                   value: value,
-  //                   child: Text(value),
-  //                 );
-  //               }).toList(),
-  //               onChanged: (String? newValue) {
-  //                 if (newValue != null) {
-  //                   genre = newValue;
-  //                 }
-  //               },
-  //             ),
-  //             TextField(
-  //               controller: _commentController,
-  //               decoration: const InputDecoration(hintText: 'コメントを入力してください'),
-  //             ),
-  //           ],
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: const Text('キャンセル'),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               final commentText = _commentController.text;
-  //               if (commentText.isNotEmpty) {
-  //                 _addQuestion(commentText, genre);
-  //                 _commentController.clear();
-  //                 Navigator.of(context).pop();
-  //               }
-  //             },
-  //             child: const Text('送信'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void _addQuestion(String questionText, String genre) async {
     try {
@@ -322,6 +272,7 @@ class QuestionCard extends StatelessWidget {
   final int userId;
   final String profileImageUrl;
   final String mbtiType;
+  final String genre;
 
   const QuestionCard({
     Key? key,
@@ -329,6 +280,7 @@ class QuestionCard extends StatelessWidget {
     required this.userId,
     required this.profileImageUrl,
     required this.mbtiType,
+    required this.genre,
   }) : super(key: key);
 
   @override
@@ -336,42 +288,125 @@ class QuestionCard extends StatelessWidget {
     const int truncateLength = 41;
     final isLongText = question.length > truncateLength;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage(profileImageUrl),
-              backgroundColor: Colors.grey,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              mbtiType,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          question.length > truncateLength ? '${question.substring(0, truncateLength)}...' : question,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        const SizedBox(height: 8),
-        if (isLongText)
-          GestureDetector(
-            onTap: () {
-              // 質問の詳細画面に移動する処理
-            },
-            child: const Text(
-              'もっと見る',
-              style: TextStyle(color: Colors.blue, fontSize: 14),
-            ),
+    return SingleChildScrollView(  // ここでスクロール可能にする
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: AssetImage(profileImageUrl),
+                backgroundColor: Colors.grey,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                mbtiType,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(), // アイコンとジャンルを右に寄せる
+              Container(
+                alignment: Alignment.center,
+                height: 35,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  genre,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
           ),
-      ],
+          const SizedBox(height: 8),
+          // 最大3行まで表示し、それを超えると「もっと見る」を表示
+          Text(
+            question,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
+            maxLines: isLongText ? 3 : null, // 長い場合は最大3行
+            overflow: TextOverflow.ellipsis, // テキストが多い場合は省略する
+          ),
+          const SizedBox(height: 8),
+          if (isLongText)
+            GestureDetector(
+              onTap: () {
+                // 質問の詳細画面に移動する処理を追加する
+              },
+              child: const Text(
+                'もっと見る',
+                style: TextStyle(color: Colors.blue, fontSize: 14),
+              ),
+            ),
+        ],
+      ),
     );
   }
+  // @override
+  // Widget build(BuildContext context) {
+  //   const int truncateLength = 41;
+  //   final isLongText = question.length > truncateLength;
+  //
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(
+  //         children: [
+  //           CircleAvatar(
+  //             radius: 20,
+  //             backgroundImage: AssetImage(profileImageUrl),
+  //             backgroundColor: Colors.grey,
+  //           ),
+  //           const SizedBox(width: 10),
+  //           Text(
+  //             mbtiType,
+  //             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //           ),
+  //           const Spacer(), // アイコンとジャンルを右に寄せる
+  //           Container(
+  //             alignment: Alignment.center,
+  //             height: 35,
+  //             width: 100,
+  //             decoration: BoxDecoration(
+  //               color: Colors.lightBlueAccent,
+  //               borderRadius: BorderRadius.circular(8),
+  //             ),
+  //             child: Text(
+  //               genre,
+  //               style: const TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //                 color: Colors.white,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       const SizedBox(height: 8),
+  //       // 最大3行まで表示し、それを超えると「もっと見る」を表示
+  //       Text(
+  //         question,
+  //         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
+  //         maxLines: isLongText ? 3 : null, // 長い場合は最大3行
+  //         overflow: TextOverflow.ellipsis, // テキストが多い場合は省略する
+  //       ),
+  //       const SizedBox(height: 8),
+  //       if (isLongText)
+  //         GestureDetector(
+  //           onTap: () {
+  //             // 質問の詳細画面に移動する処理を追加する
+  //           },
+  //           child: const Text(
+  //             'もっと見る',
+  //             style: TextStyle(color: Colors.blue, fontSize: 14),
+  //           ),
+  //         ),
+  //     ],
+  //   );
+  // }
 }

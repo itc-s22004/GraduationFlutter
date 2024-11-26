@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
 
+import '../utilities/constant.dart';
+
 class NopeList extends StatefulWidget {
   final int currentUserId;
 
@@ -249,61 +251,91 @@ class _NopeListState extends State<NopeList> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('左スワイプしたユーザー'),
+        title: const Text(
+          'NOTした人',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(90, 30),
+          ),
+        ),
+        backgroundColor: kAppBarBackground,
+        elevation: 0,
       ),
-      body: FutureBuilder<List<NopeUser>>(
-        future: _nopeUsersFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text("エラーが発生しました"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("左スワイプしたユーザーがいません"));
-          } else {
-            final nopeUsers = snapshot.data!;
-            return ListView.separated(
-                itemCount: nopeUsers.length,
-                itemBuilder: (context, index) {
-                  final user = nopeUsers[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
-                      backgroundColor: Colors.grey[200],
-                      radius: 24,
-                    ),
-                    title: Text(user.name),
-                    subtitle: Text('ユーザID: ${user.userId}\nMBTI: ${user.mbti}'),
-                    onTap: () {
-                      _showUserDetails(context, user);
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Stack(
+          children: [
+            Container(
+              height: 500,
+              color: kAppBtmBackground,
+            ),
+            Container(
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200),
+                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+            FutureBuilder<List<NopeUser>>(
+              future: _nopeUsersFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(child: Text("エラーが発生しました"));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text("左スワイプしたユーザーがいません"));
+                } else {
+                  final nopeUsers = snapshot.data!;
+                  return ListView.separated(
+                    itemCount: nopeUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = nopeUsers[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
+                          backgroundColor: Colors.grey[200],
+                          radius: 24,
+                        ),
+                        title: Text(user.name),
+                        subtitle: Text('ユーザID: ${user.userId}\nMBTI: ${user.mbti}'),
+                        onTap: () {
+                          _showUserDetails(context, user);
+                        },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                await _likeUser(user.userId, user);
+                              },
+                              child: const Text('いいね'),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: () {
+                                _deleteUserFromList(user.userId, user);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: const Text('削除'),
+                            ),
+                          ],
+                        ),
+                      );
                     },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            await _likeUser(user.userId, user);
-                            },
-                          child: const Text('いいね'),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            _deleteUserFromList(user.userId, user);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                          ),
-                          child: const Text('削除'),
-                        ),
-                      ],
-                    ),
+                    separatorBuilder: (context, index) => const Divider(),
                   );
-                },
-              separatorBuilder: (context, index) => const Divider()
-            );
-          }
-        },
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
