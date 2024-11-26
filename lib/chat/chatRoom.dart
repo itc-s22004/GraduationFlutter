@@ -71,39 +71,43 @@ class ChatRoom extends StatelessWidget {
 
                       // もし2つのnumberが存在する場合
                       if (numberDocs.length >= 2) {
-                        final number1 = numberDocs[0]['number']; // 最初のnumber
-                        final number2 = numberDocs[1]['number']; // 2番目のnumber
-                        final receiverId1 = numberDocs[0]['receiverId'];
-                        final receiverId2 = numberDocs[1]['receiverId'];
+                        final number1 = numberDocs[0]['number'];
+                        final number2 = numberDocs[1]['number'];
 
-                        return Card(
-                          margin: const EdgeInsets.all(10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Number 1: $number1',
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  'Receiver ID: $receiverId1',
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Number 2: $number2',
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  'Receiver ID: $receiverId2',
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                                ),
-                              ],
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 8.0,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        number1,
+                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(width: 18),
+                                      const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                        size: 24,
+                                      ),
+                                      const SizedBox(width: 18),
+                                      Text(
+                                        number2,
+                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -405,27 +409,33 @@ class ChatRoom extends StatelessWidget {
         .doc(_getChatRoomId(authController))
         .collection('number');
 
-    // `users` コレクションから `schoolNumber` が一致するユーザーを検索
-    final matchedUsersSnapshot = await FirebaseFirestore.instance
+    // `users` コレクションから `schoolNumber` と一致するユーザーを検索
+    final userSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('schoolNumber', isEqualTo: num)
+        .where('schoolNumber', isEqualTo: num)  // 入力された num が schoolNumber と一致するかを確認
         .get();
 
-    // 一致するユーザーが存在する場合、通知を出す
-    if (matchedUsersSnapshot.docs.isNotEmpty) {
-      for (var doc in matchedUsersSnapshot.docs) {
-        final matchedUser = doc.data();
-        _showMatchNotification(matchedUser);
+    if (userSnapshot.docs.isNotEmpty) {
+      // 取得したユーザーデータ
+      final userData = userSnapshot.docs.first.data();
+      final senderId = userData['id'];  // `users` コレクションの `id` を取得
+      final schoolNumberFromUser = userData['schoolNumber'];  // `schoolNumber` を取得
 
-        // 一致した場合にFirebaseに新しい情報を登録する
+      // `currentUserId` と `senderId`、`num` と `schoolNumberFromUser` が一致する場合に登録
+      if (currentUserId == senderId && num == schoolNumberFromUser) {
+        // 登録処理
         await chatRoomRef.add({
           'number': num,
           'senderId': currentUserId,
-          'receiverId': doc.id,  // 一致したユーザーのIDを追加
           'timestamp': FieldValue.serverTimestamp(),
-          'userBool': true,  // 一致したことを示すフラグを true に設定
+          'userBool': true,
         });
+        print("登録成功: currentUserId と senderId と schoolNumber が一致しました");
+      } else {
+        print("一致するデータが見つかりませんでした");
       }
+    } else {
+      print("ユーザーが見つかりませんでした");
     }
   }
 
