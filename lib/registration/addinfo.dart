@@ -4,8 +4,11 @@ import 'package:get/get.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/comp/tag.dart';
 
+import '../utilities/constant.dart';
+
 class AddInfo extends StatefulWidget {
   final String data;
+
   const AddInfo({super.key, required this.data});
 
   @override
@@ -18,14 +21,23 @@ class _AddInfoState extends State<AddInfo> {
   final TextEditingController _diagnosisController = TextEditingController();
   final TextEditingController _introductionController = TextEditingController();
   final TextEditingController _schoolNumController = TextEditingController();
-
   final AuthController authController = Get.find<AuthController>();
+
+  bool _isButtonEnabled = false;
 
   @override
   void dispose() {
     _diagnosisController.dispose();
     _introductionController.dispose();
     super.dispose();
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      _isButtonEnabled = _selectedGender != null &&
+          _selectedSchool != null &&
+          _schoolNumController.text.trim().isNotEmpty;
+    });
   }
 
   Future<void> _updateUserData() async {
@@ -42,7 +54,6 @@ class _AddInfoState extends State<AddInfo> {
           FirebaseFirestore.instance.collection('users').doc(docId).update({
             'gender': _selectedGender,
             'school': _selectedSchool,
-            // 'diagnosis': _diagnosisController.text.trim(),
             'diagnosis': "",
             'schoolNumber': _schoolNumController.text.trim()
           });
@@ -63,78 +74,162 @@ class _AddInfoState extends State<AddInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('追加情報入力'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text('email: ${widget.data}'),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _selectedGender,
-              items: ['男性', '女性', 'その他'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedGender = newValue;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: '性別',
-                border: OutlineInputBorder(),
-              ),
+        appBar: AppBar(
+          title: const Text(
+            '設定',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.elliptical(90, 30),
             ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _selectedSchool,
-              items: ['ITカレッジ沖縄', '外語学院'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedSchool = newValue;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: '学校',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _schoolNumController,
-              decoration: const InputDecoration(
-                labelText: '学校の番号を入れて!!',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _updateUserData,
-              child: const Text('情報を更新'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Tag(email: widget.data)),
-                );
-              },
-              child: const Text('MBTIへ進む'),
-            ),
-          ],
+          ),
+          backgroundColor: kAppBarBackground,
+          elevation: 0,
         ),
-      ),
-    );
+        body: Align(
+            alignment: Alignment.topCenter,
+            child: Stack(children: [
+              Container(
+                height: 500,
+                color: kAppBtmBackground,
+              ),
+              Container(
+                height: 500,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(200),
+                  ),
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('email: ${widget.data}'),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: _selectedGender,
+                      items: ['男性', '女性', 'その他'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedGender = newValue;
+                          _updateButtonState();
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: '性別',
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        floatingLabelAlignment: FloatingLabelAlignment.center,
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade50,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: _selectedSchool,
+                      items: ['ITカレッジ沖縄', '外語学院'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedSchool = newValue;
+                          _updateButtonState();
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: '学校',
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        floatingLabelAlignment: FloatingLabelAlignment.center,
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade50,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _schoolNumController,
+                      decoration: InputDecoration(
+                        labelText: '学校番号',
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade50,
+                      ),
+                      onChanged: (text) {
+                        _updateButtonState();
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              offset: const Offset(0, 4),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: _isButtonEnabled
+                              ? () async {
+                                  await _updateUserData();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          Tag(email: widget.data),
+                                    ),
+                                  );
+                                }
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 50, vertical: 15),
+                            backgroundColor: Colors.blueAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 10,
+                          ),
+                          child: const Text(
+                            '次へ進む',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ])));
   }
 }

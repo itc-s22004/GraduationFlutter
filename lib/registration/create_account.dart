@@ -167,7 +167,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => GoogleSignUpPage(),
+                    builder: (context) => const GoogleSignUpPage(),
                   ),
                 );
               },

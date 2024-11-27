@@ -56,117 +56,97 @@ class SwipeCard extends ConsumerWidget {
   }
 
   Widget _buildCard(BuildContext context, User user) {
-    return GestureDetector(
-      onTap: () {
-        _showUserDetails(context, user);
-      },
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade400, width: 2),
-          image: DecorationImage(
-            image: AssetImage(
-                user.profileImageURL.isNotEmpty ? user.profileImageURL[0] : 'assets/default_image.png'),
-            fit: BoxFit.cover,
-            alignment: Alignment.center,
-          ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.6), // 下から濃い黒
-                      Colors.black.withOpacity(0.0), // 上は透明
-                    ],
-                  ),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildText(user.name, 22, Colors.white),
-                    _buildText(user.mbti, 18, Colors.white),
-                    const SizedBox(height: 8),
-                    if (user.introduction != null && user.introduction.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(
-                          user.introduction,
-                          style: const TextStyle(fontSize: 16, color: Colors.white),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    // タグを表示 (最大4つ)
-                    Wrap(
-                      spacing: 8.0,
-                      children: user.tags.take(4).map((tag) => _buildTag(tag)).toList(),
-                    ),
-                  ],
-                ),
+    final remainingCount = list.length - list.indexOf(user) - 1;
+
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            _showUserDetails(context, user);
+          },
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.grey.shade400, width: 2),
+              image: DecorationImage(
+                image: AssetImage(
+                    user.profileImageURL.isNotEmpty ? user.profileImageURL[0] : 'assets/default_image.png'),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
               ),
             ),
-          ],
+            child: Stack(
+              children: [
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.6), // 下から濃い黒
+                          Colors.black.withOpacity(0.0), // 上は透明
+                        ],
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildText(user.name, 22, Colors.white),
+                        _buildText(user.mbti, 18, Colors.white),
+                        const SizedBox(height: 8),
+                        if (user.introduction != null && user.introduction.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              user.introduction,
+                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        Wrap(
+                          spacing: 8.0,
+                          children: user.tags.take(4).map((tag) => _buildTag(tag)).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
+        // 右上に残りの人数を表示
+        Positioned(
+          top: 10,
+          right: 10,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '残り: $remainingCount 人',
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-
-
-  // Widget _buildCard(BuildContext context, User user) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       _showUserDetails(context, user);
-  //     },
-  //     child: Container(
-  //       width: double.infinity,
-  //       decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(20),
-  //         border: Border.all(color: Colors.grey.shade400, width: 2),
-  //         image: DecorationImage(
-  //             image: AssetImage(user.profileImageURL.isNotEmpty ? user.profileImageURL[0] : 'assets/default_image.png'),
-  //             fit: BoxFit.cover,
-  //             alignment: Alignment.center),
-  //       ),
-  //       child: Stack(
-  //         children: [
-  //           Positioned(
-  //             bottom: 20,
-  //             left: 20,
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 _buildText(user.name, 22, Colors.black),  // ----------------------------------------------
-  //                 _buildText(user.mbti, 18, Colors.black),
-  //                 const SizedBox(height: 8),
-  //                 Wrap(
-  //                   spacing: 8.0,
-  //                   children: user.tags.map((tag) => _buildTag(tag)).toList(),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _buildText(String text, double fontSize, Color color) {  // -------------------------
+  Widget _buildText(String text, double fontSize, Color color) {
     return Text(
       text,
       style: TextStyle(

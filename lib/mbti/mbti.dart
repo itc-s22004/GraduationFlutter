@@ -5,10 +5,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/navigation.dart';
-import 'package:omg/setting/editProf.dart';
-import 'package:omg/with/with.dart';
 
-import '../setting/setting.dart';
+import '../utilities/constant.dart';
 
 class Mbti extends StatefulWidget {
   final String data;
@@ -67,7 +65,8 @@ class _MbtiState extends State<Mbti> {
   }
 
   Future<void> _fetchQuestions() async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('mbti').get();
+    final querySnapshot =
+        await FirebaseFirestore.instance.collection('mbti').get();
     final docs = querySnapshot.docs;
 
     for (var i = 0; i < docs.length && i < questions.length; i++) {
@@ -82,7 +81,7 @@ class _MbtiState extends State<Mbti> {
     if (context != null) {
       Scrollable.ensureVisible(
         context,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 350),
         curve: Curves.easeInOut,
       );
     }
@@ -101,9 +100,9 @@ class _MbtiState extends State<Mbti> {
     List<int> selected = _selectedIndexes.whereType<int>().toList();
     String resultStr;
     List<List<int>> groupedSelections = [
-      selected.sublist(0, 3),  // EI
-      selected.sublist(3, 6),  // SN
-      selected.sublist(6, 9),  // TF
+      selected.sublist(0, 3), // EI
+      selected.sublist(3, 6), // SN
+      selected.sublist(6, 9), // TF
       selected.sublist(9, 12), // JP
     ];
 
@@ -146,69 +145,145 @@ class _MbtiState extends State<Mbti> {
     );
   }
 
-
   // 特性判定関数
   String _determineType(List<int> group, String typeA, String typeB) {
     int countTypeA = group.where((index) => index == 0 || index == 1).length;
     int countTypeB = group.where((index) => index == 2 || index == 3).length;
-    return countTypeA >= 2 ? typeA : countTypeB >= 2 ? typeB : '';
+    return countTypeA >= 2
+        ? typeA
+        : countTypeB >= 2
+            ? typeB
+            : '';
   }
 
   @override
   Widget build(BuildContext context) {
+    final double buttonWidth = MediaQuery.of(context).size.width * 0.8;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("MBTI 診断"),
+        title: const Text(
+          'MBTI',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(90, 30),
+          ),
+        ),
+        backgroundColor: kAppBarBackground,
+        elevation: 0,
       ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('email: ${widget.data}'),
-            for (int setIndex = 0; setIndex < _setKeys.length; setIndex++)
-              Container(
-                key: _setKeys[setIndex],
-                margin: const EdgeInsets.only(bottom: 700.0),
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40.0),
-                      Text(
-                        questions[setIndex].isNotEmpty
-                            ? "問題 ${setIndex + 1}: ${questions[setIndex]}"
-                            : "読み込み中...",
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10),
-                      for (int buttonIndex = 0; buttonIndex < 4; buttonIndex++)
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 30.0, top: 20.0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _selectedIndexes[setIndex] == buttonIndex
-                                  ? Colors.blue
-                                  : Colors.white,
-                            ),
-                            onPressed: () {
-                              _onButtonPressed(setIndex, buttonIndex);
-                            },
-                            child: Text("Set ${setIndex + 1} - Button ${buttonIndex + 1}"),
+      body: Stack(
+        children: [
+          Container(
+            height: 500,
+            color: kAppBtmBackground,
+          ),
+          Container(
+            height: 500,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(200),
+              ),
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 70.0),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int setIndex = 0; setIndex < _setKeys.length; setIndex++)
+                    Container(
+                      key: _setKeys[setIndex],
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 20.0),
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            offset: const Offset(0, 5),
+                            blurRadius: 10.0,
                           ),
-                        ),
-                    ],
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            questions[setIndex].isNotEmpty
+                                ? "問題 ${setIndex + 1}:\n${questions[setIndex]}"
+                                : "読み込み中...",
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          for (int buttonIndex = 0; buttonIndex < 4; buttonIndex++)
+                            Padding(
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 8.0),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _selectedIndexes[setIndex] ==
+                                      buttonIndex
+                                      ? Colors.blue
+                                      : Colors.grey[200],
+                                  foregroundColor:
+                                  _selectedIndexes[setIndex] == buttonIndex
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fixedSize: Size(buttonWidth, 50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                onPressed: () =>
+                                    _onButtonPressed(setIndex, buttonIndex),
+                                child: Text(
+                                  ["　賛成　", "やや賛成", "やや反対", "　反対　"]
+                                  [buttonIndex],
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          if (_selectedIndexes.every((index) => index != null))
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: _onConfirm,
+                  child: const Text(
+                    "決定",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-            if (_selectedIndexes.every((index) => index != null))
-              ElevatedButton(
-                onPressed: _onConfirm,
-                child: const Text("決定"),
-              ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

@@ -183,6 +183,7 @@ class ChatRoom extends StatelessWidget {
                       ),
                       Expanded(
                         child: TextField(
+                          maxLines: 2,
                           controller: messageController,
                           decoration: const InputDecoration(hintText: "メッセージを入力..."),
                         ),

@@ -108,11 +108,11 @@ class QuestionScreen extends StatelessWidget {
                                             color: Colors.grey.withOpacity(0.3),
                                             blurRadius: 10,
                                           ),
-                                          BoxShadow(
-                                            offset: const Offset(-4, -4),
-                                            color: Colors.white.withOpacity(0.8),
-                                            blurRadius: 10,
-                                          ),
+                                        //   BoxShadow(
+                                        //     offset: const Offset(-4, -4),
+                                        //     color: Colors.white.withOpacity(0.8),
+                                        //     blurRadius: 10,
+                                        //   ),
                                         ],
                                         border: Border.all(color: Colors.grey.withOpacity(0.2)),
                                       ),
@@ -143,27 +143,6 @@ class QuestionScreen extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    // Positioned(
-                                    //   top: 15,
-                                    //   left: 15,
-                                    //   child: Container(
-                                    //     alignment: Alignment.center,
-                                    //     height: 35,
-                                    //     width: 100,
-                                    //     decoration: BoxDecoration(
-                                    //       color: Colors.lightBlueAccent,
-                                    //       borderRadius: BorderRadius.circular(8),
-                                    //     ),
-                                    //     child: Text(
-                                    //       genre,
-                                    //       style: const TextStyle(
-                                    //         fontSize: 16,
-                                    //         fontWeight: FontWeight.bold,
-                                    //         color: Colors.white,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                               ),
