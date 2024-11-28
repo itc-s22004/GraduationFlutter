@@ -34,10 +34,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
           screens: _buildScreens(),
           items: _navBarsItems(),
           backgroundColor: kColorBNBBackground,
-          // エラーの出るプロパティは削除
           handleAndroidBackButtonPress: true,
           stateManagement: true,
-          // navBarStyle: NavBarStyle.style6, // NavBarStyleは変更できる場合があります
             navBarStyle: NavBarStyle.style19,
             onItemSelected: (index) {
             setState(() {
@@ -62,100 +60,124 @@ class _BottomNavigationState extends State<BottomNavigation> {
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarHome,
+        icon: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarHome,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        inactiveIcon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarHomeDeactive,
+        inactiveIcon: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarHomeDeactive,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         title: ('Home'),
         activeColorPrimary: kColorBNBActiveTitleColor,
         inactiveColorPrimary: kColorBNBDeactiveTitleColor,
       ),
       PersistentBottomNavBarItem(
-        icon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarAnimals,
+        icon: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarAnimals,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        inactiveIcon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarAnimalsDeactive,
+        inactiveIcon: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarAnimalsDeactive,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         title: ('Animals'),
         activeColorPrimary: kColorBNBActiveTitleColor,
         inactiveColorPrimary: kColorBNBDeactiveTitleColor,
       ),
       PersistentBottomNavBarItem(
-        icon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarPlants,
+        icon: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarPlants,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        inactiveIcon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarPlantsDeactive,
+        inactiveIcon: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarPlantsDeactive,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         title: ('Plants'),
         activeColorPrimary: kColorBNBActiveTitleColor,
         inactiveColorPrimary: kColorBNBDeactiveTitleColor,
       ),
       PersistentBottomNavBarItem(
-        icon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarProfile,
+        icon: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarProfile,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        inactiveIcon: Column(
-          children: [
-            SizedBox(
-              height: kSizeBottomNavigationBarIconHeight,
-              child: Image.asset(
-                kIconPathBottomNavigationBarProfileDeactive,
+        inactiveIcon: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: kSizeBottomNavigationBarIconHeight,
+                child: Image.asset(
+                  kIconPathBottomNavigationBarProfileDeactive,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         title: ('Profile'),
         activeColorPrimary: kColorBNBActiveTitleColor,
