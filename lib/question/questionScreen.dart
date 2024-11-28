@@ -173,36 +173,62 @@ class QuestionScreen extends StatelessWidget {
   }
 
   void _showCommentDialog(BuildContext context) {
-    String genre = 'pg';
+    String genre = 'ジャンル';
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('何を投稿しますか？'),
-          content: SizedBox(
-            width: 400, // ダイアログの横幅を指定
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButton<String>(
-                  value: genre,
-                  items: <String>['pg', 'lang'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      genre = newValue;
-                    }
-                  },
-                ),
-                const SizedBox(height: 16), // スペースを追加
-                TextField(
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  const Text('何を投稿しますか？', style: TextStyle(fontSize: 21)),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      value: genre,
+                      isExpanded: true,
+                      items: <String>['ジャンル', 'pg', 'lang'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Center(
+                            child: Text(value),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            genre = newValue;
+                          });
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'ジャンル',
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade50,
+                      ),
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                ],
+              ),
+              content: SizedBox(
+                width: 400,
+                child: TextField(
                   maxLines: 5,
                   controller: _commentController,
+                  onChanged: (value) {
+                    setState(() {}); // テキスト変更時に状態を更新
+                  },
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -218,106 +244,32 @@ class QuestionScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('キャンセル'),
+                ),
+                ElevatedButton(
+                  onPressed: (genre == 'pg' || genre == 'lang') && _commentController.text.isNotEmpty
+                      ? () {
+                    final commentText = _commentController.text;
+                    _addQuestion(commentText, genre);
+                    _commentController.clear();
+                    Navigator.of(context).pop();
+                  }
+                      : null, // 無効状態の送信ボタン
+                  child: const Text('送信'),
+                ),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('キャンセル'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final commentText = _commentController.text;
-                if (commentText.isNotEmpty) {
-                  _addQuestion(commentText, genre);
-                  _commentController.clear();
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('送信'),
-            ),
-          ],
+            );
+          },
         );
       },
     );
   }
-
-  // void _showCommentDialog(BuildContext context) {
-  //   String genre = 'pg';
-  //
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('コメントを追加'),
-  //         content: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             DropdownButton<String>(
-  //               value: genre,
-  //               items: <String>['pg', 'lang'].map((String value) {
-  //                 return DropdownMenuItem<String>(
-  //                   value: value,
-  //                   child: Text(value),
-  //                 );
-  //               }).toList(),
-  //               onChanged: (String? newValue) {
-  //                 if (newValue != null) {
-  //                   genre = newValue;
-  //                 }
-  //               },
-  //             ),
-  //             TextField(
-  //               maxLines: 5,
-  //               controller: _commentController,
-  //               decoration: InputDecoration(
-  //                 enabledBorder: OutlineInputBorder(
-  //                     borderRadius: BorderRadius.circular(30),
-  //                     borderSide: const BorderSide(
-  //                       color: Colors.amber,
-  //                     )
-  //                 ),
-  //                 focusedBorder: OutlineInputBorder(
-  //                     borderRadius: BorderRadius.circular(30),
-  //                     borderSide: const BorderSide(
-  //                       color: Colors.amber,
-  //                     )
-  //                 ),
-  //               ),
-  //             ),
-  //             // TextField(
-  //             //   maxLines: 2,
-  //             //   controller: _commentController,
-  //             //   decoration: const InputDecoration(hintText: 'コメントを入力してください'),
-  //             // ),
-  //           ],
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: const Text('キャンセル'),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               final commentText = _commentController.text;
-  //               if (commentText.isNotEmpty) {
-  //                 _addQuestion(commentText, genre);
-  //                 _commentController.clear();
-  //                 Navigator.of(context).pop();
-  //               }
-  //             },
-  //             child: const Text('送信'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void _addQuestion(String questionText, String genre) async {
     try {
