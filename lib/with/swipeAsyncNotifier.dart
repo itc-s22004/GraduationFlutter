@@ -78,14 +78,23 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
 
   int _getMBTIScore(String currentUserMBTI, String userMBTI) {
     final Map<String, List<String>> mbtiCompatibility = {
-      'INTJ': ['ENFP', 'ENTP', 'INFJ', 'INTJ', 'ENTJ'],
-      'INFJ': ['ENTP', 'ENFP', 'INTJ', 'INFJ', 'INFP'],
-      'ENTP': ['INFJ', 'INTJ', 'ENFP', 'ENTP', 'INFP'],
-      'ENFP': ['INTJ', 'INFJ', 'INFP', 'ENTP', 'ENFP'],
-      'ISTJ': ['ESTP', 'ESFP', 'ISTJ', 'ISFJ', 'ESTJ'],
-      'ISFJ': ['ESFP', 'ESTP', 'ISTJ', 'ISFJ', 'ESTJ'],
-      'ESTJ': ['ISFP', 'ISTP', 'ESFJ', 'ESTP', 'ISFJ'],
-      'ESFJ': ['ISFP', 'ISTP', 'ESFP', 'ESTP', 'ISFJ'],
+      'INTJ': ['ESFJ', 'ISFP', 'ENTP', 'INFJ', 'ENFJ'],
+      'INFJ': ['ESTJ', 'ISTP', 'ENFP', 'INTJ', 'ENTJ'],
+      'ISTJ': ['ENFJ', 'INFP', 'ESTP', 'ISFJ', 'ESFJ'],
+      'ISFJ': ['ENTJ', 'INTP', 'ESFP', 'ISTJ', 'ESTJ'],
+      'INTP': ['ESFP', 'ISFJ', 'ENTJ', 'ISTP', 'ESTP'],
+      'INFP': ['ESTP', 'ISTJ', 'ENFJ', 'ISFP', 'ESFP'],
+      'ISTP': ['ENFP', 'INFJ', 'ESTJ', 'INTP', 'ENTP'],
+      'ISFP': ['ENTP', 'INTJ', 'ESFJ', 'INFP', 'ENFP'],
+
+      'ESTJ': ['INFJ', 'ENFP', 'ISTP', 'ESFJ', 'ISFJ'],
+      'ESFJ': ['INTJ', 'ENTP', 'ISFP', 'ESTJ', 'ISTJ'],
+      'ENTJ': ['ISFJ', 'ESFP', 'INTP', 'ENFJ', 'INFJ'],
+      'ENFJ': ['ISTJ', 'ESTP', 'INFP', 'ENTJ', 'INTJ'],
+      'ESTP': ['INFP', 'ENFJ', 'ISTJ', 'ENTP', 'INTP'],
+      'ESFP': ['INTP', 'ENTJ', 'ISFJ', 'ENFP', 'INFP'],
+      'ENTP': ['ISFP', 'ESFJ', 'INTJ', 'ESTP', 'ISTP'],
+      'ENFP': ['ISTP', 'ESTJ', 'INFJ', 'ESFP', 'ISFP'],
     };
 
     List<String> compatibleTypes = mbtiCompatibility[currentUserMBTI] ?? [];

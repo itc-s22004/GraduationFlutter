@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const LoginValidate(),
+      // home: const AddInfo(data: "test@a.com"),
       debugShowCheckedModeBanner: false,
     );
   }
