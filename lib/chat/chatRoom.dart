@@ -329,7 +329,6 @@ class ChatRoom extends StatelessWidget {
 
     final snapshot = await chatRoomRef.get();
 
-    // ログイン中のIDとsenderIdが一致する場合、ダイアログを表示しない
     bool showDialogFlag = true;
 
     for (var doc in snapshot.docs) {
@@ -338,20 +337,22 @@ class ChatRoom extends StatelessWidget {
       print('ログイン中のID: ${authController.userId.value}');
       print('Sender ID: $senderId');
 
-      // `authController.userId` と `senderId` を比較
       if (authController.userId.value == senderId) {
-        print('ログイン中のID: ${authController.userId.value}');
-        print('Sender ID: $senderId');
+        print('既に番号が登録されています。');
         showDialogFlag = false;
-        break; // 一致するsenderIdが見つかったら、ループを抜ける
+
+        _showMatchNotification({
+          'email': authController.email.value,
+        }, false);
+        break;
       }
     }
 
-    // 一致する senderId があればダイアログは表示しない
     if (!showDialogFlag) {
       return;
     }
 
+    // ダイアログ表示
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -381,7 +382,7 @@ class ChatRoom extends StatelessWidget {
                           onChanged: (String? newValue) {
                             if (newValue != null) {
                               setState(() {
-                                course = newValue;  // 新しい選択肢を`course`にセット
+                                course = newValue; // 新しい選択肢を`course`にセット
                                 print("Selected course: $course"); // デバッグ出力
                               });
                             }
@@ -444,8 +445,8 @@ class ChatRoom extends StatelessWidget {
         );
       },
     );
-
   }
+
 
   Stream<QuerySnapshot> _getMessagesStream(AuthController authController) {
     return FirebaseFirestore.instance
@@ -481,8 +482,7 @@ class ChatRoom extends StatelessWidget {
     // `users` コレクションから `schoolNumber` と一致するユーザーを検索
     final userSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('schoolNumber',
-            isEqualTo: num) // 入力された num が schoolNumber と一致するかを確認
+        .where('schoolNumber', isEqualTo: num) // 入力された num が schoolNumber と一致するかを確認
         .get();
 
     if (userSnapshot.docs.isNotEmpty) {
@@ -501,7 +501,7 @@ class ChatRoom extends StatelessWidget {
           'timestamp': FieldValue.serverTimestamp(),
           'userBool': true,
         });
-        _showMatchNotification(userData);
+        _showMatchNotification(userData, true); // ----------------
         print("登録成功: currentUserId と senderId と schoolNumber が一致しました");
       } else {
         print("一致するデータが見つかりませんでした");
@@ -512,22 +512,25 @@ class ChatRoom extends StatelessWidget {
   }
 
 // マッチングしたユーザーの情報を表示する通知
-  void _showMatchNotification(Map<String, dynamic> userData) {
+  void _showMatchNotification(Map<String, dynamic> userData, bool registratBool) {
     Get.snackbar(
-      '一致したユーザーが見つかりました！',
+      registratBool
+          ? '一致したユーザーが見つかりました！'
+          : '自分の番号を登録済みです。',
       'ユーザー: ${userData['email']} さん',
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.green.withOpacity(0.8),
       colorText: Colors.white,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 3),
       mainButton: TextButton(
         onPressed: () {
-          // ここに詳細情報を見るアクションを実装する（例: プロフィール画面への遷移）
+          // 詳細情報を見るアクションを実装する（例: プロフィール画面への遷移）
         },
         child: const Text('詳細を見る', style: TextStyle(color: Colors.white)),
       ),
     );
   }
+
 
   String _getChatRoomId(AuthController authController) {
     final currentUserId = authController.userId.value;
