@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
+import '../comp/tag.dart';
 import '../mbti/mbti.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -12,17 +13,16 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final authController = Get.find<AuthController>();
+  bool isFocused = false;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController diagnosisController = TextEditingController();
   final TextEditingController introductionController = TextEditingController();
 
+  final FocusNode introductionFocusNode = FocusNode();
+
   final List<String> genderOptions = ['男性', '女性', 'その他'];
   final List<String> schoolOptions = ['ITカレッジ沖縄', '外語学院'];
-  final List<String> tags = [
-    'ビール', 'ワイン', '日本酒', '焼酎', 'ウィスキー',
-    'ジン', 'ウォッカ', '紹興酒', 'マッコリ', 'カクテル', '果実酒',
-  ];
 
   String? selectedGender;
   String? selectedSchool;
@@ -32,6 +32,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     loadUserData();
+
+    introductionFocusNode.addListener(() {
+      setState(() {
+        isFocused = introductionFocusNode.hasFocus;
+      });
+    });
   }
 
   void loadUserData() {
@@ -45,6 +51,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> refreshDiagnosis() async {
     diagnosisController.text = authController.diagnosis.value;
+  }
+
+  // Future<void> refreshTag() async {
+  //
+  // }
+
+  // タグ更新のためにsetStateで再描画
+  void updateTags() {
+    setState(() {
+      selectedTags = authController.tags.value;
+    });
   }
 
   void saveProfile() {
@@ -65,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
         title: const Text('プロフィール編集'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,87 +90,174 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             TextField(
               controller: emailController,
               readOnly: true,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(
+                labelText: 'メールアドレス',
+                labelStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                floatingLabelAlignment: FloatingLabelAlignment.center,
+                filled: true,
+                fillColor: Colors.blueGrey.shade50,
+              ),
             ),
+            const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: selectedGender,
-              items: genderOptions.map((String gender) {
+              items: ['男性', '女性', 'その他'].map((String value) {
                 return DropdownMenuItem<String>(
-                  value: gender,
-                  child: Text(gender),
+                  value: value,
+                  child: Text(value),
                 );
               }).toList(),
-              onChanged: (value) {
+              onChanged: (String? newValue) {
                 setState(() {
-                  selectedGender = value;
+                  selectedGender = newValue;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Gender'),
+              decoration: InputDecoration(
+                labelText: '性別',
+                labelStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                floatingLabelAlignment: FloatingLabelAlignment.center,
+                filled: true,
+                fillColor: Colors.blueGrey.shade50,
+              ),
             ),
+            const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: selectedSchool,
-              items: schoolOptions.map((String school) {
+              items: ['ITカレッジ沖縄', '外語学院',].map((String value) {
                 return DropdownMenuItem<String>(
-                  value: school,
-                  child: Text(school),
+                  value: value,
+                  child: Text(value),
                 );
               }).toList(),
-              onChanged: (value) {
+              onChanged: (String? newValue) {
                 setState(() {
-                  selectedSchool = value;
+                  selectedSchool = newValue;
                 });
               },
-              decoration: const InputDecoration(labelText: 'School'),
+              decoration: InputDecoration(
+                labelText: '学校',
+                labelStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                floatingLabelAlignment: FloatingLabelAlignment.center,
+                filled: true,
+                fillColor: Colors.blueGrey.shade50,
+              ),
             ),
-            TextField(
-              controller: diagnosisController,
-              readOnly: true,
-              decoration: const InputDecoration(labelText: '診断結果 (MBTI)'),
-            ),
-            TextField(
-              maxLines: 2,
-              controller: introductionController,
-              decoration: const InputDecoration(labelText: '自己紹介'),
-            ),
-            const SizedBox(height: 20),
-
-            // タグの選択
-            const Text("タグを選択"),
-            Wrap(
-              spacing: 8.0,
-              children: tags.map((tag) {
-                final isSelected = selectedTags.contains(tag);
-                return ChoiceChip(
-                  label: Text(tag),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      isSelected ? selectedTags.remove(tag) : selectedTags.add(tag);
-                    });
-                  },
-                  selectedColor: Colors.pink,
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
-
-            // MBTI診断ボタン
-            ElevatedButton(
-              onPressed: () async {
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: () async {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => Mbti(
+                  MaterialPageRoute(builder: (context) => Mbti(
                       data: authController.email.value,
-                      fromEditProf: true,
-                    ),
+                      fromEditProf: true),
                   ),
                 );
                 refreshDiagnosis();
               },
-              child: const Text('診断を受ける'),
+              child: AbsorbPointer( // TextFieldの入力を無効化（タップ可能にする）
+                child: TextField(
+                  controller: diagnosisController,
+                  readOnly: true, // 読み取り専用
+                  decoration: InputDecoration(
+                    labelText: 'MBTI',
+                    labelStyle: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    floatingLabelAlignment: FloatingLabelAlignment.center,
+                    filled: true,
+                    fillColor: Colors.blueGrey.shade50,
+                  ),
+                ),
+              ),
             ),
-
+            const SizedBox(height: 16),
+            TextField(
+              focusNode: introductionFocusNode,
+              minLines: 1,
+              maxLines: null,
+              controller: introductionController,
+              decoration: InputDecoration(
+                // labelText: 'labelText',
+                labelText: isFocused ? '自己紹介' : '素敵な自己紹介を書いてね！！！',
+                labelStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                floatingLabelAlignment: FloatingLabelAlignment.center,
+                filled: true,
+                fillColor: Colors.blueGrey.shade50,
+              ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Tag(
+                      email: authController.email.value,
+                      fromEditProf: true)
+                  )
+                );
+                // refresh
+              },
+              child: AbsorbPointer(
+                child: TextField(
+                  // controller: ,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    // hintText: 'タグを編集する',
+                      labelText: 'タグを編集する',
+                      labelStyle: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    floatingLabelAlignment: FloatingLabelAlignment.center,
+                    filled: true,
+                    fillColor: Colors.blueGrey.shade50
+                  ),
+                ),
+              ),
+            ),
+            selectedTags.isNotEmpty
+                ? Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: selectedTags.map((tag) {
+                return Chip(
+                  label: Text(tag),
+                  backgroundColor: Colors.blue,
+                );
+              }).toList(),
+            )
+                : const Text('タグが選択されていません'),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: saveProfile,

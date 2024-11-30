@@ -130,14 +130,14 @@ class _MbtiState extends State<Mbti> {
                 // AuthControllerに診断結果を保存
                 authController.updateDiagnosis(resultStr);
 
-                if (widget.fromEditProf) {
+                if (widget.fromEditProf) { // trueだったら編集画面に
                   Get.back(); // 編集画面に戻る
                 } else {
                   // BottomNavigationに遷移
                   Get.offAll(() => const BottomNavigation());
                 }
               },
-              child: const Text("閉じる"),
+              child: const Text("閉じる"),  //----------------------------
             ),
           ],
         );

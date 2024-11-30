@@ -206,7 +206,10 @@ class _AddInfoState extends State<AddInfo> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          Tag(email: widget.data),
+                                          Tag(
+                                              email: widget.data,
+                                              fromEditProf: false
+                                          ),
                                     ),
                                   );
                                 }

@@ -399,6 +399,7 @@ class ChatRoom extends StatelessWidget {
                             filled: true,
                             fillColor: Colors.blueGrey.shade50,
                           ),
+                          alignment: Alignment.center,
                         ),
                       ),
                       const SizedBox(width: 8),

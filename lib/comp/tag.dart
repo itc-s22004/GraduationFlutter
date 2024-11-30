@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:omg/navigation.dart';
 import '../auth_controller.dart';
 import 'package:omg/mbti/mbti.dart';
 import '../utilities/constant.dart';
 
 class Tag extends StatefulWidget {
-  final String email; // AddInfoから受け取るemail
+  final String email;
+  final bool fromEditProf;
 
-  const Tag({Key? key, required this.email}) : super(key: key);
+  const Tag({Key? key, required this.email, required this.fromEditProf}) : super(key: key);
 
   @override
   State<Tag> createState() => _TagState();
@@ -64,17 +66,17 @@ class _TagState extends State<Tag> {
     }
   }
 
-  void navigateToMbti() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Mbti(
-          data: widget.email,
-          fromEditProf: false,
-        ),
-      ),
-    );
-  }
+  // void navigateToMbti() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => Mbti(
+  //         data: widget.email,
+  //         fromEditProf: false,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -189,10 +191,20 @@ class _TagState extends State<Tag> {
                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), backgroundColor: Colors.pink,
                           ),
                           onPressed: () {
+                            Navigator.of(context).pop();
                             saveTagsToFirebase();
-                            navigateToMbti(); // 保存後にMBTIへ遷移
+
+                            authController.updateTags(selectedTags);
+
+                            if (widget.fromEditProf) {
+                              Get.back();
+                            } else {
+                              Get.offAll(() => Mbti(data: widget.email, fromEditProf: false));
+                              print('elseだよ');
+
+                            }
                           },
-                          child: const Text('MBTIへ進む'),
+                          child: const Text('タグを決定'),
                         ),
                       ],
                     ),
