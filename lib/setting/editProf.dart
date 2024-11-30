@@ -53,11 +53,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     diagnosisController.text = authController.diagnosis.value;
   }
 
-  // Future<void> refreshTag() async {
-  //
-  // }
-
-  // タグ更新のためにsetStateで再描画
   void updateTags() {
     setState(() {
       selectedTags = authController.tags.value;
@@ -172,10 +167,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 );
                 refreshDiagnosis();
               },
-              child: AbsorbPointer( // TextFieldの入力を無効化（タップ可能にする）
+              child: AbsorbPointer(
                 child: TextField(
                   controller: diagnosisController,
-                  readOnly: true, // 読み取り専用
+                  readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'MBTI',
                     labelStyle: const TextStyle(
@@ -217,31 +212,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             GestureDetector(
               onTap: () async {
                 await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Tag(
-                      email: authController.email.value,
-                      fromEditProf: true)
-                  )
+                    context,
+                    MaterialPageRoute(builder: (context) => Tag(
+                        email: authController.email.value,
+                        fromEditProf: true)
+                    )
                 );
-                // refresh
+                setState(() {
+                  selectedTags = authController.tags.value;
+                });
               },
               child: AbsorbPointer(
                 child: TextField(
-                  // controller: ,
                   readOnly: true,
                   decoration: InputDecoration(
-                    // hintText: 'タグを編集する',
                       labelText: 'タグを編集する',
                       labelStyle: const TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
                       ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)
-                    ),
-                    floatingLabelAlignment: FloatingLabelAlignment.center,
-                    filled: true,
-                    fillColor: Colors.blueGrey.shade50
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      floatingLabelAlignment: FloatingLabelAlignment.center,
+                      filled: true,
+                      fillColor: Colors.blueGrey.shade50
                   ),
                 ),
               ),

@@ -21,7 +21,6 @@ class _TagState extends State<Tag> {
 
   var selectedTags = <String>[];
 
-  // Define grouped tags
   final Map<String, List<String>> groupedTags = {
     'お酒': ['ビール', 'ワイン', '日本酒', '焼酎', 'ウィスキー',
       'ジン', 'ウォッカ', '紹興酒', 'マッコリ', 'カクテル', '果実酒'],
@@ -34,7 +33,7 @@ class _TagState extends State<Tag> {
       'フィットネス', 'ビデオ編集', 'バーベキュー', '釣り', 'パズル'],
   };
 
-  Future<void>  saveTagsToFirebase() async {
+  Future<void> saveTagsToFirebase() async {
     try {
       await FirebaseFirestore.instance
           .collection('users')
@@ -52,19 +51,20 @@ class _TagState extends State<Tag> {
 
           // AuthControllerにタグを更新
           authController.updateTags(selectedTags);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('タグが保存されました。')),
-          );
         }
       });
+      //
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('タグが保存されました。')),
+      // );
     } catch (e) {
       print("タグの保存中にエラーが発生しました: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('タグの保存に失敗しました')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('タグの保存に失敗しました')),
+      // );
     }
   }
+
 
   // void navigateToMbti() {
   //   Navigator.push(
@@ -111,11 +111,10 @@ class _TagState extends State<Tag> {
                 color: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
-            SingleChildScrollView( // ここを追加してスクロール可能にする
+            SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(height: 50.0),
-                  // Loop through the categories and display the tags
                   ...groupedTags.entries.map((category) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,9 +127,8 @@ class _TagState extends State<Tag> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        // 趣味のタグを表示するWrapウィジェット
                         Padding(
-                          padding: const EdgeInsets.all(40.0), // Paddingを追加して余白を設定
+                          padding: const EdgeInsets.all(40.0),
                           child: Wrap(
                             runSpacing: 16,
                             spacing: 16,
@@ -191,7 +189,7 @@ class _TagState extends State<Tag> {
                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), backgroundColor: Colors.pink,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            // Navigator.of(context).pop();
                             saveTagsToFirebase();
 
                             authController.updateTags(selectedTags);
