@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:omg/navigation.dart';
 import '../auth_controller.dart';
 import 'package:omg/mbti/mbti.dart';
 import '../utilities/constant.dart';
@@ -27,11 +26,42 @@ class _TagState extends State<Tag> {
     '趣味': ['音楽', '映画', 'ゲーム', 'スポーツ', '旅行', '読書',
       '写真', '料理', 'アート', 'ダンス', 'ハイキング', 'ボードゲーム',
       'ヨガ', 'ギター', 'カラオケ', 'スイーツ', '漫画', 'コーディング',
-      '写真', '料理', 'アート', 'ダンス', 'ハイキング', 'ボードゲーム',
-      'ヨガ', 'ギター', 'カラオケ', 'スイーツ', '漫画', 'コーディング',
       'ファッション', 'DIY', 'ペット', 'サイクリング', 'ランニング', '美容',
       'フィットネス', 'ビデオ編集', 'バーベキュー', '釣り', 'パズル'],
   };
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialTags();
+  }
+
+  Future<void> _loadInitialTags() async {
+    try {
+      final tagsFromController = authController.tags;
+      if (tagsFromController.isNotEmpty) {
+        setState(() {
+          selectedTags = List<String>.from(tagsFromController);
+        });
+        return;
+      }
+
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: widget.email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        final List<dynamic> tagsFromFirestore = userDoc['tag'] ?? [];
+        setState(() {
+          selectedTags = tagsFromFirestore.cast<String>();
+        });
+      }
+    } catch (e) {
+      print('タグのロード中にエラーが発生しました: $e');
+    }
+  }
 
   Future<void> saveTagsToFirebase() async {
     try {
@@ -49,34 +79,14 @@ class _TagState extends State<Tag> {
               .doc(docId)
               .set({'tag': selectedTags}, SetOptions(merge: true));
 
-          // AuthControllerにタグを更新
+          // AuthController にタグを更新
           authController.updateTags(selectedTags);
         }
       });
-      //
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('タグが保存されました。')),
-      // );
     } catch (e) {
       print("タグの保存中にエラーが発生しました: $e");
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('タグの保存に失敗しました')),
-      // );
     }
   }
-
-
-  // void navigateToMbti() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => Mbti(
-  //         data: widget.email,
-  //         fromEditProf: false,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +185,8 @@ class _TagState extends State<Tag> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), backgroundColor: Colors.grey[300],
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            backgroundColor: Colors.grey[300],
                           ),
                           onPressed: () {
                             setState(() {
@@ -186,20 +197,17 @@ class _TagState extends State<Tag> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), backgroundColor: Colors.pink,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            backgroundColor: Colors.pink,
                           ),
                           onPressed: () {
-                            // Navigator.of(context).pop();
                             saveTagsToFirebase();
-
                             authController.updateTags(selectedTags);
 
                             if (widget.fromEditProf) {
                               Get.back();
                             } else {
                               Get.offAll(() => Mbti(data: widget.email, fromEditProf: false));
-                              print('elseだよ');
-
                             }
                           },
                           child: const Text('タグを決定'),
