@@ -9,7 +9,7 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double cardSize = 226.0;
+    const double cardSize = 220.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -76,6 +76,8 @@ class SettingScreen extends StatelessWidget {
                     )),
                     const SizedBox(height: 24),
                     Divider(color: Colors.grey[300]),
+
+                    // 学校、性別、MBTIのカード
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -85,7 +87,7 @@ class SettingScreen extends StatelessWidget {
                           authController.gender.value,
                           cardSize,
                         )),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 24),
                         Obx(() => _buildInfoCard(
                           Icons.school,
                           '学校',
@@ -94,7 +96,7 @@ class SettingScreen extends StatelessWidget {
                         )),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -104,7 +106,7 @@ class SettingScreen extends StatelessWidget {
                           authController.diagnosis.value,
                           cardSize,
                         )),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 24),
                         Obx(() => Container(
                           width: cardSize,
                           height: cardSize,
@@ -130,8 +132,15 @@ class SettingScreen extends StatelessWidget {
                         )),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
+                    //　自己紹介
+                    Obx(() => _buildIntroductionCard(
+                      authController.introduction.value,
+                    )),
+
+                    const SizedBox(height: 24),
                     Obx(() => _buildTagsSection(authController.tags)),
+
                   ],
                 ),
               ),
@@ -149,7 +158,8 @@ class SettingScreen extends StatelessWidget {
       height: size,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.green[100],
+        // color: Colors.green[50],
+        color: kObjectBackground,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -171,7 +181,7 @@ class SettingScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-            height: 80, // 上に少し余白を追加
+            height: 80,
             child: Center(
               child: Text(
                 value,
@@ -192,53 +202,106 @@ class SettingScreen extends StatelessWidget {
 
 
   Widget _buildTagsSection(List<String> tags) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.label, color: Colors.green),
-              Text(
-                'タグ:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(width: 400),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 8.0,
-            runSpacing: 4.0,
-            children: tags
-                .map((tag) => Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.green[100],
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Text(
-                tag,
-                style: const TextStyle(
-                    fontSize: 16, color: Colors.black87),
-              ),
-            ))
-                .toList(),
-          ),
-        ],
+    return Center(
+      child: Container(
+        width: 466, // 横幅を固定
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          // color: Colors.green[80],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black.withOpacity(0.1),
+          //     spreadRadius: 2,
+          //     blurRadius: 8,
+          //     offset: const Offset(2, 4),
+          //   ),
+          // ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.label, color: Colors.green),
+                Text(
+                  'タグ:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(width: 360),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: tags
+                  .map((tag) => Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  // color: Colors.green[50],
+                  color: kObjectBackground,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  tag,
+                  style: const TextStyle(
+                      fontSize: 16, color: Colors.black87),
+                ),
+              ))
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIntroductionCard(String introduction) {
+    return Center(
+      child: Container(
+        width: 466,
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: kObjectBackground,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(2, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '自己紹介',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              introduction.isNotEmpty
+                  ? introduction
+                  : 'まだ自己紹介がありません。',
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
       ),
     );
   }
