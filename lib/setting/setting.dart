@@ -53,30 +53,37 @@ class SettingScreen extends StatelessWidget {
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                // padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
                 child: Column(
                   children: [
-                    Obx(() => CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage: AssetImage(
-                          "assets/images/${authController.diagnosis.value}.jpg"),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 4),
-                        ),
-                      ),
-                    )),
-                    const SizedBox(height: 16),
-                    Obx(() => Text(
-                      authController.email.value,
-                      style: const TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.bold),
-                    )),
-                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Obx(() => CircleAvatar(
+                          radius: 40.0,
+                          backgroundColor: Colors.grey[300],
+                          backgroundImage: AssetImage(
+                              "assets/images/${authController.diagnosis.value}.jpg"),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 4),
+                            ),
+                          ),
+                        )),
+                        const SizedBox(width: 24),
+                        Obx(() => Text(
+                          authController.email.value,
+                          style: const TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
+                        )),
+                        const SizedBox(width: 230),
+                      ],
+                    ),
+                    // const SizedBox(height: 24),
                     Divider(color: Colors.grey[300]),
-
                     // 学校、性別、MBTIのカード
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -133,7 +140,6 @@ class SettingScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    //　自己紹介
                     Obx(() => _buildIntroductionCard(
                       authController.introduction.value,
                     )),
@@ -204,10 +210,10 @@ class SettingScreen extends StatelessWidget {
   Widget _buildTagsSection(List<String> tags) {
     return Center(
       child: Container(
-        width: 466, // 横幅を固定
+        width: 490, // 横幅を固定
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          // color: Colors.green[80],
+          // color: Colors.green[100],
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           // boxShadow: [
@@ -230,7 +236,7 @@ class SettingScreen extends StatelessWidget {
                   'タグ:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(width: 360),
+                SizedBox(width: 390),
               ],
             ),
             const SizedBox(height: 16),
