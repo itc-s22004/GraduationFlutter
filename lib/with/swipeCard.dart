@@ -21,8 +21,10 @@ class SwipeCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final swipeNotifier = ref.read(asyncNotifier.swipeAsyncNotifierProvider.notifier);
 
+
     return Column(
       children: [
+        const SizedBox(height: 16),
         Expanded(
           child: AppinioSwiper(
             controller: controller,
@@ -196,7 +198,7 @@ class SwipeCard extends ConsumerWidget {
                 ),
               ],
             ),
-            child: Column(              // スワイプカードの中の情報
+            child: Column(
               children: [
                 CircleAvatar(
                   radius: 50,
@@ -290,6 +292,7 @@ class SwipeCard extends ConsumerWidget {
           },
           iconData: Icons.cancel,
           color: Colors.red,
+          iconSize: 30,
         ),
         _buildCustomBtn(
           onPressed: () {
@@ -297,6 +300,7 @@ class SwipeCard extends ConsumerWidget {
           },
           iconData: Icons.star,
           color: Colors.blue,
+          iconSize: 30,
         ),
         _buildCustomBtn(
           onPressed: () {
@@ -304,15 +308,18 @@ class SwipeCard extends ConsumerWidget {
           },
           iconData: Icons.favorite,
           color: Colors.teal,
+          iconSize: 30,
         ),
       ],
     );
   }
 
+
   Widget _buildCustomBtn({
     required void Function()? onPressed,
     required IconData iconData,
     required Color color,
+    required double iconSize,
   }) {
     return ElevatedButton(
       onPressed: onPressed,
@@ -321,11 +328,12 @@ class SwipeCard extends ConsumerWidget {
         backgroundColor: Colors.white,
         elevation: 8,
         shape: const CircleBorder(),
-        minimumSize: const Size.square(50),
+        minimumSize: const Size.square(70),
       ),
       child: Icon(
         iconData,
         color: color,
+        size: iconSize,
       ),
     );
   }

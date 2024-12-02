@@ -54,7 +54,7 @@ class SettingScreen extends StatelessWidget {
             SingleChildScrollView(
               child: Padding(
                 // padding: const EdgeInsets.all(16.0),
-                padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                padding: const EdgeInsets.only(top: 10.0, bottom: 20.0, left: 10.0),
                 child: Column(
                   children: [
                     Row(
@@ -109,7 +109,7 @@ class SettingScreen extends StatelessWidget {
                       children: [
                         Obx(() => _buildInfoCard(
                           Icons.person,
-                          '性別',
+                          'MBTI',
                           authController.diagnosis.value,
                           cardSize,
                         )),

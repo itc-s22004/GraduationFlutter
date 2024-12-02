@@ -12,7 +12,6 @@ class ChatListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
         title: const Text(
             'チャット',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
@@ -44,7 +43,6 @@ class ChatListScreen extends StatelessWidget {
                 color: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
-            // チャットリスト部分
             FutureBuilder<List<ChatUser>>(
               future: _fetchMatchedUsers(authController.userId.value),
               builder: (context, snapshot) {
@@ -60,14 +58,7 @@ class ChatListScreen extends StatelessWidget {
                     itemCount: matchedUsers.length,
                     itemBuilder: (context, index) {
                       final user = matchedUsers[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
-                          backgroundColor: Colors.grey[200],
-                          radius: 24,
-                        ),
-                        title: Text(user.name),
-                        subtitle: Text('ユーザーID: ${user.userId}\nMBTI: ${user.mbti}'),
+                      return InkWell(
                         onTap: () {
                           Get.to(() => ChatRoom(
                             userId: user.userId,
@@ -75,6 +66,35 @@ class ChatListScreen extends StatelessWidget {
                             mbti: user.mbti,
                           ));
                         },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
+                                backgroundColor: Colors.grey[200],
+                                radius: 35, // 写真のサイズ
+                              ),
+                              const SizedBox(width: 20.0), // 写真とテキストの間
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${user.name}\nユーザーID: ${user.userId}',
+                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 4.0), // 上下のテキスト間の余白
+                                    Text(
+                                      'MBTI: ${user.mbti}',
+                                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
                     separatorBuilder: (context, index) => const Divider(),
