@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../utilities/constant.dart';
 import 'UserDetailsPanel.dart';
+import 'detailDesgin.dart';
 
 class LikeToList extends StatefulWidget {
   final int currentUserId;
@@ -16,6 +17,7 @@ class LikeToList extends StatefulWidget {
 
 class _LikeToListState extends State<LikeToList> {
   final RxList<LikeToUser> _likeToUsers = <LikeToUser>[].obs;
+  static const double cardSize = 210.0;
 
   @override
   void initState() {
@@ -137,10 +139,82 @@ class _LikeToListState extends State<LikeToList> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        return UserDetailsPanel(
-          user: user,
-          onLikeUser: _likeUser,
-          onDeleteUser: _deleteUser,
+        return FractionallySizedBox(
+          heightFactor: 0.8,
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, -4),
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(top: 10.0, bottom: 20.0, left: 10.0),
+                child: Column(
+                  children: [
+                    // -----------------------プロフィールのデザイン
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        buildInfoCard(
+                            Icons.person, '性別', user.gender, cardSize),
+                        const SizedBox(width: 24),
+                        buildInfoCard(
+                            Icons.school, '学校', user.school, cardSize),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        buildInfoCard(
+                            Icons.person, 'MBTI', user.mbti, cardSize),
+                        const SizedBox(width: 24),
+                        Container(
+                          width: cardSize,
+                          height: cardSize,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                spreadRadius: 2,
+                                blurRadius: 8,
+                                offset: const Offset(2, 4),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              "assets/images/${user.mbti}.jpg",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    buildIntroductionCard(user.introduction),
+                    const SizedBox(height: 24),
+                    buildTagsSection(user.tag)
+                  ],
+                ),
+              ),
+            ),
+          ),
         );
       },
     );
@@ -150,10 +224,9 @@ class _LikeToListState extends State<LikeToList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: const Text('あなたをLIKEしたユーザー'),
         title: const Text(
-            'LIKEしてくれた人',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+          'LIKEしてくれた人',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -165,65 +238,100 @@ class _LikeToListState extends State<LikeToList> {
       ),
       body: Align(
         alignment: Alignment.topCenter,
-          child: Stack(
-            children: [
-              Container(
-                height: 500,
-                color: kAppBtmBackground,
-              ),
-              Container(
-                height: 500,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(200),
-                  ),
-                  color: Theme.of(context).scaffoldBackgroundColor,
+        child: Stack(
+          children: [
+            Container(
+              height: 500,
+              color: kAppBtmBackground,
+            ),
+            Container(
+              height: 500,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(200),
                 ),
+                color: Theme.of(context).scaffoldBackgroundColor,
               ),
-              Obx(() {
-                if (_likeToUsers.isEmpty) {
-                  return const Center(child: Text("あなたをLIKEしたユーザーがいません"));
-                }
-                return ListView.builder(
-                  itemCount: _likeToUsers.length,
-                  itemBuilder: (context, index) {
-                    final user = _likeToUsers[index]; //-----------------
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
-                        backgroundColor: Colors.grey[200],
-                        radius: 24,
-                      ),
-                      title: Text(user.name),
-                      subtitle: Text('ユーザID: ${user.userId}\nMBTI: ${user.mbti}'),
-                      onTap: () {
-                        _showUserDetails(context, user);
-                      },
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
+            ),
+            Obx(() {
+              if (_likeToUsers.isEmpty) {
+                return const Center(child: Text("あなたをLIKEしたユーザーがいません"));
+              }
+              return ListView.separated(
+                itemCount: _likeToUsers.length,
+                itemBuilder: (context, index) {
+                  final user = _likeToUsers[index];
+                  return InkWell(
+                    onTap: () {
+                      _showUserDetails(context, user);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
+                      child: Row(
                         children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              await _likeUser(user.userId);
-                              }, child: const Text('いいね'),
+                          CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/${user.mbti}.jpg'),
+                            backgroundColor: Colors.grey[200],
+                            radius: 35, // 写真のサイズ
                           ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await _deleteUser(user);
-                              },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red
+                          const SizedBox(width: 20.0), // 写真とテキストの間
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.name,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 4.0),
+                                Text(
+                                  'ユーザID: ${user.userId}',
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
+                                const SizedBox(height: 4.0),
+                                Text(
+                                  'MBTI: ${user.mbti}',
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
+                              ],
                             ),
-                            child: const Text('削除'),
+                          ),
+                          const SizedBox(width: 10),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await _likeUser(user.userId);
+                                },
+                                child: const Text('いいね'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await _deleteUser(user);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red),
+                                child: const Text('削除'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    );
-                    },
-                );
-              }),
-            ],
-          ),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) => const Divider(),
+              );
+            }),
+          ],
+        ),
       ),
     );
   }

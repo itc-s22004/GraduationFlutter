@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
+import '../comp/detailDesgin.dart';
 import '../utilities/constant.dart';
 
 class ChatRoom extends StatelessWidget {
@@ -13,6 +14,7 @@ class ChatRoom extends StatelessWidget {
 
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _numberController = TextEditingController();
+  static const double cardSize = 210.0;
 
   @override
   Widget build(BuildContext context) {
@@ -235,90 +237,149 @@ class ChatRoom extends StatelessWidget {
 
       showModalBottomSheet(
         context: context,
-        builder: (BuildContext context) {
-          return Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return FractionallySizedBox(
+            heightFactor: 0.8,
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, -4),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10.0, bottom: 20.0, left: 10.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          buildInfoCard(
+                              Icons.person,
+                              '性別',
+                              userData['gender'],
+                              cardSize
+                          ),
+                          const SizedBox(width: 24),
+                          buildInfoCard(
+                              Icons.school,
+                              '学校',
+                              userData['school'],
+                              cardSize
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          buildInfoCard(
+                              Icons.person,
+                              'MBTI',
+                              userData['diagnosis'],
+                              cardSize
+                          ),
+                          const SizedBox(width: 24),
+                          Container(
+                            width: cardSize,
+                            height: cardSize,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                  offset: const Offset(2, 4),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.asset(
+                                "assets/images/${userData['diagnosis']}.jpg",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      buildIntroductionCard(
+                          userData['introduction']
+                      ),
+                      const SizedBox(height: 24),
+                      Column(
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.label, color: Colors.green),
+                              SizedBox(width: 8),
+                              Text(
+                                'タグ:',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 360),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: userData['tag']?.map<Widget>((tag) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: kObjectBackground,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  tag,
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.black87),
+                                ),
+                              );
+                            }).toList() ??
+                                [],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage:
-                      AssetImage('assets/images/${userData['diagnosis']}.jpg'),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  userData['email'],
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  userData['diagnosis'],
-                  style: TextStyle(fontSize: 18, color: Colors.grey.shade700),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8.0,
-                  runSpacing: 4.0,
-                  children: userData['tag']?.map<Widget>((tag) {
-                        return Chip(
-                          label: Text(tag),
-                          backgroundColor: Colors.blue.shade100,
-                        );
-                      }).toList() ??
-                      [],
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                    child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildDetailRow(Icons.school, "学校", userData['school']),
-                        _buildDetailRow(
-                            Icons.abc, "自己紹介", userData['introduction']),
-                      ],
-                    ),
-                ))
-              ],
+              ),
             ),
           );
         },
       );
     }
-  }
-
-  Widget _buildDetailRow(IconData icon, String title, String detail) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: Colors.teal),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              "$title: $detail",
-              style: const TextStyle(fontSize: 16),
-              softWrap: true,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   void _showMyNumDialog(BuildContext context, AuthController authController) async {
