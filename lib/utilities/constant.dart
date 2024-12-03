@@ -13,3 +13,4 @@ const Color kAppBarBackground = Color.fromARGB(255, 163, 233, 120);
 const Color kAppBtmBackground = Color.fromARGB(255, 168, 235, 131);
 
 const Color kObjectBackground = Color.fromARGB(255, 255, 225, 244);
+const Color kQuestBackground = Color.fromARGB(255, 246, 190, 225);

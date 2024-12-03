@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
 import '../comp/UserDetailsPanel.dart';
+import '../comp/detailDesgin.dart';
 import '../comp/likeToList.dart';
 import '../utilities/constant.dart';
 
@@ -21,13 +22,16 @@ class FullQuestionScreen extends StatelessWidget {
     required this.userId,
   }) : super(key: key);
 
+  static const double cardSize = 210.0;
+
   @override
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hello World', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: const Text("返信",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.elliptical(90, 30),
@@ -62,9 +66,7 @@ class FullQuestionScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildGenreTag(),
-                    const SizedBox(height: 16),
-                    _buildUserInfo(),
+                    _buildGenreAndUserRow(),
                     const SizedBox(height: 16),
                     _buildQuestionText(),
                     const SizedBox(height: 32),
@@ -81,86 +83,198 @@ class FullQuestionScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGenreTag() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        color: Colors.lightBlueAccent,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        genre,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
+  Widget _buildGenreAndUserRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('users')
+              .doc('user$userId')
+              .get(),
+          builder: (context, userSnapshot) {
+            if (!userSnapshot.hasData) {
+              return const CircularProgressIndicator();
+            }
 
-  Widget _buildUserInfo() {
-    return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance
-          .collection('users')
-          .doc('user$userId')
-          .get(),
-      builder: (context, userSnapshot) {
-        if (!userSnapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
+            final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+            final mbti = userData?['diagnosis'] ?? 'NotSet';
+            final profileImageUrl = 'assets/images/${mbti}.jpg';
 
-        final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-        final mbti = userData?['diagnosis'] ?? 'NotSet';
-        final profileImageUrl = 'assets/images/${mbti}.jpg';
-
-        // ユーザー情報の準備
-        final user = LikeToUser(
-          name: userData?['name'] ?? 'Unknown',
-          userId: userId,
-          likeDocId: '', // 必要に応じて設定
-          gender: userData?['gender'] ?? 'NotSet',
-          introduction: userData?['introduction'] ?? 'No Introduction',
-          mbti: mbti,
-          school: userData?['school'] ?? 'Unknown',
-          tag: List<String>.from(userData?['tag'] ?? []),
-        );
-
-        return Row(
-          children: [
-            GestureDetector(
+            return GestureDetector(
               onTap: () {
+                // 詳細パネルを開く
                 showModalBottomSheet(
                   context: context,
-                  isScrollControlled: true, // Allows the panel to be taller than the default
-                  backgroundColor: Colors.transparent, // Makes the edges rounded
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
                   builder: (BuildContext context) {
-                    return UserDetailsPanel(
-                      user: user,
-                      onLikeUser: (int likeToUserId) async {
-                        await _likeUser(likeToUserId);
-                      },
-                      onDeleteUser: (LikeToUser user) async {
-                        await _deleteUser(user);
-                      },
+                    return FractionallySizedBox(
+                      heightFactor: 0.8,
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, -4),
+                            ),
+                          ],
+                        ),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10.0, bottom: 20.0, left: 10.0),
+                            child: Column(
+                              children: [  // -----------------------プロフィールのデザイン
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    buildInfoCard(
+                                        Icons.person,
+                                        '性別',
+                                        userData?['gender'],
+                                        cardSize
+                                    ),
+                                    const SizedBox(width: 24),
+                                    buildInfoCard(
+                                        Icons.school,
+                                        '学校',
+                                        userData?['school'],
+                                        cardSize
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 24),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    buildInfoCard(
+                                        Icons.person,
+                                        'MBTI',
+                                        mbti,
+                                        cardSize
+                                    ),
+                                    const SizedBox(width: 24),
+                                    Container(
+                                      width: cardSize,
+                                      height: cardSize,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.15),
+                                            spreadRadius: 2,
+                                            blurRadius: 8,
+                                            offset: const Offset(2, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.asset(
+                                          "assets/images/${mbti}.jpg",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 24),
+                                buildIntroductionCard(
+                                  userData?['introduction']
+                                ),
+                                const SizedBox(height: 24),
+                                // buildTagsSection(user.tags)
+                                Column(
+                                  children: [
+                                    const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.label, color: Colors.green),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'タグ:',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: 360),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 8.0,
+                                      runSpacing: 8.0,
+                                      children: userData?['tag']?.map<Widget>((tag) {
+                                        return Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                          decoration: BoxDecoration(
+                                            color: kObjectBackground,
+                                            borderRadius: BorderRadius.circular(20),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.1),
+                                                spreadRadius: 1,
+                                                blurRadius: 5,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Text(
+                                            tag,
+                                            style: const TextStyle(
+                                                fontSize: 16, color: Colors.black87),
+                                          ),
+                                        );
+                                      }).toList() ??
+                                          [],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     );
                   },
                 );
               },
               child: CircleAvatar(
-                radius: 20,
+                radius: 35,
                 backgroundImage: AssetImage(profileImageUrl),
                 backgroundColor: Colors.grey,
               ),
+            );
+          },
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            // color: Colors.lightBlueAccent,
+            color: kQuestBackground,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            genre,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
-            const SizedBox(width: 10),
-            Text(
-              mbti,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 
@@ -230,7 +344,8 @@ class FullQuestionScreen extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+                final userData =
+                    userSnapshot.data!.data() as Map<String, dynamic>?;
                 final mbti = userData?['diagnosis'] ?? 'NotSet';
                 final profileImageUrl = 'assets/images/${mbti}.jpg';
 
@@ -263,11 +378,13 @@ class FullQuestionScreen extends StatelessWidget {
                             children: [
                               Text(
                                 commentText,
-                                style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                style: const TextStyle(
+                                    fontSize: 16, color: Colors.black87),
                               ),
                               Text(
                                 'MBTI: $mbti',
-                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
                               ),
                             ],
                           ),
