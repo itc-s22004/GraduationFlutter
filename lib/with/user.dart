@@ -29,6 +29,7 @@ class User with _$User {
     @Default([]) List<String> tags,
     @Default("") String school,
     @Default("") String introduction,
+    @Default("") String gender,
   }) = _User;
 
   const User._();

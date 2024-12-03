@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:omg/with/swipeAsyncNotifier.dart' as asyncNotifier;
 import 'package:omg/with/swipeAsyncNotifier.dart';
+import '../utilities/constant.dart';
 import 'user.dart';
+import 'package:omg/comp/detailDesgin.dart';
 
 class SwipeCard extends ConsumerWidget {
   const SwipeCard({
@@ -16,11 +18,12 @@ class SwipeCard extends ConsumerWidget {
   final List<User> list;
   final AppinioSwiperController controller;
   final void Function(AppinioSwiperDirection direction) onSwiping;
+  static const double cardSize = 210.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final swipeNotifier = ref.read(asyncNotifier.swipeAsyncNotifierProvider.notifier);
-
+    final swipeNotifier = ref.read(
+        asyncNotifier.swipeAsyncNotifierProvider.notifier);
 
     return Column(
       children: [
@@ -29,7 +32,8 @@ class SwipeCard extends ConsumerWidget {
           child: AppinioSwiper(
             controller: controller,
             cardCount: list.length,
-            onSwipeEnd: (int previousIndex, int targetIndex, SwiperActivity activity) {
+            onSwipeEnd: (int previousIndex, int targetIndex,
+                SwiperActivity activity) {
               if (activity is Swipe) {
                 AppinioSwiperDirection direction;
                 switch (activity.direction) {
@@ -73,7 +77,9 @@ class SwipeCard extends ConsumerWidget {
               border: Border.all(color: Colors.grey.shade400, width: 2),
               image: DecorationImage(
                 image: AssetImage(
-                    user.profileImageURL.isNotEmpty ? user.profileImageURL[0] : 'assets/default_image.png'),
+                    user.profileImageURL.isNotEmpty
+                        ? user.profileImageURL[0]
+                        : 'assets/default_image.png'),
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
@@ -106,19 +112,22 @@ class SwipeCard extends ConsumerWidget {
                         _buildText(user.name, 22, Colors.white),
                         _buildText(user.mbti, 18, Colors.white),
                         const SizedBox(height: 8),
-                        if (user.introduction != null && user.introduction.isNotEmpty)
+                        if (user.introduction != null &&
+                            user.introduction.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: Text(
                               user.introduction,
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         Wrap(
                           spacing: 8.0,
-                          children: user.tags.take(4).map((tag) => _buildTag(tag)).toList(),
+                          children: user.tags.take(4).map((tag) =>
+                              _buildTag(tag)).toList(),
                         ),
                       ],
                     ),
@@ -155,7 +164,11 @@ class SwipeCard extends ConsumerWidget {
         fontSize: fontSize,
         fontWeight: FontWeight.bold,
         color: color,
-        shadows: [Shadow(color: Colors.black.withOpacity(0.5), offset: const Offset(2, 2), blurRadius: 4)],
+        shadows: [
+          Shadow(color: Colors.black.withOpacity(0.5),
+              offset: const Offset(2, 2),
+              blurRadius: 4)
+        ],
       ),
     );
   }
@@ -198,87 +211,80 @@ class SwipeCard extends ConsumerWidget {
                 ),
               ],
             ),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage(user.profileImageURL.isNotEmpty ? user.profileImageURL[0] : 'assets/default_image.png'),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  user.name,
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  user.mbti,
-                  style: TextStyle(fontSize: 18, color: Colors.grey.shade700),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8.0,
-                  runSpacing: 4.0,
-                  children: user.tags.map((tag) => _buildTag(tag)).toList(),
-                ),
-                const SizedBox(height: 20),
-
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 10.0, bottom: 20.0, left: 10.0),
+                child: Column(
+                  children: [  // -----------------------プロフィールのデザイン
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildDetailRow(Icons.school, "学校", user.school),
-                        _buildDetailRow(Icons.abc, "自己紹介", user.introduction),
+                        buildInfoCard(
+                            Icons.person,
+                            '性別',
+                            user.gender,
+                            cardSize
+                        ),
+                        const SizedBox(width: 24),
+                        buildInfoCard(
+                            Icons.school,
+                            '学校',
+                            user.school,
+                            cardSize
+                        ),
                       ],
                     ),
-                  ),
-                ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        buildInfoCard(
+                            Icons.person,
+                            'MBTI',
+                            user.mbti,
+                            cardSize
+                        ),
+                        const SizedBox(width: 24),
+                        Container(
+                          width: cardSize,
+                          height: cardSize,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                spreadRadius: 2,
+                                blurRadius: 8,
+                                offset: const Offset(2, 4),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              "assets/images/${user.mbti}.jpg",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildActionBtn(Icons.chat, "いいね", Colors.blue),
-                    _buildActionBtn(Icons.favorite, "削除", Colors.red),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    buildIntroductionCard(
+                        user.introduction
+                    ),
+                    const SizedBox(height: 24),
+                    buildTagsSection(user.tags)
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         );
       },
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String title, String detail) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: Colors.teal),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              "$title: $detail",
-              style: const TextStyle(fontSize: 16),
-              softWrap: true,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionBtn(IconData icon, String label, Color color) {
-    return ElevatedButton.icon(
-      onPressed: () {},
-      icon: Icon(icon, color: Colors.white),
-      label: Text(label, style: const TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
     );
   }
 

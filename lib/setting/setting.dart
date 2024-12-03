@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth_controller.dart';
+import '../comp/detailDesgin.dart';
 import '../utilities/constant.dart';
 import 'editProf.dart';
 
@@ -88,14 +89,14 @@ class SettingScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Obx(() => _buildInfoCard(
+                        Obx(() => buildInfoCard(
                           Icons.person,
                           '性別',
                           authController.gender.value,
                           cardSize,
                         )),
                         const SizedBox(width: 24),
-                        Obx(() => _buildInfoCard(
+                        Obx(() => buildInfoCard(
                           Icons.school,
                           '学校',
                           authController.school.value,
@@ -107,7 +108,7 @@ class SettingScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Obx(() => _buildInfoCard(
+                        Obx(() => buildInfoCard(
                           Icons.person,
                           'MBTI',
                           authController.diagnosis.value,
@@ -140,171 +141,16 @@ class SettingScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    Obx(() => _buildIntroductionCard(
+                    Obx(() => buildIntroductionCard(
                       authController.introduction.value,
                     )),
 
                     const SizedBox(height: 24),
-                    Obx(() => _buildTagsSection(authController.tags)),
+                    Obx(() => buildTagsSection(authController.tags)),
 
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(
-      IconData icon, String label, String value, double size) {
-    return Container(
-      width: size,
-      height: size,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        // color: Colors.green[50],
-        color: kObjectBackground,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(2, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: Colors.green[700], size: 32),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 80,
-            child: Center(
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: 22, // フォントサイズを少し大きく
-                  fontWeight: FontWeight.bold, // 太字にして主張を強く
-                  color: Colors.green[800], // 色を強調
-                ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildTagsSection(List<String> tags) {
-    return Center(
-      child: Container(
-        width: 490, // 横幅を固定
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          // color: Colors.green[100],
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.black.withOpacity(0.1),
-          //     spreadRadius: 2,
-          //     blurRadius: 8,
-          //     offset: const Offset(2, 4),
-          //   ),
-          // ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.label, color: Colors.green),
-                Text(
-                  'タグ:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(width: 390),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: tags
-                  .map((tag) => Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  // color: Colors.green[50],
-                  color: kObjectBackground,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Text(
-                  tag,
-                  style: const TextStyle(
-                      fontSize: 16, color: Colors.black87),
-                ),
-              ))
-                  .toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIntroductionCard(String introduction) {
-    return Center(
-      child: Container(
-        width: 466,
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: kObjectBackground,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 8,
-              offset: const Offset(2, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '自己紹介',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              introduction.isNotEmpty
-                  ? introduction
-                  : 'まだ自己紹介がありません。',
-              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),

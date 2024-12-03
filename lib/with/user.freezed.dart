@@ -23,6 +23,7 @@ mixin _$User {
   List<String> get tags => throw _privateConstructorUsedError;
   String get school => throw _privateConstructorUsedError;
   String get introduction => throw _privateConstructorUsedError;
+  String get gender => throw _privateConstructorUsedError;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -42,7 +43,8 @@ abstract class $UserCopyWith<$Res> {
       String mbti,
       List<String> tags,
       String school,
-      String introduction});
+      String introduction,
+      String gender});
 }
 
 /// @nodoc
@@ -67,6 +69,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? tags = null,
     Object? school = null,
     Object? introduction = null,
+    Object? gender = null,
   }) {
     return _then(_value.copyWith(
       profileImageURL: null == profileImageURL
@@ -97,6 +100,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.introduction
           : introduction // ignore: cast_nullable_to_non_nullable
               as String,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -115,7 +122,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String mbti,
       List<String> tags,
       String school,
-      String introduction});
+      String introduction,
+      String gender});
 }
 
 /// @nodoc
@@ -137,6 +145,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? tags = null,
     Object? school = null,
     Object? introduction = null,
+    Object? gender = null,
   }) {
     return _then(_$UserImpl(
       profileImageURL: null == profileImageURL
@@ -167,6 +176,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.introduction
           : introduction // ignore: cast_nullable_to_non_nullable
               as String,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -181,7 +194,8 @@ class _$UserImpl extends _User {
       this.mbti = "",
       final List<String> tags = const [],
       this.school = "",
-      this.introduction = ""})
+      this.introduction = "",
+      this.gender = ""})
       : _profileImageURL = profileImageURL,
         _tags = tags,
         super._();
@@ -218,10 +232,13 @@ class _$UserImpl extends _User {
   @override
   @JsonKey()
   final String introduction;
+  @override
+  @JsonKey()
+  final String gender;
 
   @override
   String toString() {
-    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId, mbti: $mbti, tags: $tags, school: $school, introduction: $introduction)';
+    return 'User(profileImageURL: $profileImageURL, name: $name, userId: $userId, mbti: $mbti, tags: $tags, school: $school, introduction: $introduction, gender: $gender)';
   }
 
   @override
@@ -237,7 +254,8 @@ class _$UserImpl extends _User {
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.school, school) || other.school == school) &&
             (identical(other.introduction, introduction) ||
-                other.introduction == introduction));
+                other.introduction == introduction) &&
+            (identical(other.gender, gender) || other.gender == gender));
   }
 
   @override
@@ -249,7 +267,8 @@ class _$UserImpl extends _User {
       mbti,
       const DeepCollectionEquality().hash(_tags),
       school,
-      introduction);
+      introduction,
+      gender);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -268,7 +287,8 @@ abstract class _User extends User {
       final String mbti,
       final List<String> tags,
       final String school,
-      final String introduction}) = _$UserImpl;
+      final String introduction,
+      final String gender}) = _$UserImpl;
   const _User._() : super._();
 
   @override
@@ -285,6 +305,8 @@ abstract class _User extends User {
   String get school;
   @override
   String get introduction;
+  @override
+  String get gender;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

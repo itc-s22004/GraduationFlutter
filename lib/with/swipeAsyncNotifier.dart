@@ -48,6 +48,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
           tags: List<String>.from(data['tag'] ?? []),
           school: data['school'] ?? 'No School',
           introduction: data['introduction'] ?? 'No introduction',
+          gender: data['gender']
         );
 
         int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
