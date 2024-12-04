@@ -28,7 +28,7 @@ class _LoginValidateState extends State<LoginValidate> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'ログイン',
+          'Log in',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         shape: const RoundedRectangleBorder(
@@ -80,7 +80,7 @@ class _LoginValidateState extends State<LoginValidate> {
                             color: Colors.green[700],
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 30),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: TextFormField(
@@ -146,7 +146,7 @@ class _LoginValidateState extends State<LoginValidate> {
                                 style: TextStyle(color: Colors.grey, fontSize: 16),
                               ),
                             ),
-                            Expanded(
+                              Expanded(
                               child: Divider(
                                 color: Colors.grey,
                                 thickness: 1,
@@ -186,7 +186,7 @@ class _LoginValidateState extends State<LoginValidate> {
                           ),
                         ),
 
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 45),
                         Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -256,7 +256,7 @@ class _LoginValidateState extends State<LoginValidate> {
                             },
                             // child: const Text('Log in'),
                             child: const Text(
-                              "Log in",
+                              "ログイン",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -284,6 +284,7 @@ class _LoginValidateState extends State<LoginValidate> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),

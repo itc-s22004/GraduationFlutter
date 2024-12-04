@@ -80,7 +80,7 @@ class SettingScreen extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         )),
-                        const SizedBox(width: 230),
+                        const SizedBox(width: 200),
                       ],
                     ),
                     // const SizedBox(height: 24),
