@@ -8,12 +8,12 @@ import 'firebase_options.dart';
 import 'login/login_validate.dart';
 
 void main() async {
-  await dotenv.load(fileName: "assets/.env");
-  Get.put(AuthController());
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "assets/.env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Get.put(AuthController());
 
   runApp(
     const ProviderScope(
