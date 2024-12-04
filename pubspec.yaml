@@ -57,6 +57,9 @@ dependencies:
   google_sign_in: ^6.2.2
   font_awesome_flutter: ^10.8.0
 
+  flutter_svg: ^2.0.16
+
+
 
 # --------------------------------------
 
@@ -106,6 +109,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/icons/googleIcon.png
+    - assets/svg/
 
   fonts:
     - family: MyFlutterApp #アイコンセットのタイトル

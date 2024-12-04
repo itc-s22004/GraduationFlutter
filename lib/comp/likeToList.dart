@@ -120,19 +120,6 @@ class _LikeToListState extends State<LikeToList> {
     }
   }
 
-  Widget _buildTag(String tag) {
-    return Chip(
-      label: Text(
-        tag,
-        style: const TextStyle(fontSize: 14, color: Colors.white),
-      ),
-      backgroundColor: Colors.teal.shade700,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-    );
-  }
-
   void _showUserDetails(BuildContext context, LikeToUser user) {
     showModalBottomSheet(
       context: context,
