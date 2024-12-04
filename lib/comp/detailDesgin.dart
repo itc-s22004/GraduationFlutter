@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:omg/utilities/constant.dart';
 
-Widget buildInfoCard(IconData icon, String label, String value, double size) {
+Widget buildInfoCard(BuildContext context, IconData icon, String label, String value, double size) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double cardSize = (screenWidth * 0.42).clamp(0, size);
+
   return Container(
-    width: size,
-    height: size,
+    width: cardSize,
+    height: cardSize,
     padding: const EdgeInsets.all(16.0),
     decoration: BoxDecoration(
       color: kObjectBackground,
@@ -29,7 +32,7 @@ Widget buildInfoCard(IconData icon, String label, String value, double size) {
         ),
         const SizedBox(height: 8),
         SizedBox(
-          height: 80,
+          height: cardSize * 0.3,
           child: Center(
             child: Text(
               value,
@@ -48,10 +51,13 @@ Widget buildInfoCard(IconData icon, String label, String value, double size) {
   );
 }
 
-Widget buildTagsSection(List<String> tags) {
+Widget buildTagsSection(BuildContext context, List<String> tags) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double cardWidth = (screenWidth * 0.9).clamp(0, 460);
+
   return Center(
     child: Container(
-      width: 490,
+      width: cardWidth, // 計算された幅を使用
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -61,14 +67,14 @@ Widget buildTagsSection(List<String> tags) {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(Icons.label, color: Colors.green),
+              SizedBox(width: 8),
               Text(
                 'タグ:',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(width: 360),
             ],
           ),
           const SizedBox(height: 16),
@@ -95,7 +101,9 @@ Widget buildTagsSection(List<String> tags) {
               child: Text(
                 tag,
                 style: const TextStyle(
-                    fontSize: 16, color: Colors.black87),
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
               ),
             ))
                 .toList(),
@@ -106,10 +114,14 @@ Widget buildTagsSection(List<String> tags) {
   );
 }
 
-Widget buildIntroductionCard(String introduction) {
+Widget buildIntroductionCard(BuildContext context, String introduction) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double cardWidth = screenWidth * 0.9;
+  cardWidth = cardWidth.clamp(0, 460);
+
   return Center(
     child: Container(
-      width: 466,
+      width: cardWidth, // 画面幅の80%に設定
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: kObjectBackground,

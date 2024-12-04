@@ -137,6 +137,7 @@ class FullQuestionScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     buildInfoCard(
+                                        context,
                                         Icons.person,
                                         '性別',
                                         userData?['gender'],
@@ -144,6 +145,7 @@ class FullQuestionScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 24),
                                     buildInfoCard(
+                                        context,
                                         Icons.school,
                                         '学校',
                                         userData?['school'],
@@ -156,58 +158,74 @@ class FullQuestionScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     buildInfoCard(
-                                        Icons.person,
-                                        'MBTI',
-                                        mbti,
-                                        cardSize
+                                      context,
+                                      Icons.person,
+                                      'MBTI',
+                                      mbti,
+                                      cardSize,
                                     ),
                                     const SizedBox(width: 24),
-                                    Container(
-                                      width: cardSize,
-                                      height: cardSize,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.15),
-                                            spreadRadius: 2,
-                                            blurRadius: 8,
-                                            offset: const Offset(2, 4),
+                                    Builder(
+                                      builder: (context) {
+                                        double screenWidth = MediaQuery.of(context).size.width;
+                                        double photoCardSize = screenWidth * 0.42;
+                                        if (photoCardSize > 220.0) photoCardSize = 220.0;
+
+                                        return Container(
+                                          width: photoCardSize,
+                                          height: photoCardSize,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(16),
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.15),
+                                                spreadRadius: 2,
+                                                blurRadius: 8,
+                                                offset: const Offset(2, 4),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: Image.asset(
-                                          "assets/images/${mbti}.jpg",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(16),
+                                            child: Image.asset(
+                                              "assets/images/${mbti}.jpg",
+                                              width: photoCardSize,
+                                              height: photoCardSize,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 24),
                                 buildIntroductionCard(
+                                  context,
                                   userData?['introduction']
                                 ),
                                 const SizedBox(height: 24),
-                                // buildTagsSection(user.tags)
                                 Column(
                                   children: [
-                                    const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.label, color: Colors.green),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'タグ:',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
+                                    Center(
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.9 > 460
+                                            ? 460
+                                            : MediaQuery.of(context).size.width * 0.9,
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.start, // 左寄せ
+                                          children: [
+                                            Icon(Icons.label, color: Colors.green),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              'タグ:',
+                                              style: TextStyle(
+                                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(width: 360),
-                                      ],
+                                      ),
                                     ),
                                     const SizedBox(height: 16),
                                     Wrap(
@@ -216,8 +234,7 @@ class FullQuestionScreen extends StatelessWidget {
                                       runSpacing: 8.0,
                                       children: userData?['tag']?.map<Widget>((tag) {
                                         return Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                           decoration: BoxDecoration(
                                             color: kObjectBackground,
                                             borderRadius: BorderRadius.circular(20),
@@ -232,8 +249,7 @@ class FullQuestionScreen extends StatelessWidget {
                                           ),
                                           child: Text(
                                             tag,
-                                            style: const TextStyle(
-                                                fontSize: 16, color: Colors.black87),
+                                            style: const TextStyle(fontSize: 16, color: Colors.black87),
                                           ),
                                         );
                                       }).toList() ??

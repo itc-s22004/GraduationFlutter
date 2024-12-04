@@ -155,6 +155,7 @@ class _NopeListState extends State<NopeList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         buildInfoCard(
+                            context,
                             Icons.person,
                             '性別',
                             user.gender,
@@ -162,6 +163,7 @@ class _NopeListState extends State<NopeList> {
                         ),
                         const SizedBox(width: 24),
                         buildInfoCard(
+                            context,
                             Icons.school,
                             '学校',
                             user.school,
@@ -174,44 +176,55 @@ class _NopeListState extends State<NopeList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         buildInfoCard(
-                            Icons.person,
-                            'MBTI',
-                            user.mbti,
-                            cardSize
+                          context,
+                          Icons.person,
+                          'MBTI',
+                          user.mbti,
+                          cardSize,
                         ),
                         const SizedBox(width: 24),
-                        Container(
-                          width: cardSize,
-                          height: cardSize,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                spreadRadius: 2,
-                                blurRadius: 8,
-                                offset: const Offset(2, 4),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              "assets/images/${user.mbti}.jpg",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                        Builder(
+                          builder: (context) {
+                            double screenWidth = MediaQuery.of(context).size.width;
+                            double photoCardSize = screenWidth * 0.42;
+                            if (photoCardSize > 220.0) photoCardSize = 220.0;
 
+                            return Container(
+                              width: photoCardSize,
+                              height: photoCardSize,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    spreadRadius: 2,
+                                    blurRadius: 8,
+                                    offset: const Offset(2, 4),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.asset(
+                                  "assets/images/${user.mbti}.jpg",
+                                  width: photoCardSize,
+                                  height: photoCardSize,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
                     buildIntroductionCard(
+                      context,
                         user.introduction
                     ),
                     const SizedBox(height: 24),
-                    buildTagsSection(user.tags)
+                    buildTagsSection(context, user.tags)
                   ],
                 ),
               ),

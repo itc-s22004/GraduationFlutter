@@ -54,42 +54,48 @@ class SettingScreen extends StatelessWidget {
             ),
             SingleChildScrollView(
               child: Padding(
-                // padding: const EdgeInsets.all(16.0),
                 padding: const EdgeInsets.only(top: 10.0, bottom: 20.0, left: 10.0),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Obx(() => CircleAvatar(
-                          radius: 40.0,
-                          backgroundColor: Colors.grey[300],
-                          backgroundImage: AssetImage(
-                              "assets/images/${authController.diagnosis.value}.jpg"),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 4),
-                            ),
-                          ),
-                        )),
-                        const SizedBox(width: 24),
-                        Obx(() => Text(
-                          authController.email.value,
-                          style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
-                        )),
-                        const SizedBox(width: 200),
-                      ],
+                    Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.9 > 460
+                            ? 460
+                            : MediaQuery.of(context).size.width * 0.9,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Obx(() => CircleAvatar(
+                              radius: 40.0,
+                              backgroundColor: Colors.grey[300],
+                              backgroundImage: AssetImage(
+                                  "assets/images/${authController.diagnosis.value}.jpg"),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white, width: 4),
+                                ),
+                              ),
+                            )),
+                            const SizedBox(width: 24),
+                            Obx(() => Text(
+                              authController.email.value,
+                              style: const TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
+                            )),
+                            const Spacer(),
+                          ],
+                        ),
+                      ),
                     ),
-                    // const SizedBox(height: 24),
                     Divider(color: Colors.grey[300]),
                     // 学校、性別、MBTIのカード
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Obx(() => buildInfoCard(
+                          context,
                           Icons.person,
                           '性別',
                           authController.gender.value,
@@ -97,6 +103,7 @@ class SettingScreen extends StatelessWidget {
                         )),
                         const SizedBox(width: 24),
                         Obx(() => buildInfoCard(
+                          context,
                           Icons.school,
                           '学校',
                           authController.school.value,
@@ -109,45 +116,53 @@ class SettingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Obx(() => buildInfoCard(
+                          context,
                           Icons.person,
                           'MBTI',
                           authController.diagnosis.value,
                           cardSize,
                         )),
                         const SizedBox(width: 24),
-                        Obx(() => Container(
-                          width: cardSize,
-                          height: cardSize,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                spreadRadius: 2,
-                                blurRadius: 8,
-                                offset: const Offset(2, 4),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.asset(
-                              "assets/images/${authController.diagnosis.value}.jpg",
-                              fit: BoxFit.cover,
+                        Obx(() {
+                          double screenWidth = MediaQuery.of(context).size.width;
+                          double photoCardSize = screenWidth * 0.42;
+                          if (photoCardSize > 220.0) photoCardSize = 220.0;
+
+                          return Container(
+                            width: photoCardSize,
+                            height: photoCardSize,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                  offset: const Offset(2, 4),
+                                ),
+                              ],
                             ),
-                          ),
-                        )),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.asset(
+                                "assets/images/${authController.diagnosis.value}.jpg",
+                                width: photoCardSize,
+                                height: photoCardSize,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        }),
                       ],
                     ),
                     const SizedBox(height: 24),
                     Obx(() => buildIntroductionCard(
+                      context,
                       authController.introduction.value,
                     )),
-
                     const SizedBox(height: 24),
-                    Obx(() => buildTagsSection(authController.tags)),
-
+                    Obx(() => buildTagsSection(context, authController.tags)),
                   ],
                 ),
               ),
