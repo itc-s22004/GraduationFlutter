@@ -49,31 +49,24 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    // apiKey: dotenv.env['API_KEY']!,
-    // appId: dotenv.env['APP_ID']!,
-    // messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
-    // projectId: dotenv.env['PROJECT_ID']!,
-    // authDomain: dotenv.env['AUTH_DOMAIN']!,
-    // storageBucket: dotenv.env['STORAGE_BUCKET']!,
-    // measurementId: dotenv.env['MEASUREMENT_ID']!,
-    apiKey: 'AIzaSyCsalgicY8bgSKfsYwLXTJOJOph_9AOYU8',
-    appId: '1:142294469883:web:7ff38726b9357ac42a345e',
-    messagingSenderId: '142294469883',
-    projectId: 'fluttergrad-9c464',
-    authDomain: 'fluttergrad-9c464.firebaseapp.com',
-    storageBucket: 'fluttergrad-9c464.appspot.com',
-    measurementId: 'G-Q42D33HQ37',
-  );
-  // static FirebaseOptions get web {
-  //   return FirebaseOptions(
-  //     apiKey: dotenv.env['API_KEY']!,
-  //     appId: dotenv.env['APP_ID']!,
-  //     messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
-  //     projectId: dotenv.env['PROJECT_ID']!,
-  //     authDomain: dotenv.env['AUTH_DOMAIN']!,
-  //     storageBucket: dotenv.env['STORAGE_BUCKET']!,
-  //     measurementId: dotenv.env['MEASUREMENT_ID']!,
-  //   );
-  // }
+  // static const FirebaseOptions web = FirebaseOptions(
+  //   apiKey: 'AIzaSyCsalgicY8bgSKfsYwLXTJOJOph_9AOYU8',
+  //   appId: '1:142294469883:web:7ff38726b9357ac42a345e',
+  //   messagingSenderId: '142294469883',
+  //   projectId: 'fluttergrad-9c464',
+  //   authDomain: 'fluttergrad-9c464.firebaseapp.com',
+  //   storageBucket: 'fluttergrad-9c464.appspot.com',
+  //   measurementId: 'G-Q42D33HQ37',
+  // );
+  static FirebaseOptions get web {
+    return FirebaseOptions(
+      apiKey: dotenv.env['API_KEY']!,
+      appId: dotenv.env['APP_ID']!,
+      messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+      projectId: dotenv.env['PROJECT_ID']!,
+      authDomain: dotenv.env['AUTH_DOMAIN']!,
+      storageBucket: dotenv.env['STORAGE_BUCKET']!,
+      measurementId: dotenv.env['MEASUREMENT_ID']!,
+    );
+  }
 }
