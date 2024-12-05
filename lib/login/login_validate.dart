@@ -156,35 +156,35 @@ class _LoginValidateState extends State<LoginValidate> {
                         ),
                         const SizedBox(height: 26),
 
-                        Center(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // Googleログインの処理をここに追加  ---------------------
-                            },
-                            icon: SvgPicture.asset(
-                              'assets/svg/web_neutral_rd_na.svg',
-                              height: 34,
-                              width: 34,
-                            ),
-                            label: const Text(
-                              "Log in with Google       ",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(350, 40),
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Center(
+                        //   child: ElevatedButton.icon(
+                        //     onPressed: () {
+                        //       // Googleログインの処理をここに追加  ---------------------
+                        //     },
+                        //     icon: SvgPicture.asset(
+                        //       'assets/svg/web_neutral_rd_na.svg',
+                        //       height: 34,
+                        //       width: 34,
+                        //     ),
+                        //     label: const Text(
+                        //       "Log in with Google       ",
+                        //       style: TextStyle(
+                        //           fontSize: 20,
+                        //           fontWeight: FontWeight.w600,
+                        //           color: Colors.black87
+                        //       ),
+                        //     ),
+                        //     style: ElevatedButton.styleFrom(
+                        //       minimumSize: const Size(350, 40),
+                        //       backgroundColor: Colors.white,
+                        //       foregroundColor: Colors.black,
+                        //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(8),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
 
                         const SizedBox(height: 45),
                         Center(
