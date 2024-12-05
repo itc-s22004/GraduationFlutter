@@ -14,13 +14,13 @@ import 'login/login_validate.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // .envが正しく設定されているか
-  // try {
-  //   print("try");
-  //   await dotenv.load(fileName: ".env");
-  // } catch (e) {
-  //   print(e);
-  // }
-  await dotenv.load(fileName: ".env");
+  try {
+    print("try");
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print(e);
+  }
+  // await dotenv.load(fileName: ".env");
 
   print('環境変数読み込み完了');
 
