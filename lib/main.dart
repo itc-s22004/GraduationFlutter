@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,13 +14,14 @@ import 'login/login_validate.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // .envが正しく設定されているか
-  try {
-    print("try");
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    print(e);
-  }
-  // await dotenv.load();
+  // try {
+  //   print("try");
+  //   await dotenv.load(fileName: ".env");
+  // } catch (e) {
+  //   print(e);
+  // }
+  await dotenv.load(fileName: ".env");
+
   print('環境変数読み込み完了');
 
   // 環境変数の読み込み確認用
