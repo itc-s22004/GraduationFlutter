@@ -10,7 +10,7 @@ import 'login/login_validate.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // .envが正しく設定されているか
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: "assets/.env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
