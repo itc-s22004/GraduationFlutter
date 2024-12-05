@@ -10,11 +10,16 @@ import 'login/login_validate.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // .envが正しく設定されているか
-  await dotenv.load(fileName: "assets/.env");
+  await dotenv.load(fileName: "../assets/.env");
+  print('環境変数読み込み完了');
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  print('Firebase 初期化完了');
+
   Get.put(AuthController());
+  print('AuthController 初期化完了');
 
   runApp(
     const ProviderScope(
