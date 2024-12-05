@@ -11,7 +11,8 @@ import 'login/login_validate.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // .envが正しく設定されているか
-  await dotenv.load(fileName: ".env");
+  // await dotenv.load(fileName: ".env");
+  await dotenv.load();
   print('環境変数読み込み完了');
 
   await Firebase.initializeApp(

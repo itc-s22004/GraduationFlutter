@@ -43,7 +43,6 @@ dependencies:
 
   #追加パッケージ
   appinio_swiper: ^2.1.1
-#  appinio_swiper: ^2.0.3
   flutter_riverpod: ^2.5.1
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
@@ -110,7 +109,7 @@ flutter:
     - assets/icons/
     - assets/icons/googleIcon.png
     - assets/svg/
-    - .env
+#    - assets/.env
 
 
   fonts:
