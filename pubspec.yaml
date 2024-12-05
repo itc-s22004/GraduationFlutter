@@ -38,17 +38,17 @@ dependencies:
   flutter_overlay_window: ^0.4.5
 #  fluttery_dart2: ^0.0.9
   cupertino_icons: ^1.0.8
-  firebase_core: ^3.6.0
+  firebase_core: ^3.8.1
   get: ^4.6.6
 
   #追加パッケージ
   appinio_swiper: ^2.1.1
-  flutter_riverpod: ^2.5.1
+  flutter_riverpod: ^2.6.1
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
 
   url_launcher: ^6.1.7
-  firebase_auth: ^5.3.1
+  firebase_auth: ^5.3.4
   cloud_firestore: ^5.4.4
   flutter_chat_ui: ^1.6.15
 
@@ -109,7 +109,7 @@ flutter:
     - assets/icons/
     - assets/icons/googleIcon.png
     - assets/svg/
-#    - assets/.env
+    - .env
 
 
   fonts:

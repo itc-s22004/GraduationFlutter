@@ -44,7 +44,7 @@ class _MainAppState extends ConsumerState<MainApp> {
         appBar: AppBar(
           // leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
           title: const Text(
-              'スワイプ',
+              'スワイpi-----',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
           ),
           shape: const RoundedRectangleBorder(
