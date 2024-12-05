@@ -110,7 +110,7 @@ flutter:
     - assets/icons/
     - assets/icons/googleIcon.png
     - assets/svg/
-    - .env
+    - assets/.env
 
   fonts:
     - family: MyFlutterApp #アイコンセットのタイトル
