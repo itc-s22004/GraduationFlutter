@@ -7,10 +7,11 @@ import 'auth_controller.dart';
 import 'firebase_options.dart';
 import 'login/login_validate.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // .envが正しく設定されているか
-  await dotenv.load(fileName: "assets/.env");
+  await dotenv.load(fileName: "asssets/.env");
   print('環境変数読み込み完了');
 
   await Firebase.initializeApp(
