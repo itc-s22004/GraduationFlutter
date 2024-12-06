@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
       appId: dotenv.env['APP_ID']! ?? '',
       messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']! ?? '',
       projectId: dotenv.env['PROJECT_ID']! ?? '',
-      authDomain: dotenv.env['AUTH_DOMAIN']! ?? '',
+      // authDomain: dotenv.env['AUTH_DOMAIN']! ?? '',
       storageBucket: dotenv.env['STORAGE_BUCKET']! ?? '',
       measurementId: dotenv.env['MEASUREMENT_ID']! ?? '',
     );

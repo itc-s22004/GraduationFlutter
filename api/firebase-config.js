@@ -11,7 +11,7 @@ export default function handler(req, res) {
     storageBucket: process.env.storage_bucket,
     messagingSenderId: process.env.messaging_sender_id,
     projectId: process.env.project_id,
-    authDomain: process.env.auth_domain,
+//    authDomain: process.env.auth_domain,
     measurementId: process.env.measurement_id,
   });
 }
