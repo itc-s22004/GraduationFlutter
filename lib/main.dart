@@ -9,13 +9,13 @@ import 'login/login_validate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    print("try");
-    await dotenv.load(fileName: ".env");
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
+  // try {
+  //   print("try");
+  //   // await dotenv.load(fileName: ".env");
+  //   await Firebase.initializeApp(
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
+  // } catch (e) {
     // Vercelで設定した環境変数を取得
     // const apiKey = String.fromEnvironment('API_KEY', defaultValue: '');
     // const appId = String.fromEnvironment('APP_ID', defaultValue: '');
@@ -43,7 +43,7 @@ void main() async {
       measurementId: measurementId),
     );
     print('Firebase 初期化完了');
-  }
+  // }
   Get.put(AuthController());
   print('AuthController 初期化完了');
 
