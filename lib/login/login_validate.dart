@@ -258,55 +258,53 @@ class _LoginValidateState extends State<LoginValidate> {
                             onPressed: () async {
                               if (_formkey.currentState!.validate()) {
                                 try {
-                                  // メールアドレスがすでに登録されているか確認
-                                  List<String> methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailController.text);
+                                  // メールアドレスがFirebaseに登録されているか確認
+                                  final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailController.text);
 
-                                  if (methods.isEmpty) {
-                                    // メールアドレスが未登録の場合、エラーメッセージを表示
+                                  if (signInMethods.isEmpty) {
+                                    // メールアドレスが登録されていない場合
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('そのメールアドレスは登録されていません')),
                                     );
-                                  } else {
-                                    // メールアドレスが登録されている場合、ログイン処理を実行
-                                    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                    );
-
-                                    // ユーザー情報を取得
-                                    authController.updateEmail(emailController.text);
-
-                                    final snapshot = await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .where('email', isEqualTo: emailController.text)
-                                        .get();
-
-                                    if (snapshot.docs.isNotEmpty) {
-                                      final userData = snapshot.docs.first.data();
-                                      final userId = userData['id'] ?? 0;
-                                      authController.updateUserId(userId);
-
-                                      authController.updateSchool(userData['school'] ?? '');
-                                      authController.updateDiagnosis(userData['diagnosis'] ?? '');
-                                      authController.updateGender(userData['gender'] ?? '');
-                                      authController.updateIntroduction(userData['introduction'] ?? '');
-
-                                      if (userData['tag'] != null) {
-                                        List<String> userTags = List<String>.from(userData['tag']);
-                                        authController.updateTags(userTags);
-                                      }
-                                    }
-
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const BottomNavigation()),
-                                    );
+                                    return;
                                   }
+
+                                  // メールアドレスが登録されている場合、ログイン処理を実行
+                                  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+
+                                  authController.updateEmail(emailController.text);
+
+                                  final snapshot = await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .where('email', isEqualTo: emailController.text)
+                                      .get();
+
+                                  if (snapshot.docs.isNotEmpty) {
+                                    final userData = snapshot.docs.first.data();
+                                    final userId = userData['id'] ?? 0;
+                                    authController.updateUserId(userId);
+
+                                    authController.updateSchool(userData['school'] ?? '');
+                                    authController.updateDiagnosis(userData['diagnosis'] ?? '');
+                                    authController.updateGender(userData['gender'] ?? '');
+                                    authController.updateIntroduction(userData['introduction'] ?? '');
+
+                                    if (userData['tag'] != null) {
+                                      List<String> userTags = List<String>.from(userData['tag']);
+                                      authController.updateTags(userTags);
+                                    }
+                                  }
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const BottomNavigation()),
+                                  );
                                 } on FirebaseAuthException catch (e) {
                                   String message;
-                                  if (e.code == 'user-not-found') {
-                                    message = 'ユーザーが見つかりません';
-                                  } else if (e.code == 'wrong-password') {
+                                  if (e.code == 'wrong-password') {
                                     message = 'パスワードが間違っています';
                                   } else {
                                     message = 'ログインに失敗しました';
