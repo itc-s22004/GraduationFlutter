@@ -199,17 +199,64 @@ class _LoginValidateState extends State<LoginValidate> {
                               // backgroundColor: Colors.indigo
                               backgroundColor: kAppBtmBackground
                             ),
+                            onPressed: () async {
+                              if (_formkey.currentState!.validate()) {
+                                try {
+                                  // メールアドレスでFirestoreを検索
+                                  final snapshot = await FirebaseFirestore
+                                      .instance
+                                      .collection('users')
+                                      .where('email', isEqualTo: emailController.text)
+                                      .get();
+
+                                  if (snapshot.docs.isNotEmpty) {
+                                    final userData = snapshot.docs.first.data();
+                                    final storedPassword = userData['password']; // Firestoreに保存されているパスワード
+                                    final inputPassword = passwordController.text; // 入力されたパスワード
+
+                                    // パスワードが一致するか確認（暗号化されている場合は適切なデコード処理が必要）
+                                    if (storedPassword == inputPassword) {
+                                      // パスワードが一致した場合、ユーザー情報をauthControllerに更新
+                                      authController.updateEmail(emailController.text);
+                                      final userId = userData['id'] ?? 0;
+                                      authController.updateUserId(userId);
+
+                                      authController.updateSchool(userData['school'] ?? '');
+                                      authController.updateDiagnosis(userData['diagnosis'] ?? '');
+                                      authController.updateGender(userData['gender'] ?? '');
+                                      authController.updateIntroduction(userData['introduction'] ?? '');
+
+                                      if (userData['tag'] != null) {
+                                        List<String> userTags = List<String>.from(userData['tag']);
+                                        authController.updateTags(userTags);
+                                      }
+
+                                      // ログイン成功後、画面遷移
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const BottomNavigation()),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('パスワードが間違っています')),
+                                      );
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('ユーザーが見つかりません')),
+                                    );
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('ログインに失敗しました')),
+                                  );
+                                }
+                              }
+                            },
+
                             // onPressed: () async {
                             //   if (_formkey.currentState!.validate()) {
                             //     try {
-                            //       // Firebase Authenticationでログイン
-                            //       UserCredential userCredential = await FirebaseAuth
-                            //           .instance
-                            //           .signInWithEmailAndPassword(
-                            //         email: emailController.text,
-                            //         password: passwordController.text,
-                            //       );
-                            //
                             //       authController.updateEmail(emailController.text);
                             //
                             //       final snapshot = await FirebaseFirestore
@@ -255,85 +302,6 @@ class _LoginValidateState extends State<LoginValidate> {
                             //   }
                             // },
                             // child: const Text('Log in'),
-                            onPressed: () async {
-                              if (_formkey.currentState!.validate()) {
-                                try {
-                                  // ログ: 入力されたメールアドレスを表示
-                                  print("ログイン試行中: メールアドレス: ${emailController.text}");
-
-                                  // メールアドレスがFirebaseに登録されているか確認
-                                  final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailController.text);
-
-                                  // ログ: サインイン方法の確認結果を表示
-                                  print("サインイン方法: $signInMethods");
-
-                                  if (signInMethods.isEmpty) {
-                                    // メールアドレスが登録されていない場合
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('そのメールアドレスは登録されていません')),
-                                    );
-                                    return;
-                                  }
-
-                                  // メールアドレスが登録されている場合、ログイン処理を実行
-                                  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  );
-
-                                  // ログ: ログイン成功時のユーザー情報を表示
-                                  print("ログイン成功: ユーザーID: ${userCredential.user?.uid}");
-
-                                  authController.updateEmail(emailController.text);
-
-                                  final snapshot = await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .where('email', isEqualTo: emailController.text)
-                                      .get();
-
-                                  // ログ: Firestore からのユーザーデータの取得結果を表示
-                                  print("Firestore ユーザーデータ: ${snapshot.docs}");
-
-                                  if (snapshot.docs.isNotEmpty) {
-                                    final userData = snapshot.docs.first.data();
-                                    final userId = userData['id'] ?? 0;
-                                    authController.updateUserId(userId);
-
-                                    authController.updateSchool(userData['school'] ?? '');
-                                    authController.updateDiagnosis(userData['diagnosis'] ?? '');
-                                    authController.updateGender(userData['gender'] ?? '');
-                                    authController.updateIntroduction(userData['introduction'] ?? '');
-
-                                    if (userData['tag'] != null) {
-                                      List<String> userTags = List<String>.from(userData['tag']);
-                                      authController.updateTags(userTags);
-                                    }
-                                  }
-
-                                  // ログ: ユーザー情報の更新完了メッセージを表示
-                                  print("ユーザー情報の更新完了");
-
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const BottomNavigation()),
-                                  );
-                                } on FirebaseAuthException catch (e) {
-                                  String message;
-                                  if (e.code == 'wrong-password') {
-                                    message = 'パスワードが間違っています';
-                                  } else {
-                                    message = 'ログインに失敗しました';
-                                  }
-                                  // ログ: エラーメッセージを表示
-                                  print("エラー: ${e.code}: $message");
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(message)),
-                                  );
-                                }
-                              }
-                            },
-
                             child: const Text(
                               "ログイン",
                               style: TextStyle(
