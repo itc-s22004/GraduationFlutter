@@ -50,13 +50,13 @@ class DefaultFirebaseOptions {
 
   static FirebaseOptions get web {
     return FirebaseOptions(
-      apiKey: dotenv.env['API_KEY']!,
-      appId: dotenv.env['APP_ID']!,
-      messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
-      projectId: dotenv.env['PROJECT_ID']!,
-      authDomain: dotenv.env['AUTH_DOMAIN']!,
-      storageBucket: dotenv.env['STORAGE_BUCKET']!,
-      measurementId: dotenv.env['MEASUREMENT_ID']!,
+      apiKey: dotenv.env['API_KEY']! ?? '',
+      appId: dotenv.env['APP_ID']! ?? '',
+      messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']! ?? '',
+      projectId: dotenv.env['PROJECT_ID']! ?? '',
+      authDomain: dotenv.env['AUTH_DOMAIN']! ?? '',
+      storageBucket: dotenv.env['STORAGE_BUCKET']! ?? '',
+      measurementId: dotenv.env['MEASUREMENT_ID']! ?? '',
     );
   }
 }

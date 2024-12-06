@@ -49,7 +49,7 @@ dependencies:
 
   url_launcher: ^6.1.7
   firebase_auth: ^5.3.4
-  cloud_firestore: ^5.4.4
+  cloud_firestore: ^5.5.1
   flutter_chat_ui: ^1.6.15
 
   persistent_bottom_nav_bar: ^6.2.1
