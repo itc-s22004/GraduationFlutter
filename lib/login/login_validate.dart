@@ -258,8 +258,14 @@ class _LoginValidateState extends State<LoginValidate> {
                             onPressed: () async {
                               if (_formkey.currentState!.validate()) {
                                 try {
+                                  // ログ: 入力されたメールアドレスを表示
+                                  print("ログイン試行中: メールアドレス: ${emailController.text}");
+
                                   // メールアドレスがFirebaseに登録されているか確認
                                   final signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailController.text);
+
+                                  // ログ: サインイン方法の確認結果を表示
+                                  print("サインイン方法: $signInMethods");
 
                                   if (signInMethods.isEmpty) {
                                     // メールアドレスが登録されていない場合
@@ -275,12 +281,18 @@ class _LoginValidateState extends State<LoginValidate> {
                                     password: passwordController.text,
                                   );
 
+                                  // ログ: ログイン成功時のユーザー情報を表示
+                                  print("ログイン成功: ユーザーID: ${userCredential.user?.uid}");
+
                                   authController.updateEmail(emailController.text);
 
                                   final snapshot = await FirebaseFirestore.instance
                                       .collection('users')
                                       .where('email', isEqualTo: emailController.text)
                                       .get();
+
+                                  // ログ: Firestore からのユーザーデータの取得結果を表示
+                                  print("Firestore ユーザーデータ: ${snapshot.docs}");
 
                                   if (snapshot.docs.isNotEmpty) {
                                     final userData = snapshot.docs.first.data();
@@ -298,6 +310,9 @@ class _LoginValidateState extends State<LoginValidate> {
                                     }
                                   }
 
+                                  // ログ: ユーザー情報の更新完了メッセージを表示
+                                  print("ユーザー情報の更新完了");
+
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(builder: (context) => const BottomNavigation()),
@@ -309,12 +324,16 @@ class _LoginValidateState extends State<LoginValidate> {
                                   } else {
                                     message = 'ログインに失敗しました';
                                   }
+                                  // ログ: エラーメッセージを表示
+                                  print("エラー: ${e.code}: $message");
+
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text(message)),
                                   );
                                 }
                               }
                             },
+
                             child: const Text(
                               "ログイン",
                               style: TextStyle(
