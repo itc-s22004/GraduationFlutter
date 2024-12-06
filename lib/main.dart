@@ -17,13 +17,20 @@ void main() async {
     );
   } catch (e) {
     // Vercelで設定した環境変数を取得
-    const apiKey = String.fromEnvironment('API_KEY', defaultValue: '');
-    const appId = String.fromEnvironment('APP_ID', defaultValue: '');
-    const storageBucket = String.fromEnvironment('STORAGE_BUCKET', defaultValue: '');
-    const messagingSenderId = String.fromEnvironment('MESSAGING_SENDER_ID', defaultValue: '');
-    const projectId = String.fromEnvironment('PROJECT_ID', defaultValue: '');
-    const authDomain = String.fromEnvironment('AUTH_DOMAIN', defaultValue: '');
-    const measurementId = String.fromEnvironment('MEASUREMENT_ID', defaultValue: '');
+    // const apiKey = String.fromEnvironment('API_KEY', defaultValue: '');
+    // const appId = String.fromEnvironment('APP_ID', defaultValue: '');
+    // const storageBucket = String.fromEnvironment('STORAGE_BUCKET', defaultValue: '');
+    // const messagingSenderId = String.fromEnvironment('MESSAGING_SENDER_ID', defaultValue: '');
+    // const projectId = String.fromEnvironment('PROJECT_ID', defaultValue: '');
+    // const authDomain = String.fromEnvironment('AUTH_DOMAIN', defaultValue: '');
+    // const measurementId = String.fromEnvironment('MEASUREMENT_ID', defaultValue: '');
+    const apiKey = String.fromEnvironment('api_key', defaultValue: '');
+    const appId = String.fromEnvironment('app_id', defaultValue: '');
+    const storageBucket = String.fromEnvironment('storage_bucket', defaultValue: '');
+    const messagingSenderId = String.fromEnvironment('messaging_sender_id', defaultValue: '');
+    const projectId = String.fromEnvironment('project_id', defaultValue: '');
+    const authDomain = String.fromEnvironment('auth_domain', defaultValue: '');
+    const measurementId = String.fromEnvironment('measurement_id', defaultValue: '');
 
     await Firebase.initializeApp(
     options: const FirebaseOptions(
