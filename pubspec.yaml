@@ -109,7 +109,7 @@ flutter:
     - assets/icons/
     - assets/icons/googleIcon.png
     - assets/svg/
-    - .env
+#    - .env   #ちょくの場合はいらない
 
 
   fonts:
