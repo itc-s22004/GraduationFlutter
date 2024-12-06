@@ -146,7 +146,7 @@ class _LoginValidateState extends State<LoginValidate> {
                                 style: TextStyle(color: Colors.grey, fontSize: 16),
                               ),
                             ),
-                              Expanded(
+                            Expanded(
                               child: Divider(
                                 color: Colors.grey,
                                 thickness: 1,
@@ -190,19 +190,28 @@ class _LoginValidateState extends State<LoginValidate> {
                         Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              textStyle: const TextStyle(fontSize: 18),
-                              fixedSize: const Size(350, 40),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              // backgroundColor: Colors.indigo
-                              backgroundColor: kAppBtmBackground
+                                padding: const EdgeInsets.symmetric(vertical: 15),
+                                textStyle: const TextStyle(fontSize: 18),
+                                fixedSize: const Size(350, 40),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                // backgroundColor: Colors.indigo
+                                backgroundColor: kAppBtmBackground
                             ),
                             onPressed: () async {
                               if (_formkey.currentState!.validate()) {
                                 try {
-                                  // メールアドレスでFirestoreを検索
+                                  // Firebase Authenticationでログイン
+                                  UserCredential userCredential = await FirebaseAuth
+                                      .instance
+                                      .signInWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+
+                                  authController.updateEmail(emailController.text);
+
                                   final snapshot = await FirebaseFirestore
                                       .instance
                                       .collection('users')
@@ -211,103 +220,47 @@ class _LoginValidateState extends State<LoginValidate> {
 
                                   if (snapshot.docs.isNotEmpty) {
                                     final userData = snapshot.docs.first.data();
-                                    final storedPassword = userData['password']; // Firestoreに保存されているパスワード
-                                    final inputPassword = passwordController.text; // 入力されたパスワード
+                                    final userId = userData['id'] ?? 0;
+                                    authController.updateUserId(userId);
 
-                                    // パスワードが一致するか確認（暗号化されている場合は適切なデコード処理が必要）
-                                    if (storedPassword == inputPassword) {
-                                      // パスワードが一致した場合、ユーザー情報をauthControllerに更新
-                                      authController.updateEmail(emailController.text);
-                                      final userId = userData['id'] ?? 0;
-                                      authController.updateUserId(userId);
+                                    authController.updateSchool(userData['school'] ?? '');
+                                    authController.updateDiagnosis(userData['diagnosis'] ?? '');
+                                    authController.updateGender(userData['gender'] ?? '');
+                                    authController.updateIntroduction(userData['introduction'] ?? '');
 
-                                      authController.updateSchool(userData['school'] ?? '');
-                                      authController.updateDiagnosis(userData['diagnosis'] ?? '');
-                                      authController.updateGender(userData['gender'] ?? '');
-                                      authController.updateIntroduction(userData['introduction'] ?? '');
-
-                                      if (userData['tag'] != null) {
-                                        List<String> userTags = List<String>.from(userData['tag']);
-                                        authController.updateTags(userTags);
-                                      }
-
-                                      // ログイン成功後、画面遷移
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const BottomNavigation()),
-                                      );
-                                    } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('パスワードが間違っています')),
-                                      );
+                                    if (userData['tag'] != null) {
+                                      List<String> userTags = List<String>.from(userData['tag']);
+                                      authController.updateTags(userTags);
                                     }
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('ユーザーが見つかりません')),
-                                    );
                                   }
-                                } catch (e) {
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const BottomNavigation()),
+                                  );
+                                } on FirebaseAuthException catch (e) {
+                                  String message;
+                                  if (e.code == 'user-not-found') {
+                                    message = 'ユーザーが見つかりません';
+                                  } else if (e.code == 'wrong-password') {
+                                    message = 'パスワードが間違っています';
+                                  } else {
+                                    message = 'ログインに失敗しました';
+                                  }
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('ログインに失敗しました')),
+                                    SnackBar(content: Text(message)),
                                   );
                                 }
                               }
                             },
-
-                            // onPressed: () async {
-                            //   if (_formkey.currentState!.validate()) {
-                            //     try {
-                            //       authController.updateEmail(emailController.text);
-                            //
-                            //       final snapshot = await FirebaseFirestore
-                            //           .instance
-                            //           .collection('users')
-                            //           .where('email', isEqualTo: emailController.text)
-                            //           .get();
-                            //
-                            //       if (snapshot.docs.isNotEmpty) {
-                            //         final userData = snapshot.docs.first.data();
-                            //         final userId = userData['id'] ?? 0;
-                            //         authController.updateUserId(userId);
-                            //
-                            //         authController.updateSchool(userData['school'] ?? '');
-                            //         authController.updateDiagnosis(userData['diagnosis'] ?? '');
-                            //         authController.updateGender(userData['gender'] ?? '');
-                            //         authController.updateIntroduction(userData['introduction'] ?? '');
-                            //
-                            //         if (userData['tag'] != null) {
-                            //           List<String> userTags = List<String>.from(userData['tag']);
-                            //           authController.updateTags(userTags);
-                            //         }
-                            //       }
-                            //
-                            //       Navigator.pushReplacement(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //             builder: (context) => const BottomNavigation()),
-                            //       );
-                            //     } on FirebaseAuthException catch (e) {
-                            //       String message;
-                            //       if (e.code == 'user-not-found') {
-                            //         message = 'ユーザーが見つかりません';
-                            //       } else if (e.code == 'wrong-password') {
-                            //         message = 'パスワードが間違っています';
-                            //       } else {
-                            //         message = 'ログインに失敗しました';
-                            //       }
-                            //       ScaffoldMessenger.of(context).showSnackBar(
-                            //         SnackBar(content: Text(message)),
-                            //       );
-                            //     }
-                            //   }
-                            // },
                             // child: const Text('Log in'),
                             child: const Text(
                               "ログイン",
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87
                               ),
                             ),
                           ),
