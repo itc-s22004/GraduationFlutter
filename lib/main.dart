@@ -32,7 +32,7 @@ void main() async {
         storageBucket: firebaseConfig['storageBucket'],
         messagingSenderId: firebaseConfig['messagingSenderId'],
         projectId: firebaseConfig['projectId'],
-        // authDomain: firebaseConfig['authDomain'],
+        authDomain: firebaseConfig['authDomain'],
         measurementId: firebaseConfig['measurementId'],
       ),
     );
