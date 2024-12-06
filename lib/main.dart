@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // dotenvのロード
-  await dotenv.load();
+  // await dotenv.load();
 
   // VercelのAPIからFirebase設定を取得
   // const apiUrl = 'https://your-vercel-app-url/api/firebase-config';  // VercelのAPIエンドポイント
