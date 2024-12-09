@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:omg/auth_controller.dart';
 
+import '../login/loginNext.dart';
 import '../utilities/constant.dart';
-import 'UserDetailsPanel.dart';
 import 'detailDesgin.dart';
 
 class LikeToList extends StatefulWidget {
@@ -18,6 +19,8 @@ class LikeToList extends StatefulWidget {
 class _LikeToListState extends State<LikeToList> {
   final RxList<LikeToUser> _likeToUsers = <LikeToUser>[].obs;
   static const double cardSize = 210.0;
+  final AuthController authController = Get.find<AuthController>();
+  bool _showSlideText = false;
 
   @override
   void initState() {
@@ -86,6 +89,8 @@ class _LikeToListState extends State<LikeToList> {
           'timestamp': FieldValue.serverTimestamp(),
         });
         print("マッチングしました: ${widget.currentUserId} と $likeToUserId");
+
+        _checkMatching(likeToUserId);  //--------------------------
 
         for (var doc in reverseLikeSnapshot.docs) {
           await likeCollection.doc(doc.id).delete();
@@ -332,10 +337,49 @@ class _LikeToListState extends State<LikeToList> {
                 separatorBuilder: (context, index) => const Divider(),
               );
             }),
+            if (_showSlideText)  //-----------------------------
+              Align(
+                alignment: Alignment.center,
+                child: SlideInText(
+                  duration: const Duration(seconds: 1),
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _checkMatching(int swipedUserId) async {  //------------------------------------
+    print("_checkMatchingだよーー");
+    try {
+      int currentUserId = authController.userId.value;
+      print("Current User ID: $currentUserId");
+
+      var matchesCollection = FirebaseFirestore.instance.collection('matches');
+      var querySnapshot = await matchesCollection
+          .where('user1', isEqualTo: currentUserId)
+          .where('user2', isEqualTo: swipedUserId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        print("Match found!");
+        setState(() {
+          _showSlideText = true;
+        });
+
+        Future.delayed(const Duration(seconds: 4), () {
+          setState(() {
+            _showSlideText = false;
+          });
+        });
+
+      } else {
+        print("No match found.");
+      }
+    } catch (e) {
+      print("Error checking matching: $e");
+    }
   }
 }
 

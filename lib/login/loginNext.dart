@@ -61,12 +61,12 @@ class _LoginNextState extends State<LoginNext> {
                   _showSlideText = false; // 既存のアニメーションをリセット
                 });
 
-                Future.delayed(Duration(milliseconds: 200), () {
+                Future.delayed(const Duration(milliseconds: 200), () {
                   setState(() {
                     _showSlideText = true; // アニメーションを再表示
                   });
 
-                  Future.delayed(Duration(seconds: 4), () {
+                  Future.delayed(const Duration(seconds: 3), () {
                     setState(() {
                       _showSlideText = false; // 2秒後にテキストを非表示に
                     });
@@ -77,7 +77,7 @@ class _LoginNextState extends State<LoginNext> {
               },
               child: const Text('スワイプ処理開始'),
             ),
-            if (_showSlideText) SlideInText(text: 'text'), // アニメーションを表示する
+            if (_showSlideText) SlideInText(), // アニメーションを表示する
           ],
         ),
       ),
@@ -86,10 +86,9 @@ class _LoginNextState extends State<LoginNext> {
 }
 
 class SlideInText extends StatefulWidget {
-  final String text;
   final Duration duration;
 
-  SlideInText({required this.text, this.duration = const Duration(seconds: 1)});
+  SlideInText({this.duration = const Duration(seconds: 1)});
 
   @override
   _SlideInTextState createState() => _SlideInTextState();

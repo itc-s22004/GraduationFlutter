@@ -31,7 +31,7 @@ class _MainAppState extends ConsumerState<MainApp> {
 
     ever(authController.swipedUserId, (swipedUserId) async {
       if (swipedUserId > 0) {
-        await Future.delayed(const Duration(seconds: 2)); // スワイプされた２秒後に_checkMatchingを実行
+        await Future.delayed(const Duration(seconds: 1)); // スワイプされた２秒後に_checkMatchingを実行
         _checkMatching(swipedUserId);
       }
     });
@@ -136,7 +136,6 @@ class _MainAppState extends ConsumerState<MainApp> {
                 Align(
                   alignment: Alignment.center,
                   child: SlideInText(
-                    text: "マッチング成功！",
                     duration: const Duration(seconds: 1),
                   ),
                 ),
