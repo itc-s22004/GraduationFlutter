@@ -212,6 +212,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:omg/login/loginNext.dart';
 import 'auth_controller.dart';
 import 'firebase_options.dart';
 import 'login/login_validate.dart';
@@ -269,6 +270,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginValidate(),
       // home: const AddInfo(data: "test@a.com"),
+      // home: const LoginNext(),
       debugShowCheckedModeBanner: false,
     );
   }

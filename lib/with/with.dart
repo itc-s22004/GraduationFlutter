@@ -1,5 +1,6 @@
-import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:omg/auth_controller.dart';
@@ -9,6 +10,7 @@ import 'package:omg/with/swipeAsyncNotifier.dart' as notifier;
 import 'package:omg/with/swipeCard.dart' as card;
 
 import '../comp/nopeList.dart';
+import '../login/loginNext.dart';
 
 class MainApp extends ConsumerStatefulWidget {
   const MainApp({super.key});
@@ -20,17 +22,25 @@ class MainApp extends ConsumerStatefulWidget {
 class _MainAppState extends ConsumerState<MainApp> {
   late AppinioSwiperController _swiperController;
   final AuthController authController = Get.find<AuthController>();
+  bool _showSlideText = false;
 
   @override
   void initState() {
     super.initState();
     _swiperController = AppinioSwiperController();
+
+    ever(authController.swipedUserId, (swipedUserId) async {
+      if (swipedUserId > 0) {
+        await Future.delayed(const Duration(seconds: 2)); // スワイプされた２秒後に_checkMatchingを実行
+        _checkMatching(swipedUserId);
+      }
+    });
   }
 
   @override
   void dispose() {
-    super.dispose();
     _swiperController.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,10 +52,9 @@ class _MainAppState extends ConsumerState<MainApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          // leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
           title: const Text(
-              'スワイpi-----',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+            'スワイpi-----',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -84,22 +93,19 @@ class _MainAppState extends ConsumerState<MainApp> {
         body: SafeArea(
           child: Stack(
             children: [
-              // 背景色の部分
               Container(
                 height: 500,
                 color: kAppBtmBackground,
               ),
-              // 背景が丸くなる部分
               Container(
                 height: 500,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(200), // 上左側に大きな丸み
+                    topLeft: Radius.circular(200),
                   ),
                   color: Theme.of(context).scaffoldBackgroundColor,
                 ),
               ),
-              // カードの部分
               Align(
                 alignment: Alignment.topCenter,
                 child: asyncValue.when(
@@ -126,6 +132,14 @@ class _MainAppState extends ConsumerState<MainApp> {
                   },
                 ),
               ),
+              if (_showSlideText)
+                Align(
+                  alignment: Alignment.center,
+                  child: SlideInText(
+                    text: "マッチング成功！",
+                    duration: const Duration(seconds: 1),
+                  ),
+                ),
             ],
           ),
         ),
@@ -136,11 +150,42 @@ class _MainAppState extends ConsumerState<MainApp> {
   Future<int> loggedInUserId() async {
     try {
       int loggedInUserId = authController.userId.value ?? 0;
-      print(loggedInUserId);
       return loggedInUserId;
     } catch (e) {
       print(e);
       return 0;
+    }
+  }
+
+  Future<void> _checkMatching(int swipedUserId) async {
+    print("_checkMatchingだよーー");
+    try {
+      int currentUserId = await loggedInUserId();
+      print("Current User ID: $currentUserId");
+
+      var matchesCollection = FirebaseFirestore.instance.collection('matches');
+      var querySnapshot = await matchesCollection
+          .where('user1', isEqualTo: currentUserId)
+          .where('user2', isEqualTo: swipedUserId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        print("Match found!");
+        setState(() {
+          _showSlideText = true;
+        });
+
+        Future.delayed(const Duration(seconds: 4), () {
+          setState(() {
+            _showSlideText = false;
+          });
+        });
+
+      } else {
+        print("No match found.");
+      }
+    } catch (e) {
+      print("Error checking matching: $e");
     }
   }
 }

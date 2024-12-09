@@ -11,6 +11,7 @@ class AuthController extends GetxController {
   RxString introduction = ''.obs;
   RxList<String> tags = <String>[].obs;
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
+  RxInt swipedUserId = 0.obs;
 
 
 

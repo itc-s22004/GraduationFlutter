@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import '../auth_controller.dart';
 import 'user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -136,7 +135,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
     print("スワイプされた方向: $direction");
     switch (direction) {
       case AppinioSwiperDirection.left:
-        _handleLeftSwipe();
+        await _handleLeftSwipe();
         print("左スライド");
         break;
       case AppinioSwiperDirection.right:
@@ -182,6 +181,8 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
 
       int currentUserId = authController.userId.value ?? 0;
       int swipedUserId = state.value![currentIndex].userId;
+
+      authController.swipedUserId.value = swipedUserId; // スワイプされたユーザーIDを保存
 
       await FirebaseFirestore.instance.collection('likes').add({
         'likeFrom': currentUserId,
