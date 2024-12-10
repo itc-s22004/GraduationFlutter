@@ -59,6 +59,7 @@ dependencies:
   flutter_svg: ^2.0.16
   http: ^1.2.2
   text_3d: ^0.0.4
+  intl: ^0.20.1
 
 
 

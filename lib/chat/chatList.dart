@@ -11,19 +11,6 @@ class ChatListScreen extends StatelessWidget {
     final AuthController authController = Get.find<AuthController>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-            'チャット',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.elliptical(90, 30),
-          ),
-        ),
-        backgroundColor: kAppBarBackground,
-        elevation: 0,
-      ),
       body: Align(
         alignment: Alignment.topCenter,
         child: Stack(
@@ -33,14 +20,19 @@ class ChatListScreen extends StatelessWidget {
               height: 500,
               color: kAppBtmBackground,
             ),
-            // 背景が丸くなる部分
-            Container(
-              height: 500,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(200), // 上左側に大きな丸み
+            // 背景が丸くなる部分（めり込むように位置を調整）
+            Positioned(
+              top: -50, // 上部に突き出す高さを調整
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 1000,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(200), // 丸みのデザインを維持
+                  ),
+                  color: Theme.of(context).scaffoldBackgroundColor,
                 ),
-                color: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
             FutureBuilder<List<ChatUser>>(

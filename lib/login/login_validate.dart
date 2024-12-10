@@ -223,10 +223,12 @@ class _LoginValidateState extends State<LoginValidate> {
                                     final userId = userData['id'] ?? 0;
                                     authController.updateUserId(userId);
 
+                                    // login後のauthControllerはここに書いたら保持され使える
                                     authController.updateSchool(userData['school'] ?? '');
                                     authController.updateDiagnosis(userData['diagnosis'] ?? '');
                                     authController.updateGender(userData['gender'] ?? '');
                                     authController.updateIntroduction(userData['introduction'] ?? '');
+                                    authController.updateSchoolNum(userData['schoolNumber'] ?? '');
 
                                     if (userData['tag'] != null) {
                                       List<String> userTags = List<String>.from(userData['tag']);

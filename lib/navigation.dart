@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omg/chat/chatList.dart';
+import 'package:omg/comp/switch.dart';
 import 'package:omg/question/questionScreen.dart';
 import 'package:omg/setting/setting.dart';
 import 'package:omg/utilities/constant.dart';
@@ -51,7 +52,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   List<Widget> _buildScreens() {
     return [
       const MainApp(),
-      ChatListScreen(),
+      SwitchScreen(),
       QuestionScreen(),
       SettingScreen()
     ];
