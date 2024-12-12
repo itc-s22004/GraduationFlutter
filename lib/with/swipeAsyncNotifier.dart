@@ -28,6 +28,26 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
       String currentUserMBTI = authController.diagnosis.value;
       List<String> currentUserTags = authController.tags.value;
 
+      // matchesコレクションからすでにマッチングしているユーザーを取得
+      final matchesSnapshot = await FirebaseFirestore.instance
+          .collection('matches')
+          .where('user1', isEqualTo: loggedInUserId)
+          .get();
+      final reverseMatchesSnapshot = await FirebaseFirestore.instance
+          .collection('matches')
+          .where('user2', isEqualTo: loggedInUserId)
+          .get();
+
+      // マッチング済みのユーザーIDをリストに追加
+      Set<int> matchedUserIds = {};
+      matchesSnapshot.docs.forEach((doc) {
+        matchedUserIds.add(doc.data()['user2']);
+      });
+      reverseMatchesSnapshot.docs.forEach((doc) {
+        matchedUserIds.add(doc.data()['user1']);
+      });
+
+      // usersコレクションから全ユーザーを取得
       final snapshot = await FirebaseFirestore.instance.collection('users').get();
 
       List<User> highScoreUsers = [];
@@ -36,20 +56,23 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
       snapshot.docs.forEach((doc) {
         final data = doc.data();
         int userId = data['id'] ?? 0;
-        if (userId == loggedInUserId) return;
+
+        // 自分自身とマッチング済みのユーザーを除外
+        if (userId == loggedInUserId || matchedUserIds.contains(userId)) return;
 
         final String dataMBTI = data['diagnosis'] ?? '不明';
         User user = User(
-          name: data['email'] ?? 'No Email',
-          mbti: dataMBTI,
-          profileImageURL: ["assets/images/${dataMBTI}.jpg"],
-          userId: userId,
-          tags: List<String>.from(data['tag'] ?? []),
-          school: data['school'] ?? 'No School',
-          introduction: data['introduction'] ?? 'No introduction',
-          gender: data['gender']
+            name: data['email'] ?? 'No Email',
+            mbti: dataMBTI,
+            profileImageURL: ["assets/images/${dataMBTI}.jpg"],
+            userId: userId,
+            tags: List<String>.from(data['tag'] ?? []),
+            school: data['school'] ?? 'No School',
+            introduction: data['introduction'] ?? 'No introduction',
+            gender: data['gender']
         );
 
+        // スコア計算
         int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
         int tagScore = _getTagScore(currentUserTags, user.tags);
         int totalScore = mbtiScore + tagScore;
@@ -62,19 +85,72 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
           lowScoreUsers.add(user);
         }
       });
+
+      // ユーザーリストをランダム化
       highScoreUsers.shuffle(Random());
       lowScoreUsers.shuffle(Random());
 
       List<User> sortedUsers = [...highScoreUsers, ...lowScoreUsers];
-      // sortedUsers.shuffle(Random()); // 順番ランダム
-
-      print("Filtered and sorted users: $sortedUsers");
       return sortedUsers;
     } catch (e) {
       print("Error fetching users from Firestore: $e");
       return [];
     }
   }
+
+  // Future<List<User>> fetchUsersFromFirestore() async {
+  //   try {
+  //     int loggedInUserId = authController.userId.value ?? 0;
+  //     String currentUserMBTI = authController.diagnosis.value;
+  //     List<String> currentUserTags = authController.tags.value;
+  //
+  //     final snapshot = await FirebaseFirestore.instance.collection('users').get();
+  //
+  //     List<User> highScoreUsers = [];
+  //     List<User> lowScoreUsers = [];
+  //
+  //     snapshot.docs.forEach((doc) {
+  //       final data = doc.data();
+  //       int userId = data['id'] ?? 0;
+  //       if (userId == loggedInUserId) return;
+  //
+  //       final String dataMBTI = data['diagnosis'] ?? '不明';
+  //       User user = User(
+  //         name: data['email'] ?? 'No Email',
+  //         mbti: dataMBTI,
+  //         profileImageURL: ["assets/images/${dataMBTI}.jpg"],
+  //         userId: userId,
+  //         tags: List<String>.from(data['tag'] ?? []),
+  //         school: data['school'] ?? 'No School',
+  //         introduction: data['introduction'] ?? 'No introduction',
+  //         gender: data['gender']
+  //       );
+  //
+  //       int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
+  //       int tagScore = _getTagScore(currentUserTags, user.tags);
+  //       int totalScore = mbtiScore + tagScore;
+  //
+  //       print("ユーザー ${user.name} (ID: ${user.userId}): MBTIスコア = $mbtiScore, タグスコア = $tagScore, 合計スコア = $totalScore");
+  //
+  //       if (totalScore >= 3) {
+  //         highScoreUsers.add(user);
+  //       } else {
+  //         lowScoreUsers.add(user);
+  //       }
+  //     });
+  //     highScoreUsers.shuffle(Random());
+  //     lowScoreUsers.shuffle(Random());
+  //
+  //     List<User> sortedUsers = [...highScoreUsers, ...lowScoreUsers];
+  //     // sortedUsers.shuffle(Random()); // 順番ランダム
+  //
+  //     print("Filtered and sorted users: $sortedUsers");
+  //     return sortedUsers;
+  //   } catch (e) {
+  //     print("Error fetching users from Firestore: $e");
+  //     return [];
+  //   }
+  // }
 
   int _getMBTIScore(String currentUserMBTI, String userMBTI) {
     final Map<String, List<String>> mbtiCompatibility = {
