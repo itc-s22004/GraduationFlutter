@@ -32,7 +32,7 @@ class _SwitchScreenState extends State<SwitchScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '憩い',
+          'チャット',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         shape: const RoundedRectangleBorder(
@@ -67,12 +67,13 @@ class _SwitchScreenState extends State<SwitchScreen>
               color: Colors.transparent,
               child: TabBar(
                 controller: _tabController,
-                indicatorColor: Colors.white.withOpacity(0.8),
+                indicatorColor: Colors.pinkAccent,
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey.withOpacity(0.6),
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold),  // ここで文字を太く設定
                 tabs: const [
-                  Tab(text: 'おすすめ'),
-                  Tab(text: 'フォロー中'),
+                  Tab(text: '個人',),
+                  Tab(text: 'グループ'),
                 ],
               ),
             ),

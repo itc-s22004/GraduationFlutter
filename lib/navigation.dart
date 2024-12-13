@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omg/chat/chatList.dart';
-import 'package:omg/comp/switch.dart';
+import 'package:omg/chat/switch.dart';
 import 'package:omg/question/questionScreen.dart';
 import 'package:omg/setting/setting.dart';
 import 'package:omg/utilities/constant.dart';

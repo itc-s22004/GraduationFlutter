@@ -106,32 +106,41 @@ class GroupChatList extends StatelessWidget {
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
                     final chatRoom = snapshot.data!.docs[index];
-                    final chatRoomId = chatRoom.id;
-                    return Card(
-                      margin: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16.0),
-                        title: Text(
-                          chatRoomId,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    final chatRoomName = chatRoom.id;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
-                        subtitle: const Text("チャットルームの詳細..."),
-                        onTap: () {
-                          debugPrint("チャットルーム $chatRoomId を選択しました");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GroupChatRoom(
-                                // userId: authController.userId.value,
-                                // mbti: authController.diagnosis.value,
-                                roomName: chatRoomId,
-                              ),
+                        elevation: 5,
+                        color: kObjectBackground,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(16.0),
+                          title: Text(
+                            chatRoomName,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green[800],
                             ),
-                          );
-                        },
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.chat_bubble_outline,
+                                color: Colors.green[700],
+                              ),
+                              const SizedBox(width: 20.0),
+                            ],
+                          ),
+                          onTap: () {
+                            debugPrint("チャットルーム $chatRoomName を選択しました");
+                            Get.to(() => GroupChatRoom(roomName: chatRoomName));
+                          },
+                        ),
                       ),
                     );
                   },
