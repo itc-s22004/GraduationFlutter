@@ -77,7 +77,7 @@ class ChatRoom extends StatelessWidget {
                         final number2 = numberDocs[1]['number'];
 
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -146,7 +146,7 @@ class ChatRoom extends StatelessWidget {
                               messages[index].data() as Map<String, dynamic>;
                           final bool isCurrentUser = messageData['senderId'] ==
                               authController.userId.value;
-                          final profileImageUrl = 'assets/images/$mbti.jpg';
+                          final profileImageUrl = 'assets/images/$mbti.png';
 
                           return Align(
                             alignment: isCurrentUser
@@ -320,7 +320,7 @@ class ChatRoom extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16),
                                   child: Image.asset(
-                                    "assets/images/${userData['diagnosis']}.jpg",
+                                    "assets/images/${userData['diagnosis']}.png",
                                     width: photoCardSize,
                                     height: photoCardSize,
                                     fit: BoxFit.cover,
@@ -400,7 +400,7 @@ class ChatRoom extends StatelessWidget {
   }
 
   void _showMyNumDialog(BuildContext context, AuthController authController) async {
-    String course = '学科を選んで'; // 初期値は「学科を選んで」
+    String course = '学科'; // 初期値は「学科を選んで」
     final chatRoomRef = FirebaseFirestore.instance
         .collection('chatRooms')
         .doc(_getChatRoomId(authController))
@@ -450,7 +450,7 @@ class ChatRoom extends StatelessWidget {
                         flex: 2,
                         child: DropdownButtonFormField<String>(
                           value: course,
-                          items: ['学科を選んで', 's', 'n', 'c'].map((String value) {
+                          items: ['学科', 's', 'n', 'c'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Center(
@@ -511,7 +511,7 @@ class ChatRoom extends StatelessWidget {
                   onPressed: () {
                     final myId = course + _numberController.text;
                     print("myId: $myId");
-                    if (myId != '学科を選んで' && myId.isNotEmpty) {
+                    if (myId != '学科' && myId.isNotEmpty) {
                       _sendMyNum(myId, authController);
                       _numberController.clear();
                       Navigator.of(context).pop();
@@ -585,6 +585,7 @@ class ChatRoom extends StatelessWidget {
         print("登録成功: currentUserId と senderId と schoolNumber が一致しました");
       } else {
         print("一致するデータが見つかりませんでした");
+        _showNotMatch(userData, false);
       }
     } else {
       print("ユーザーが見つかりませんでした");
@@ -610,6 +611,19 @@ class ChatRoom extends StatelessWidget {
       ),
     );
   }
+
+  void _showNotMatch(Map<String, dynamic>? userData, bool isMatched) {
+      String message = "${userData?['schoolNumber']}という番号ではありません。。";
+
+      Get.snackbar(
+        "マッチング失敗",
+        message,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+  }
+
 
 
   String _getChatRoomId(AuthController authController) {

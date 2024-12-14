@@ -130,7 +130,7 @@ class QuestionScreen extends StatelessWidget {
 
                                             final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
                                             final mbti = userData?['diagnosis'] ?? 'NotSet';
-                                            final profileImageUrl = 'assets/images/${mbti}.jpg';
+                                            final profileImageUrl = 'assets/images/${mbti}.png';
 
                                             return QuestionCard(
                                               question: question,

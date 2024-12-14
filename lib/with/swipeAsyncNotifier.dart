@@ -64,7 +64,7 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         User user = User(
             name: data['email'] ?? 'No Email',
             mbti: dataMBTI,
-            profileImageURL: ["assets/images/${dataMBTI}.jpg"],
+            profileImageURL: ["assets/images/${dataMBTI}.png"],
             userId: userId,
             tags: List<String>.from(data['tag'] ?? []),
             school: data['school'] ?? 'No School',
@@ -98,79 +98,18 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
     }
   }
 
-  // Future<List<User>> fetchUsersFromFirestore() async {
-  //   try {
-  //     int loggedInUserId = authController.userId.value ?? 0;
-  //     String currentUserMBTI = authController.diagnosis.value;
-  //     List<String> currentUserTags = authController.tags.value;
-  //
-  //     final snapshot = await FirebaseFirestore.instance.collection('users').get();
-  //
-  //     List<User> highScoreUsers = [];
-  //     List<User> lowScoreUsers = [];
-  //
-  //     snapshot.docs.forEach((doc) {
-  //       final data = doc.data();
-  //       int userId = data['id'] ?? 0;
-  //       if (userId == loggedInUserId) return;
-  //
-  //       final String dataMBTI = data['diagnosis'] ?? '不明';
-  //       User user = User(
-  //         name: data['email'] ?? 'No Email',
-  //         mbti: dataMBTI,
-  //         profileImageURL: ["assets/images/${dataMBTI}.jpg"],
-  //         userId: userId,
-  //         tags: List<String>.from(data['tag'] ?? []),
-  //         school: data['school'] ?? 'No School',
-  //         introduction: data['introduction'] ?? 'No introduction',
-  //         gender: data['gender']
-  //       );
-  //
-  //       int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
-  //       int tagScore = _getTagScore(currentUserTags, user.tags);
-  //       int totalScore = mbtiScore + tagScore;
-  //
-  //       print("ユーザー ${user.name} (ID: ${user.userId}): MBTIスコア = $mbtiScore, タグスコア = $tagScore, 合計スコア = $totalScore");
-  //
-  //       if (totalScore >= 3) {
-  //         highScoreUsers.add(user);
-  //       } else {
-  //         lowScoreUsers.add(user);
-  //       }
-  //     });
-  //     highScoreUsers.shuffle(Random());
-  //     lowScoreUsers.shuffle(Random());
-  //
-  //     List<User> sortedUsers = [...highScoreUsers, ...lowScoreUsers];
-  //     // sortedUsers.shuffle(Random()); // 順番ランダム
-  //
-  //     print("Filtered and sorted users: $sortedUsers");
-  //     return sortedUsers;
-  //   } catch (e) {
-  //     print("Error fetching users from Firestore: $e");
-  //     return [];
-  //   }
-  // }
-
   int _getMBTIScore(String currentUserMBTI, String userMBTI) {
     final Map<String, List<String>> mbtiCompatibility = {
-      'INTJ': ['ESFJ', 'ISFP', 'ENTP', 'INFJ', 'ENFJ'],
-      'INFJ': ['ESTJ', 'ISTP', 'ENFP', 'INTJ', 'ENTJ'],
-      'ISTJ': ['ENFJ', 'INFP', 'ESTP', 'ISFJ', 'ESFJ'],
-      'ISFJ': ['ENTJ', 'INTP', 'ESFP', 'ISTJ', 'ESTJ'],
-      'INTP': ['ESFP', 'ISFJ', 'ENTJ', 'ISTP', 'ESTP'],
-      'INFP': ['ESTP', 'ISTJ', 'ENFJ', 'ISFP', 'ESFP'],
-      'ISTP': ['ENFP', 'INFJ', 'ESTJ', 'INTP', 'ENTP'],
-      'ISFP': ['ENTP', 'INTJ', 'ESFJ', 'INFP', 'ENFP'],
+      'INT': ['ESF', 'ISF', 'ENT', 'INF', 'ENF'],
+      'INF': ['EST', 'IST', 'ENF', 'INT', 'ENT'],
+      'IST': ['ENF', 'INF', 'EST', 'ISF', 'ESF'],
+      'ISF': ['ENT', 'INT', 'ESF', 'IST', 'EST'],
 
-      'ESTJ': ['INFJ', 'ENFP', 'ISTP', 'ESFJ', 'ISFJ'],
-      'ESFJ': ['INTJ', 'ENTP', 'ISFP', 'ESTJ', 'ISTJ'],
-      'ENTJ': ['ISFJ', 'ESFP', 'INTP', 'ENFJ', 'INFJ'],
-      'ENFJ': ['ISTJ', 'ESTP', 'INFP', 'ENTJ', 'INTJ'],
-      'ESTP': ['INFP', 'ENFJ', 'ISTJ', 'ENTP', 'INTP'],
-      'ESFP': ['INTP', 'ENTJ', 'ISFJ', 'ENFP', 'INFP'],
-      'ENTP': ['ISFP', 'ESFJ', 'INTJ', 'ESTP', 'ISTP'],
-      'ENFP': ['ISTP', 'ESTJ', 'INFJ', 'ESFP', 'ISFP'],
+
+      'EST': ['INF', 'ENF', 'IST', 'ESF', 'ISF'],
+      'ESF': ['INT', 'ENT', 'ISF', 'EST', 'IST'],
+      'ENT': ['ISF', 'ESF', 'INT', 'ENF', 'INF'],
+      'ENF': ['IST', 'EST', 'INF', 'ENT', 'INT'],
     };
 
     List<String> compatibleTypes = mbtiCompatibility[currentUserMBTI] ?? [];

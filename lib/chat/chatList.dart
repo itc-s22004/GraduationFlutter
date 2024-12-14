@@ -63,7 +63,7 @@ class ChatListScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/${user.mbti}.jpg'),
+                                backgroundImage: AssetImage('assets/images/${user.mbti}.png'),
                                 backgroundColor: Colors.grey[200],
                                 radius: 35, // 写真のサイズ
                               ),

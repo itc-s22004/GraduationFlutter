@@ -110,7 +110,7 @@ class _MbtiState extends State<Mbti> {
       _determineType(groupedSelections[0], 'E', 'I'),
       _determineType(groupedSelections[1], 'S', 'N'),
       _determineType(groupedSelections[2], 'T', 'F'),
-      _determineType(groupedSelections[3], 'J', 'P'),
+      // _determineType(groupedSelections[3], 'J', 'P'),
     ];
 
     resultStr = results.join('');

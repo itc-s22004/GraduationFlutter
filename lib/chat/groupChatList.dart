@@ -153,6 +153,7 @@ class GroupChatList extends StatelessWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 24.0, bottom: 16.0),
         child: FloatingActionButton(
+          heroTag: "groupChatFab", // ユニークな heroTag を指定
           onPressed: () => _showChatRoomDialog(context),
           backgroundColor: kQuestBackground,
           child: const Icon(Icons.add),

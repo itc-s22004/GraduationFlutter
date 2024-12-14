@@ -148,7 +148,7 @@ class GroupChatRoom extends StatelessWidget {
                           final bool isCurrentUser = messageData['senderId'] ==
                               authController.userId.value;
 
-                          final profileImageUrl = 'assets/images/${messageData['mbti']}.jpg';
+                          final profileImageUrl = 'assets/images/${messageData['mbti']}.png';
 
                           return Align(
                             alignment: isCurrentUser
@@ -175,7 +175,7 @@ class GroupChatRoom extends StatelessWidget {
                                           child: CircleAvatar(
                                             radius: 15,
                                             backgroundImage: AssetImage(profileImageUrl),
-                                            backgroundColor: Colors.grey,
+                                            // backgroundColor: Colors.grey,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
@@ -328,7 +328,7 @@ class GroupChatRoom extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16),
                                   child: Image.asset(
-                                    "assets/images/${userData['diagnosis']}.jpg",
+                                    "assets/images/${userData['diagnosis']}.png",
                                     width: photoCardSize,
                                     height: photoCardSize,
                                     fit: BoxFit.cover,

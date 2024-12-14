@@ -70,7 +70,7 @@ class SettingScreen extends StatelessWidget {
                               radius: 40.0,
                               backgroundColor: Colors.grey[300],
                               backgroundImage: AssetImage(
-                                  "assets/images/${authController.diagnosis.value}.jpg"),
+                                  "assets/images/${authController.diagnosis.value}.png"),
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -146,7 +146,7 @@ class SettingScreen extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: Image.asset(
-                                "assets/images/${authController.diagnosis.value}.jpg",
+                                "assets/images/${authController.diagnosis.value}.png",
                                 width: photoCardSize,
                                 height: photoCardSize,
                                 fit: BoxFit.cover,

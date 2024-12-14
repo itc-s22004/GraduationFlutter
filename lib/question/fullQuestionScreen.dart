@@ -99,7 +99,7 @@ class FullQuestionScreen extends StatelessWidget {
 
             final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
             final mbti = userData?['diagnosis'] ?? 'NotSet';
-            final profileImageUrl = 'assets/images/${mbti}.jpg';
+            final profileImageUrl = 'assets/images/${mbti}.png';
 
             return GestureDetector(
               onTap: () {
@@ -189,7 +189,7 @@ class FullQuestionScreen extends StatelessWidget {
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(16),
                                             child: Image.asset(
-                                              "assets/images/${mbti}.jpg",
+                                              "assets/images/${mbti}.png",
                                               width: photoCardSize,
                                               height: photoCardSize,
                                               fit: BoxFit.cover,
@@ -363,7 +363,7 @@ class FullQuestionScreen extends StatelessWidget {
                 final userData =
                     userSnapshot.data!.data() as Map<String, dynamic>?;
                 final mbti = userData?['diagnosis'] ?? 'NotSet';
-                final profileImageUrl = 'assets/images/${mbti}.jpg';
+                final profileImageUrl = 'assets/images/${mbti}.png';
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),

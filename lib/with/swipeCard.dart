@@ -73,6 +73,7 @@ class SwipeCard extends ConsumerWidget {
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.grey.shade400, width: 2),
               image: DecorationImage(
@@ -274,7 +275,7 @@ class SwipeCard extends ConsumerWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: Image.asset(
-                                  "assets/images/${user.mbti}.jpg",
+                                  "assets/images/${user.mbti}.png",
                                   width: photoCardSize,
                                   height: photoCardSize,
                                   fit: BoxFit.cover,

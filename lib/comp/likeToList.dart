@@ -202,7 +202,7 @@ class _LikeToListState extends State<LikeToList> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: Image.asset(
-                                  "assets/images/${user.mbti}.jpg",
+                                  "assets/images/${user.mbti}.png",
                                   width: photoCardSize,
                                   height: photoCardSize,
                                   fit: BoxFit.cover,
@@ -279,7 +279,7 @@ class _LikeToListState extends State<LikeToList> {
                         children: [
                           CircleAvatar(
                             backgroundImage:
-                                AssetImage('assets/images/${user.mbti}.jpg'),
+                                AssetImage('assets/images/${user.mbti}.png'),
                             backgroundColor: Colors.grey[200],
                             radius: 35, // 写真のサイズ
                           ),
