@@ -20,11 +20,11 @@ class Mbti extends StatefulWidget {
 
 class _MbtiState extends State<Mbti> {
   final ScrollController _scrollController = ScrollController();
-  final List<GlobalKey> _setKeys = List.generate(12, (_) => GlobalKey());
-  final List<int?> _selectedIndexes = List.generate(12, (_) => null);
+  final List<GlobalKey> _setKeys = List.generate(9, (_) => GlobalKey());
+  final List<int?> _selectedIndexes = List.generate(9, (_) => null);
   final AuthController authController = Get.find<AuthController>();
 
-  List<String> questions = List.generate(12, (_) => "");
+  List<String> questions = List.generate(9, (_) => "");
 
   @override
   void initState() {
@@ -39,6 +39,8 @@ class _MbtiState extends State<Mbti> {
   }
 
   Future<void> _updateUserDate(String diagnosisResult) async {
+    String animalName = _convertToAnimal(diagnosisResult);
+
     try {
       await FirebaseFirestore.instance
           .collection('users')
@@ -50,11 +52,14 @@ class _MbtiState extends State<Mbti> {
           String docId = userDoc.id;
 
           FirebaseFirestore.instance.collection('users').doc(docId).update({
-            'diagnosis': diagnosisResult,
+            // 'diagnosis': diagnosisResult,
+            'diagnosis': animalName,
           });
 
           // AuthControllerに診断結果を保存
-          authController.updateDiagnosis(diagnosisResult);
+          // authController.updateDiagnosis(diagnosisResult);
+          authController.updateDiagnosis(animalName);
+
         }
       });
     } catch (e) {
@@ -62,6 +67,21 @@ class _MbtiState extends State<Mbti> {
         SnackBar(content: Text('エラーが発生しました: $e')),
       );
     }
+  }
+
+  String _convertToAnimal(String diagnosisResult) {
+    Map<String, String> animalMap = {
+      'ENF': 'うしさん',
+      'ENT': 'とりさん',
+      'ESF': 'いぬさん',
+      'EST': 'さるさん',
+      'INF': 'ねこさん',
+      'INT': 'はむさん',
+      'ISF': 'ひつじさん',
+      'IST': 'へびさん',
+    };
+
+    return animalMap[diagnosisResult] ?? '不明な結果'; // 見つからない場合はデフォルトで「不明な結果」
   }
 
   Future<void> _fetchQuestions() async {
@@ -103,14 +123,12 @@ class _MbtiState extends State<Mbti> {
       selected.sublist(0, 3), // EI
       selected.sublist(3, 6), // SN
       selected.sublist(6, 9), // TF
-      selected.sublist(9, 12), // JP
     ];
 
     List<String> results = [
       _determineType(groupedSelections[0], 'E', 'I'),
       _determineType(groupedSelections[1], 'S', 'N'),
       _determineType(groupedSelections[2], 'T', 'F'),
-      // _determineType(groupedSelections[3], 'J', 'P'),
     ];
 
     resultStr = results.join('');

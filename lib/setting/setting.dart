@@ -68,7 +68,7 @@ class SettingScreen extends StatelessWidget {
                           children: [
                             Obx(() => CircleAvatar(
                               radius: 40.0,
-                              backgroundColor: Colors.grey[300],
+                              backgroundColor: Colors.white,
                               backgroundImage: AssetImage(
                                   "assets/images/${authController.diagnosis.value}.png"),
                               child: Container(

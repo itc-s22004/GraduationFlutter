@@ -172,7 +172,7 @@ class ChatRoom extends StatelessWidget {
                                         radius: 15,
                                         backgroundImage:
                                             AssetImage(profileImageUrl),
-                                        backgroundColor: Colors.grey,
+                                        backgroundColor: Colors.white,
                                       ),
                                     ),
                                   if (!isCurrentUser) const SizedBox(width: 8),

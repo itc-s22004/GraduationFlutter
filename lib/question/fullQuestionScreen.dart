@@ -269,7 +269,7 @@ class FullQuestionScreen extends StatelessWidget {
               child: CircleAvatar(
                 radius: 35,
                 backgroundImage: AssetImage(profileImageUrl),
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.white,
               ),
             );
           },
@@ -385,7 +385,7 @@ class FullQuestionScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 20,
                           backgroundImage: AssetImage(profileImageUrl),
-                          backgroundColor: Colors.grey,
+                          backgroundColor: Colors.white,
                         ),
                         const SizedBox(width: 10),
                         Expanded(

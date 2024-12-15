@@ -320,7 +320,7 @@ class QuestionCard extends StatelessWidget {
               CircleAvatar(
                 radius: 30,
                 backgroundImage: AssetImage(profileImageUrl),
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.white,
               ),
               const SizedBox(width: 15),
               Text(

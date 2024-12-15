@@ -64,7 +64,7 @@ class ChatListScreen extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/${user.mbti}.png'),
-                                backgroundColor: Colors.grey[200],
+                                backgroundColor: Colors.white,
                                 radius: 35, // 写真のサイズ
                               ),
                               const SizedBox(width: 20.0), // 写真とテキストの間

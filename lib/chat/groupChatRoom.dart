@@ -173,9 +173,9 @@ class GroupChatRoom extends StatelessWidget {
                                         GestureDetector(
                                           onTap: () => _showUserInfoPanel(context, messageData['senderId']),
                                           child: CircleAvatar(
-                                            radius: 15,
+                                            radius: 25,
                                             backgroundImage: AssetImage(profileImageUrl),
-                                            // backgroundColor: Colors.grey,
+                                            backgroundColor: Colors.white,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
@@ -183,12 +183,20 @@ class GroupChatRoom extends StatelessWidget {
                                           messageData['schoolId'],
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
+                                            fontSize: 16,
                                           ),
                                         ),
                                       ],
                                     ),
                                   const SizedBox(height: 5),
-                                  Text(messageData['message']),
+                                  // Text(messageData['message']),
+                                  Text(
+                                    messageData['message'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
