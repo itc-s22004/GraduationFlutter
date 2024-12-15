@@ -100,16 +100,26 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
 
   int _getMBTIScore(String currentUserMBTI, String userMBTI) {
     final Map<String, List<String>> mbtiCompatibility = {
-      'INT': ['ESF', 'ISF', 'ENT', 'INF', 'ENF'],
-      'INF': ['EST', 'IST', 'ENF', 'INT', 'ENT'],
-      'IST': ['ENF', 'INF', 'EST', 'ISF', 'ESF'],
-      'ISF': ['ENT', 'INT', 'ESF', 'IST', 'EST'],
+      'はむさん': ['いぬさん', 'ひつじさん', 'とりさん', ],
+      'ねこさん': ['さるさん', 'へびさん', 'うしさん', ],
+      'へびさん': ['とりさん', 'はむさん', 'さるさん', ],
+      'ひつじさん': ['とりさん', 'はむさん', 'いぬさん', ],
 
 
-      'EST': ['INF', 'ENF', 'IST', 'ESF', 'ISF'],
-      'ESF': ['INT', 'ENT', 'ISF', 'EST', 'IST'],
-      'ENT': ['ISF', 'ESF', 'INT', 'ENF', 'INF'],
-      'ENF': ['IST', 'EST', 'INF', 'ENT', 'INT'],
+      'さるさん': ['ねこさん', 'うしさん', 'へびさん', ],
+      'いぬさん': ['はむさん', 'とりさん', 'ひつじさん', ],
+      'とりさん': ['ひつじさん', 'いぬさん', 'はむさん', ],
+      'うしさん': ['へびさん', 'さるさん', 'ねこさん', ],
+      // 'INT': ['ESF', 'ISF', 'ENT', ],
+      // 'INF': ['EST', 'IST', 'ENF', ],
+      // 'IST': ['ENF', 'INF', 'EST', ],
+      // 'ISF': ['ENT', 'INT', 'ESF', ],
+      //
+      //
+      // 'EST': ['INF', 'ENF', 'IST', ],
+      // 'ESF': ['INT', 'ENT', 'ISF', ],
+      // 'ENT': ['ISF', 'ESF', 'INT', ],
+      // 'ENF': ['IST', 'EST', 'INF', ],
     };
 
     List<String> compatibleTypes = mbtiCompatibility[currentUserMBTI] ?? [];
