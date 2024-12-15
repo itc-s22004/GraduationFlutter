@@ -53,7 +53,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'スワイpi-----',
+            'スワイプ',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           shape: const RoundedRectangleBorder(

@@ -159,12 +159,12 @@ class _TagState extends State<Tag> {
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.all(Radius.circular(32)),
                                     border: Border.all(width: 2, color: Colors.pink),
-                                    color: isSelected ? Colors.pink : null,
+                                    color: isSelected ? Colors.pinkAccent : null,
                                   ),
                                   child: Text(
                                     tag,
                                     style: TextStyle(
-                                      color: isSelected ? Colors.white : Colors.pink,
+                                      color: isSelected ? Colors.white : Colors.pinkAccent,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -198,7 +198,7 @@ class _TagState extends State<Tag> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                            backgroundColor: Colors.pink,
+                            backgroundColor: kAppBarBackground,
                           ),
                           onPressed: () {
                             saveTagsToFirebase();

@@ -39,7 +39,7 @@ class _MbtiState extends State<Mbti> {
   }
 
   Future<void> _updateUserDate(String diagnosisResult) async {
-    String animalName = _convertToAnimal(diagnosisResult);
+    // String animalName = _convertToAnimal(diagnosisResult);
 
     try {
       await FirebaseFirestore.instance
@@ -52,13 +52,13 @@ class _MbtiState extends State<Mbti> {
           String docId = userDoc.id;
 
           FirebaseFirestore.instance.collection('users').doc(docId).update({
-            // 'diagnosis': diagnosisResult,
-            'diagnosis': animalName,
+            'diagnosis': diagnosisResult,
+            // 'diagnosis': animalName,
           });
 
           // AuthControllerに診断結果を保存
-          // authController.updateDiagnosis(diagnosisResult);
-          authController.updateDiagnosis(animalName);
+          authController.updateDiagnosis(diagnosisResult);
+          // authController.updateDiagnosis(animalName);
 
         }
       });
@@ -81,7 +81,7 @@ class _MbtiState extends State<Mbti> {
       'IST': 'へびさん',
     };
 
-    return animalMap[diagnosisResult] ?? '不明な結果'; // 見つからない場合はデフォルトで「不明な結果」
+    return animalMap[diagnosisResult] ?? '不明な結果';
   }
 
   Future<void> _fetchQuestions() async {
@@ -133,20 +133,22 @@ class _MbtiState extends State<Mbti> {
 
     resultStr = results.join('');
 
+    String animal = _convertToAnimal(resultStr);
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("選択結果"),
-          content: Text("結果: $resultStr"),
+          content: Text("結果: $animal"),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _updateUserDate(resultStr); // Firestoreの更新
+                _updateUserDate(animal); // Firestoreの更新
 
                 // AuthControllerに診断結果を保存
-                authController.updateDiagnosis(resultStr);
+                authController.updateDiagnosis(animal);
 
                 if (widget.fromEditProf) { // trueだったら編集画面に
                   Get.back(); // 編集画面に戻る
@@ -251,11 +253,11 @@ class _MbtiState extends State<Mbti> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: _selectedIndexes[setIndex] ==
                                       buttonIndex
-                                      ? Colors.blue
+                                      ? kQuestBackground
                                       : Colors.grey[200],
                                   foregroundColor:
                                   _selectedIndexes[setIndex] == buttonIndex
-                                      ? Colors.white
+                                      ? Colors.black
                                       : Colors.black,
                                   fixedSize: Size(buttonWidth, 50),
                                   shape: RoundedRectangleBorder(
@@ -265,9 +267,11 @@ class _MbtiState extends State<Mbti> {
                                 onPressed: () =>
                                     _onButtonPressed(setIndex, buttonIndex),
                                 child: Text(
-                                  ["　賛成　", "やや賛成", "やや反対", "　反対　"]
-                                  [buttonIndex],
-                                  style: const TextStyle(fontSize: 16),
+                                  ["　賛成　", "やや賛成", "やや反対", "　反対　"][buttonIndex],
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold, // 文字を太字にする
+                                  ),
                                 ),
                               ),
                             ),
@@ -286,7 +290,7 @@ class _MbtiState extends State<Mbti> {
                 color: Theme.of(context).scaffoldBackgroundColor,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: kAppBarBackground,
                     padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(

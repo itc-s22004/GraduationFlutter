@@ -107,11 +107,11 @@ class _AddInfoState extends State<AddInfo> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Text('email: ${widget.data}'),
+                    // Text('email: ${widget.data}'),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       value: _selectedGender,
-                      items: ['男性', '女性', 'その他'].map((String value) {
+                      items: ['男性', '女性', 'その他', '無回答'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -140,7 +140,9 @@ class _AddInfoState extends State<AddInfo> {
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       value: _selectedSchool,
-                      items: ['ITカレッジ沖縄', '外語学院'].map((String value) {
+                      items: [
+                        'ITカレッジ沖縄', '外語学院', 'Python', 'JavaScript', 'Java', 'Kotlin', 'Dart', 'HTML/CSS', 'security', '基本情報技術者試験'
+                      ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -153,7 +155,7 @@ class _AddInfoState extends State<AddInfo> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: '学校',
+                        labelText: '得意な言語',
                         labelStyle: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -170,7 +172,7 @@ class _AddInfoState extends State<AddInfo> {
                     TextField(
                       controller: _schoolNumController,
                       decoration: InputDecoration(
-                        labelText: '学校番号',
+                        labelText: '学籍番号',
                         labelStyle: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
