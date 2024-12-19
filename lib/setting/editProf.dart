@@ -227,7 +227,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       controller: introductionController,
                       decoration: InputDecoration(
                         // labelText: 'labelText',
-                        labelText: isFocused ? '自己紹介' : '素敵な自己紹介を書いてね！！！',
+                        labelText: isFocused ? '自己紹介' : '素敵な自己紹介を書いてね！！！', //-----------------kaneko
                         labelStyle: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
