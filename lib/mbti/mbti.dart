@@ -71,14 +71,14 @@ class _MbtiState extends State<Mbti> {
 
   String _convertToAnimal(String diagnosisResult) {
     Map<String, String> animalMap = {
-      'ENF': 'うしさん',
-      'ENT': 'とりさん',
-      'ESF': 'いぬさん',
-      'EST': 'さるさん',
-      'INF': 'ねこさん',
-      'INT': 'はむさん',
-      'ISF': 'ひつじさん',
-      'IST': 'へびさん',
+      'ADF': 'うしさん',
+      'BCF': 'とりさん',
+      'ACE': 'いぬさん',
+      'ACF': 'さるさん',
+      'BCE': 'ねこさん',
+      'ADE': 'はむさん',
+      'BDE': 'ひつじさん',
+      'BDF': 'へびさん',
     };
 
     return animalMap[diagnosisResult] ?? '不明な結果';
@@ -116,54 +116,207 @@ class _MbtiState extends State<Mbti> {
     }
   }
 
-  void _onConfirm() {
+  Future<void> _onConfirm() async {
     List<int> selected = _selectedIndexes.whereType<int>().toList();
     String resultStr;
     List<List<int>> groupedSelections = [
-      selected.sublist(0, 3), // EI
-      selected.sublist(3, 6), // SN
-      selected.sublist(6, 9), // TF
+      selected.sublist(0, 3), // AB
+      selected.sublist(3, 6), // CD
+      selected.sublist(6, 9), // EF
     ];
 
     List<String> results = [
-      _determineType(groupedSelections[0], 'E', 'I'),
-      _determineType(groupedSelections[1], 'S', 'N'),
-      _determineType(groupedSelections[2], 'T', 'F'),
+      _determineType(groupedSelections[0], 'A', 'B'),
+      _determineType(groupedSelections[1], 'C', 'D'),
+      _determineType(groupedSelections[2], 'E', 'F'),
     ];
 
     resultStr = results.join('');
 
     String animal = _convertToAnimal(resultStr);
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("選択結果"),
-          content: Text("結果: $animal"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _updateUserDate(animal); // Firestoreの更新
+    // -----------------------------------------
+    final animalDoc = await FirebaseFirestore.instance
+        .collection('animals')
+        .where('animal', isEqualTo: animal)
+        .get();
 
-                // AuthControllerに診断結果を保存
-                authController.updateDiagnosis(animal);
+    // Firestoreから取得したデータが存在する場合
+    if (animalDoc.docs.isNotEmpty) {
+      // ドキュメントからデータを取得
+      var animalData = animalDoc.docs.first.data();
 
-                if (widget.fromEditProf) { // trueだったら編集画面に
-                  Get.back(); // 編集画面に戻る
-                } else {
-                  // BottomNavigationに遷移
-                  Get.offAll(() => const BottomNavigation());
-                }
-              },
-              child: const Text("閉じる"),  //----------------------------
+      // 動物の詳細情報を取り出し
+      String features = animalData['features'] ?? '特徴情報なし';
+      String personality = animalData['personality'] ?? '性格情報なし';
+      String relationships = animalData['relationships'] ?? '人間関係情報なし';
+
+      final Map<String, List<String>> compatibilityMap = {
+        'ねこさん': ['とりさん', 'へびさん', 'さるさん'],
+        'はむさん': ['うしさん', 'ひつじさん', 'いぬさん'],
+        'へびさん': ['とりさん', 'ねこさん', 'ひつじさん'],
+        'ひつじさん': ['いぬさん', 'うしさん', 'はむさん'],
+        'さるさん': ['とりさん', 'いぬさん', 'ねこさん'],
+        'いぬさん': ['さるさん', 'ひつじさん', 'とりさん'],
+        'とりさん': ['へびさん', 'さるさん', 'ねこさん'],
+        'うしさん': ['ひつじさん', 'いぬさん', 'ねこさん'],
+      };
+
+      List<String> compatibleAnimals = compatibilityMap[animal] ?? [];
+
+      // -----------------------------------------
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: const Text("選択結果"),
+      //       content: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           Text("あなたの動物は、「 $animal 」"),
+      //           const SizedBox(height: 10),
+      //           _buildAnimalRow([
+      //             _Animal(image: 'assets/images/$animal.png', label: 'あなた'),
+      //             ...compatibleAnimals.asMap().entries.map(
+      //                   (entry) {
+      //                 int rank = entry.key + 1; // 順位を1からスタート
+      //                 String compatibleAnimal = entry.value;
+      //                 return _Animal(
+      //                   image: 'assets/images/$compatibleAnimal.png',
+      //                   label: '$rank位',
+      //                 );
+      //               },
+      //             ).toList(),
+      //           ]),
+      //           const Divider(color: Colors.black),
+      //           Text("特徴: $features"),
+      //           const SizedBox(height: 10),
+      //           Text("性格: $personality"),
+      //           const SizedBox(height: 10),
+      //           Text("人間関係: $relationships"),
+      //         ],
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           onPressed: () {
+      //             Navigator.of(context).pop();
+      //             _updateUserDate(animal); // Firestoreの更新
+      //
+      //             // AuthControllerに診断結果を保存
+      //             authController.updateDiagnosis(animal);
+      //
+      //             if (widget.fromEditProf) { // trueだったら編集画面に
+      //               Get.back(); // 編集画面に戻る
+      //             } else {
+      //               // BottomNavigationに遷移
+      //               Get.offAll(() => const BottomNavigation());
+      //             }
+      //           },
+      //           child: const Text("閉じる"),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("選択結果", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            content: SingleChildScrollView( // 内容が多い場合にスクロール可能にする
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // あなたの動物表示
+                  Text(
+                    "あなたの動物は「$animal」",
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // 動物画像と順位を並べる
+                  _buildAnimalRow([
+                    _Animal(image: 'assets/images/$animal.png', label: 'あなた'),
+                    ...compatibleAnimals.asMap().entries.map((entry) {
+                      int rank = entry.key + 1; // 順位を1からスタート
+                      String compatibleAnimal = entry.value;
+                      return _Animal(
+                        image: 'assets/images/$compatibleAnimal.png',
+                        label: '$rank 位',
+                      );
+                    }).toList(),
+                  ]),
+
+                  const Divider(color: Colors.black), // 区切り線
+
+                  // 動物の特徴、性格、人間関係
+                  const SizedBox(height: 10),
+                  Text(
+                    "特徴:\n $features",
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    "性格:\n $personality",
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    "人間関係:\n $relationships",
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
-          ],
-        );
-      },
-    );
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _updateUserDate(animal); // Firestoreの更新
+
+                  // AuthControllerに診断結果を保存
+                  authController.updateDiagnosis(animal);
+
+                  if (widget.fromEditProf) { // trueだったら編集画面に
+                    Get.back(); // 編集画面に戻る
+                  } else {
+                    // BottomNavigationに遷移
+                    Get.offAll(() => const BottomNavigation());
+                  }
+                },
+                child: const Text("閉じる", style: TextStyle(fontSize: 16)),
+              ),
+            ],
+          );
+        },
+      );
+
+      // -----------------------------------------
+    } else {
+      // 動物情報が見つからなかった場合
+      print("指定された動物のデータが見つかりませんでした。");
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("エラー"),
+            content: const Text("指定された動物のデータが見つかりませんでした。"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("閉じる"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    // -----------------------------------------
   }
+
+
 
   // 特性判定関数
   String _determineType(List<int> group, String typeA, String typeB) {
@@ -183,7 +336,7 @@ class _MbtiState extends State<Mbti> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'MBTI',
+          '動物診断',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         shape: const RoundedRectangleBorder(
@@ -309,4 +462,28 @@ class _MbtiState extends State<Mbti> {
       ),
     );
   }
+
+  Widget _buildAnimalRow(List<_Animal> animals) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: animals
+          .map(
+            (animal) => Column(
+          children: [
+            Text(animal.label),
+            const SizedBox(height: 5),
+            Image.asset(animal.image, width: 50, height: 50),
+          ],
+        ),
+      )
+          .toList(),
+    );
+  }
+}
+
+class _Animal {
+  final String image;
+  final String label;
+
+  const _Animal({required this.image, required this.label});
 }

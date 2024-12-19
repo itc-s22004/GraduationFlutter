@@ -110,8 +110,8 @@ class SwipeCard extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildText(user.name, 22, Colors.white),
-                        _buildText(user.mbti, 18, Colors.white),
+                        // _buildText(user.name, 22, Colors.white),
+                        _buildText(user.mbti, 28, Colors.white),
                         const SizedBox(height: 8),
                         if (user.introduction != null &&
                             user.introduction.isNotEmpty)

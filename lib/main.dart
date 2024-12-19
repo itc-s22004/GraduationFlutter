@@ -214,6 +214,7 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:omg/comp/tag.dart';
 import 'package:omg/mbti/mbti.dart';
+import 'package:omg/question/test.dart';
 import 'auth_controller.dart';
 import 'firebase_options.dart';
 import 'login/login_validate.dart';
@@ -270,6 +271,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const LoginValidate(),
+      // home: const Mbti(data: 'test@a.com', fromEditProf: false),
       debugShowCheckedModeBanner: false,
     );
   }

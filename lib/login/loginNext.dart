@@ -152,7 +152,7 @@ class _SlideInTextState extends State<SlideInText> with SingleTickerProviderStat
           child: SlideTransition(
             position: _animation,
             child: ThreeDText(
-              text: 'HATTEN',
+              text: 'MATCH',
               textStyle: const TextStyle(
                 fontSize: 50,
                 fontWeight: FontWeight.bold,

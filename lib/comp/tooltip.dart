@@ -4,299 +4,82 @@ class TooltipButton extends StatelessWidget {
   final String tooltip;
   final String title;
 
-  TooltipButton({
+  const TooltipButton({
+    Key? key,
     required this.tooltip,
     required this.title,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.help_outline),
+      tooltip: tooltip,
       onPressed: () {
-        // ヘルプダイアログを表示
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text(title),
-              content: const SingleChildScrollView( // これでスクロールを有効にする
+              content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/うしさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text('1位'),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/へびさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text('2位'),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/さるさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text('3位'),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/ねこさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
-                    // const SizedBox(height: 10),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/うしさん.png', label: ''),
+                      const _Animal(image: 'assets/images/ひつじさん.png', label: '1位'),
+                      const _Animal(image: 'assets/images/いぬさん.png', label: '2位'),
+                      const _Animal(image: 'assets/images/ねこさん.png', label: '3位'),
+                    ]),
+                    const Divider(color: Colors.black),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/とりさん.png', label: ''),
+                      const _Animal(image: 'assets/images/へびさん.png', label: ''),
+                      const _Animal(image: 'assets/images/さるさん.png', label: ''),
+                      const _Animal(image: 'assets/images/ねこさん.png', label: ''),
+                    ]),
+                    const Divider(color: Colors.black),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/さるさん.png', label: ''),
+                      const _Animal(image: 'assets/images/とりさん.png', label: ''),
+                      const _Animal(image: 'assets/images/いぬさん.png', label: ''),
+                      const _Animal(image: 'assets/images/とりさん.png', label: ''),
+                    ]),
+                    const Divider(color: Colors.black),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/はむさん.png', label: ''),
+                      const _Animal(image: 'assets/images/うしさん.png', label: ''),
+                      const _Animal(image: 'assets/images/ひつじさん.png', label: ''),
+                      const _Animal(image: 'assets/images/いぬさん.png', label: ''),
+                    ]),const
                     Divider(color: Colors.black),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/とりさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/ひつじさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/いぬさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/はむさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.black),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/いぬさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/はむさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/とりさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/ひつじさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.black),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/さるさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/ねこさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/うしさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/へびさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.black),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/ねこさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/さるさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/へびさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/うしさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.black),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/はむさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/いぬさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/ひつじさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/とりさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.black),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/ひつじさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/とりさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/はむさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/いぬさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.black),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/へびさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/とりさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/はむさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(''),
-                            SizedBox(height: 5),
-                            Image(image: AssetImage('assets/images/いぬさん.png'), width: 50, height: 50),
-                          ],
-                        ),
-                      ],
-                    ),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/いぬさん.png', label: ''),
+                      const _Animal(image: 'assets/images/さるさん.png', label: ''),
+                      const _Animal(image: 'assets/images/ひつじさん.png', label: ''),
+                      const _Animal(image: 'assets/images/とりさん.png', label: ''),
+                    ]),
+                    const Divider(color: Colors.black),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/ねこさん.png', label: ''),
+                      const _Animal(image: 'assets/images/とりさん.png', label: ''),
+                      const _Animal(image: 'assets/images/へびさん.png', label: ''),
+                      const _Animal(image: 'assets/images/さるさん.png', label: ''),
+                    ]),
+                    const Divider(color: Colors.black),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/ひつじさん.png', label: ''),
+                      const _Animal(image: 'assets/images/いぬさん.png', label: ''),
+                      const _Animal(image: 'assets/images/うしさん.png', label: ''),
+                      const _Animal(image: 'assets/images/はむさん.png', label: ''),
+                    ]),
+                    const Divider(color: Colors.black),
+                    _buildAnimalRow([
+                      const _Animal(image: 'assets/images/へびさん.png', label: ''),
+                      const _Animal(image: 'assets/images/とりさん.png', label: ''),
+                      const _Animal(image: 'assets/images/ねこさん.png', label: ''),
+                      const _Animal(image: 'assets/images/ひつじさん.png', label: ''),
+                    ]),
                   ],
                 ),
               ),
@@ -310,7 +93,30 @@ class TooltipButton extends StatelessWidget {
           },
         );
       },
-      tooltip: tooltip,
     );
   }
+
+  Widget _buildAnimalRow(List<_Animal> animals) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: animals
+          .map(
+            (animal) => Column(
+          children: [
+            Text(animal.label),
+            const SizedBox(height: 5),
+            Image.asset(animal.image, width: 50, height: 50),
+          ],
+        ),
+      )
+          .toList(),
+    );
+  }
+}
+
+class _Animal {
+  final String image;
+  final String label;
+
+  const _Animal({required this.image, required this.label});
 }
