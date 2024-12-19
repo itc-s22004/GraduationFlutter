@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:omg/with/swipeAsyncNotifier.dart' as asyncNotifier;
 import 'package:omg/with/swipeAsyncNotifier.dart';
-import '../utilities/constant.dart';
 import 'user.dart';
 import 'package:omg/comp/detailDesgin.dart';
 

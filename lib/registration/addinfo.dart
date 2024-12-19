@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get/get.dart';
 import 'package:omg/auth_controller.dart';
 import 'package:omg/comp/tag.dart';
@@ -55,13 +56,15 @@ class _AddInfoState extends State<AddInfo> {
             'gender': _selectedGender,
             'school': _selectedSchool,
             'diagnosis': "",
-            'schoolNumber': _schoolNumController.text.trim()
+            'schoolNumber': _schoolNumController.text.trim(),
+            'introduction': _introductionController.text.trim(),
           });
 
           authController.updateGender(_selectedGender ?? '');
           authController.updateSchool(_selectedSchool ?? '');
           authController.updateDiagnosis(_diagnosisController.text.trim());
           authController.updateSchoolNum(_schoolNumController.text.trim());
+          authController.updateIntroduction(_introductionController.text.trim());
         }
       });
     } catch (e) {
@@ -183,6 +186,26 @@ class _AddInfoState extends State<AddInfo> {
                         filled: true,
                         fillColor: Colors.blueGrey.shade50,
                       ),
+                      onChanged: (text) {
+                        _updateButtonState();
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _introductionController,
+                      decoration: InputDecoration(
+                        labelText: '自己紹介',
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        filled: true,
+                        fillColor: Colors.blueGrey.shade50,
+                      ),
+                      maxLines: null,
                       onChanged: (text) {
                         _updateButtonState();
                       },
