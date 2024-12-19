@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth_controller.dart';
 import '../comp/detailDesgin.dart';
 import '../utilities/constant.dart';
@@ -90,7 +91,6 @@ class SettingScreen extends StatelessWidget {
                       ),
                     ),
                     Divider(color: Colors.grey[300]),
-                    // 学校、性別、MBTIのカード
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -145,11 +145,102 @@ class SettingScreen extends StatelessWidget {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
-                              child: Image.asset(
-                                "assets/images/${authController.diagnosis.value}.png",
-                                width: photoCardSize,
-                                height: photoCardSize,
-                                fit: BoxFit.cover,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  String animal = authController.diagnosis.value;
+
+                                  final animalDoc = await FirebaseFirestore.instance
+                                      .collection('animals')
+                                      .where('animal', isEqualTo: animal)
+                                      .get();
+
+                                  if (animalDoc.docs.isNotEmpty) {
+                                    var animalData = animalDoc.docs.first.data();
+
+                                    String features = animalData['features'] ?? '特徴情報なし';
+                                    String personality = animalData['personality'] ?? '性格情報なし';
+                                    String relationships = animalData['relationships'] ?? '人間関係情報なし';
+
+                                    final Map<String, List<String>> compatibilityMap = {
+                                      'ねこさん': ['とりさん', 'へびさん', 'さるさん'],
+                                      'はむさん': ['うしさん', 'ひつじさん', 'いぬさん'],
+                                      'へびさん': ['とりさん', 'ねこさん', 'ひつじさん'],
+                                      'ひつじさん': ['いぬさん', 'うしさん', 'はむさん'],
+                                      'さるさん': ['とりさん', 'いぬさん', 'ねこさん'],
+                                      'いぬさん': ['さるさん', 'ひつじさん', 'とりさん'],
+                                      'とりさん': ['へびさん', 'さるさん', 'ねこさん'],
+                                      'うしさん': ['ひつじさん', 'いぬさん', 'ねこさん'],
+                                    };
+
+                                    List<String> compatibleAnimals = compatibilityMap[animal] ?? [];
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                            "選択結果",
+                                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "あなたの動物は「$animal」",
+                                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                                ),
+                                                const SizedBox(height: 10),
+
+                                                _buildAnimalRow([
+                                                  _Animal(image: 'assets/images/$animal.png', label: 'あなた'),
+                                                  ...compatibleAnimals.asMap().entries.map((entry) {
+                                                    int rank = entry.key + 1;
+                                                    String compatibleAnimal = entry.value;
+                                                    return _Animal(
+                                                      image: 'assets/images/$compatibleAnimal.png',
+                                                      label: '$rank 位',
+                                                    );
+                                                  }).toList(),
+                                                ]),
+                                                const Divider(color: Colors.black),
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                  "特徴:\n$features",
+                                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                                ),
+                                                const SizedBox(height: 18),
+                                                Text(
+                                                  "性格:\n$personality",
+                                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                                ),
+                                                const SizedBox(height: 18),
+                                                Text(
+                                                  "人間関係:\n$relationships",
+                                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("閉じる"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Image.asset(
+                                  "assets/images/${authController.diagnosis.value}.png",
+                                  width: photoCardSize,
+                                  height: photoCardSize,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           );
@@ -172,4 +263,28 @@ class SettingScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildAnimalRow(List<_Animal> animals) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: animals
+          .map(
+            (animal) => Column(
+          children: [
+            Text(animal.label),
+            const SizedBox(height: 5),
+            Image.asset(animal.image, width: 50, height: 50),
+          ],
+        ),
+      )
+          .toList(),
+    );
+  }
+}
+
+class _Animal {
+  final String image;
+  final String label;
+
+  const _Animal({required this.image, required this.label});
 }

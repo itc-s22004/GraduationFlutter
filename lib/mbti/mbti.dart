@@ -164,60 +164,6 @@ class _MbtiState extends State<Mbti> {
 
       List<String> compatibleAnimals = compatibilityMap[animal] ?? [];
 
-      // -----------------------------------------
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: const Text("選択結果"),
-      //       content: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           Text("あなたの動物は、「 $animal 」"),
-      //           const SizedBox(height: 10),
-      //           _buildAnimalRow([
-      //             _Animal(image: 'assets/images/$animal.png', label: 'あなた'),
-      //             ...compatibleAnimals.asMap().entries.map(
-      //                   (entry) {
-      //                 int rank = entry.key + 1; // 順位を1からスタート
-      //                 String compatibleAnimal = entry.value;
-      //                 return _Animal(
-      //                   image: 'assets/images/$compatibleAnimal.png',
-      //                   label: '$rank位',
-      //                 );
-      //               },
-      //             ).toList(),
-      //           ]),
-      //           const Divider(color: Colors.black),
-      //           Text("特徴: $features"),
-      //           const SizedBox(height: 10),
-      //           Text("性格: $personality"),
-      //           const SizedBox(height: 10),
-      //           Text("人間関係: $relationships"),
-      //         ],
-      //       ),
-      //       actions: [
-      //         TextButton(
-      //           onPressed: () {
-      //             Navigator.of(context).pop();
-      //             _updateUserDate(animal); // Firestoreの更新
-      //
-      //             // AuthControllerに診断結果を保存
-      //             authController.updateDiagnosis(animal);
-      //
-      //             if (widget.fromEditProf) { // trueだったら編集画面に
-      //               Get.back(); // 編集画面に戻る
-      //             } else {
-      //               // BottomNavigationに遷移
-      //               Get.offAll(() => const BottomNavigation());
-      //             }
-      //           },
-      //           child: const Text("閉じる"),
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
       showDialog(
         context: context,
         builder: (context) {
@@ -252,17 +198,17 @@ class _MbtiState extends State<Mbti> {
                   // 動物の特徴、性格、人間関係
                   const SizedBox(height: 10),
                   Text(
-                    "特徴:\n $features",
+                    "特徴:\n$features",
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    "性格:\n $personality",
+                    "性格:\n$personality",
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    "人間関係:\n $relationships",
+                    "人間関係:\n$relationships",
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
