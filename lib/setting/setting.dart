@@ -118,7 +118,7 @@ class SettingScreen extends StatelessWidget {
                         Obx(() => buildInfoCard(
                           context,
                           Icons.person,
-                          'MBTI',
+                          '動物診断',
                           authController.diagnosis.value,
                           cardSize,
                         )),

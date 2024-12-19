@@ -203,7 +203,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           controller: diagnosisController,
                           readOnly: true,
                           decoration: InputDecoration(
-                            labelText: 'MBTI',
+                            labelText: '動物診断',
                             labelStyle: const TextStyle(
                               fontSize: 16,
                               color: Colors.grey,
