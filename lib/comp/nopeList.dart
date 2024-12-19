@@ -305,24 +305,23 @@ class _NopeListState extends State<NopeList> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // Text(
+                                    //   user.name,
+                                    //   style: const TextStyle(
+                                    //       fontSize: 16,
+                                    //       fontWeight: FontWeight.bold),
+                                    // ),
+                                    // const SizedBox(height: 4.0),
+                                    // Text(
+                                    //   'ユーザID: ${user.userId}',
+                                    //   style: const TextStyle(
+                                    //       fontSize: 14, color: Colors.grey),
+                                    // ),
+                                    // const SizedBox(height: 4.0),
                                     Text(
-                                      user.name,
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    Text(
-                                      'ユーザID: ${user.userId}',
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.grey),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    Text(
-                                      'MBTI: ${user.mbti}',
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.grey),
-                                    ),
+                                      '${user.mbti}',
+                                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                    )
                                   ],
                                 ),
                               ),

@@ -72,14 +72,14 @@ class ChatListScreen extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // Text(
+                                    //   '${user.name}\nユーザーID: ${user.userId}',
+                                    //   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    // ),
+                                    // const SizedBox(height: 4.0), // 上下のテキスト間の余白
                                     Text(
-                                      '${user.name}\nユーザーID: ${user.userId}',
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 4.0), // 上下のテキスト間の余白
-                                    Text(
-                                      'MBTI: ${user.mbti}',
-                                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                      user.mbti,
+                                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
