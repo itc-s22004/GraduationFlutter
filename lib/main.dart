@@ -206,7 +206,6 @@
 // -----------------------------------------------------
 // // 上がった
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -214,8 +213,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'auth_controller.dart';
 import 'firebase_options.dart';
 import 'login/login_validate.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

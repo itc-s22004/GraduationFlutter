@@ -178,10 +178,10 @@ class SettingScreen extends StatelessWidget {
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
-                                          title: const Text(
-                                            "選択結果",
-                                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                          ),
+                                          // title: const Text(
+                                          //   "",
+                                          // style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                          // ),
                                           content: SingleChildScrollView(
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,

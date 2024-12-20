@@ -13,8 +13,6 @@ class AuthController extends GetxController {
   RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
   RxInt swipedUserId = 0.obs;
 
-
-
   void updateEmail(String newEmail) {
     email.value = newEmail;
   }
