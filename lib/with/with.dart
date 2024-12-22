@@ -87,56 +87,7 @@ class _MainAppState extends ConsumerState<MainApp> {
                 );
               },
             ),
-            // IconButton(
-            //   icon: const Icon(Icons.help_outline),
-            //   onPressed: () {
-            //     // ヘルプダイアログを表示
-            //     showDialog(
-            //       context: context,
-            //       builder: (BuildContext context) {
-            //         return AlertDialog(
-            //           title: const Text('使い方'),
-            //           content: const Column(
-            //             mainAxisSize: MainAxisSize.min,
-            //             children: [
-            //               SizedBox(height: 10),
-            //               Row(
-            //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //                 children: [
-            //                   Column(children: [Text(''), SizedBox(height: 5),
-            //                       Image(image: AssetImage('assets/images/うしさん.png'),
-            //                         width: 50, height: 50,
-            //                         ),],),
-            //                   Column(children: [Text('1位'), SizedBox(height: 5),
-            //                     Image(image: AssetImage('assets/images/うしさん.png'),
-            //                       width: 50, height: 50,
-            //                     ),],),
-            //                   Column(children: [Text('2位'), SizedBox(height: 5),
-            //                     Image(image: AssetImage('assets/images/うしさん.png'),
-            //                       width: 50, height: 50,
-            //                     ),],),
-            //                   Column(children: [Text('3位'), SizedBox(height: 5),
-            //                     Image(image: AssetImage('assets/images/うしさん.png'),
-            //                       width: 50, height: 50,
-            //                     ),],),
-            //                 ],
-            //               ),
-            //             ],
-            //           ),
-            //           actions: [
-            //             TextButton(
-            //               onPressed: () => Navigator.of(context).pop(),
-            //               child: const Text('閉じる'),
-            //             ),
-            //           ],
-            //         );
-            //       },
-            //     );
-            //   },
-            //   tooltip: 'ランキングを見る',
-            // ),
-
-            TooltipButton(tooltip: "相性を見る", title: "使い方")
+            const TooltipButton(tooltip: "相性を見る")
           ],
           backgroundColor: kAppBarBackground,
           elevation: 0,

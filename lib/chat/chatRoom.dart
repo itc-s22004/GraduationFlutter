@@ -23,9 +23,9 @@ class ChatRoom extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'ChatRoom',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        title: Text(
+          mbti,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -176,7 +176,14 @@ class ChatRoom extends StatelessWidget {
                                       ),
                                     ),
                                   if (!isCurrentUser) const SizedBox(width: 8),
-                                  Flexible(child: Text(messageData['message'])),
+                                  // Flexible(child: Text(messageData['message'])),
+                                  Text(
+                                    messageData['message'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -197,11 +204,10 @@ class ChatRoom extends StatelessWidget {
                       ),
                       Expanded(
                         child: TextField(
-                          maxLines: 2,
-                          // minLines: 1,
+                          maxLines: null,
                           controller: messageController,
                           decoration:
-                              const InputDecoration(hintText: "\nメッセージを入力..."),
+                              const InputDecoration(hintText: "メッセージを入力..."),
                         ),
                       ),
                       IconButton(
@@ -278,7 +284,7 @@ class ChatRoom extends StatelessWidget {
                           buildInfoCard(
                               context,
                               Icons.school,
-                              '学校',
+                              '得意言語',
                               userData['school'],
                               cardSize
                           ),
@@ -291,7 +297,7 @@ class ChatRoom extends StatelessWidget {
                           buildInfoCard(
                             context,
                             Icons.person,
-                            'MBTI',
+                            '動物診断',
                             userData['diagnosis'],
                             cardSize,
                           ),

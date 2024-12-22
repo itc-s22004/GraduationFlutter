@@ -190,14 +190,13 @@ class _LoginValidateState extends State<LoginValidate> {
                         Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                textStyle: const TextStyle(fontSize: 18),
-                                fixedSize: const Size(350, 40),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                // backgroundColor: Colors.indigo
-                                backgroundColor: kAppBtmBackground
+                              minimumSize: const Size(350, 40),
+                              backgroundColor: kAppBtmBackground,
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                             onPressed: () async {
                               if (_formkey.currentState!.validate()) {

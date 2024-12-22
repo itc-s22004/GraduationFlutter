@@ -212,11 +212,11 @@ class GroupChatRoom extends StatelessWidget {
                     children: [
                       Expanded(
                         child: TextField(
-                          maxLines: 2,
+                          maxLines: null,
                           // minLines: 1,
                           controller: messageController,
                           decoration:
-                          const InputDecoration(hintText: "\nメッセージを入力..."),
+                          const InputDecoration(hintText: "メッセージを入力..."),
                         ),
                       ),
                       IconButton(
@@ -294,7 +294,7 @@ class GroupChatRoom extends StatelessWidget {
                           buildInfoCard(
                               context,
                               Icons.school,
-                              '学校',
+                              '得意言語',
                               userData['school'],
                               cardSize
                           ),
@@ -307,7 +307,7 @@ class GroupChatRoom extends StatelessWidget {
                           buildInfoCard(
                             context,
                             Icons.person,
-                            'MBTI',
+                            '動物診断',
                             userData['diagnosis'],
                             cardSize,
                           ),

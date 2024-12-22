@@ -147,7 +147,7 @@ class FullQuestionScreen extends StatelessWidget {
                                     buildInfoCard(
                                         context,
                                         Icons.school,
-                                        '学校',
+                                        '得意言語',
                                         userData?['school'],
                                         cardSize
                                     ),
@@ -160,7 +160,7 @@ class FullQuestionScreen extends StatelessWidget {
                                     buildInfoCard(
                                       context,
                                       Icons.person,
-                                      'MBTI',
+                                      '動物診断',
                                       mbti,
                                       cardSize,
                                     ),
@@ -299,7 +299,7 @@ class FullQuestionScreen extends StatelessWidget {
       question,
       style: const TextStyle(
         fontSize: 18,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.bold,
         color: Colors.black87,
       ),
     );
@@ -307,10 +307,10 @@ class FullQuestionScreen extends StatelessWidget {
 
   Widget _buildCommentInput() {
     return TextField(
-      maxLines: 2,
+      maxLines: null,
       controller: _commentController,
       decoration: InputDecoration(
-        hintText: '\nコメントを入力...',
+        hintText: 'コメントを入力...',
         border: OutlineInputBorder(),
         suffixIcon: IconButton(
           icon: const Icon(Icons.send),
@@ -395,12 +395,15 @@ class FullQuestionScreen extends StatelessWidget {
                               Text(
                                 commentText,
                                 style: const TextStyle(
-                                    fontSize: 16, color: Colors.black87),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87),
                               ),
                               Text(
-                                'MBTI: $mbti',
+                                '動物診断: $mbti',
                                 style: const TextStyle(
-                                    fontSize: 14, color: Colors.grey),
+                                    fontSize: 14,
+                                    color: Colors.grey),
                               ),
                             ],
                           ),

@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class TooltipButton extends StatelessWidget {
   final String tooltip;
-  final String title;
 
   const TooltipButton({
     Key? key,
     required this.tooltip,
-    required this.title,
   }) : super(key: key);
 
   @override
@@ -20,7 +18,7 @@ class TooltipButton extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text(title),
+              title: Text("相性"),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

@@ -163,7 +163,7 @@ class _LikeToListState extends State<LikeToList> {
                             context, Icons.person, '性別', user.gender, cardSize),
                         const SizedBox(width: 24),
                         buildInfoCard(
-                            context, Icons.school, '学校', user.school, cardSize),
+                            context, Icons.school, '得意言語', user.school, cardSize),
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -173,7 +173,7 @@ class _LikeToListState extends State<LikeToList> {
                         buildInfoCard(
                           context,
                           Icons.person,
-                          'MBTI',
+                          '動物診断',
                           user.mbti,
                           cardSize,
                         ),

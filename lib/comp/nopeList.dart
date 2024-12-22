@@ -165,7 +165,7 @@ class _NopeListState extends State<NopeList> {
                         buildInfoCard(
                             context,
                             Icons.school,
-                            '学校',
+                            '得意言語',
                             user.school,
                             cardSize
                         ),
@@ -178,7 +178,7 @@ class _NopeListState extends State<NopeList> {
                         buildInfoCard(
                           context,
                           Icons.person,
-                          'MBTI',
+                          '動物診断',
                           user.mbti,
                           cardSize,
                         ),
@@ -319,7 +319,7 @@ class _NopeListState extends State<NopeList> {
                                     // ),
                                     // const SizedBox(height: 4.0),
                                     Text(
-                                      '${user.mbti}',
+                                      user.mbti,
                                       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                                     )
                                   ],

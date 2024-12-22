@@ -38,8 +38,26 @@ class GroupChatList extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: const Text("チャットルームを作成"),
         content: TextField(
+          minLines: 5,
+          maxLines: null,
           controller: chatRoomController,
-          decoration: const InputDecoration(hintText: "チャットルーム名を入力してください"),
+          // decoration: const InputDecoration(hintText: "チャットルーム名を入力してください"),
+          decoration: InputDecoration(
+            hintText: "チャットルームの名前を書いて！",
+            hintStyle: const TextStyle(color: Colors.grey),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(
+                color: Colors.amber,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(
+                color: Colors.amber,
+              ),
+            ),
+          ),
         ),
         actions: [
           TextButton(

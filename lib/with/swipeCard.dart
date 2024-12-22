@@ -231,7 +231,7 @@ class SwipeCard extends ConsumerWidget {
                         buildInfoCard(
                             context,
                             Icons.school,
-                            '学校',
+                            '得意言語',
                             user.school,
                             cardSize
                         ),
@@ -244,7 +244,7 @@ class SwipeCard extends ConsumerWidget {
                         buildInfoCard(
                           context,
                           Icons.person,
-                          'MBTI',
+                          '動物診断',
                           user.mbti,
                           cardSize,
                         ),
@@ -314,14 +314,14 @@ class SwipeCard extends ConsumerWidget {
           color: Colors.red,
           iconSize: 30,
         ),
-        _buildCustomBtn(
-          onPressed: () {
-            controller.swipeUp(); // 上方向にスワイプ
-          },
-          iconData: Icons.star,
-          color: Colors.blue,
-          iconSize: 30,
-        ),
+        // _buildCustomBtn(
+        //   onPressed: () {
+        //     controller.swipeUp(); // 上方向にスワイプ
+        //   },
+        //   iconData: Icons.star,
+        //   color: Colors.blue,
+        //   iconSize: 30,
+        // ),
         _buildCustomBtn(
           onPressed: () {
             controller.swipeRight(); // 右方向にスワイプ

@@ -20,7 +20,7 @@ class QuestionScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
         title: const Text(
-            '投稿',
+            'つぶやき',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
         ),
         shape: const RoundedRectangleBorder(
@@ -175,6 +175,8 @@ class QuestionScreen extends StatelessWidget {
 
   void _showCommentDialog(BuildContext context) {
     String genre = 'ジャンル';
+    String item1 = 'pg';
+    String item2 = '独り言';
 
     showDialog(
       context: context,
@@ -190,7 +192,7 @@ class QuestionScreen extends StatelessWidget {
                     child: DropdownButtonFormField<String>(
                       value: genre,
                       isExpanded: true,
-                      items: <String>['ジャンル', 'pg', 'lang'].map((String value) {
+                      items: <String>['ジャンル', item1, item2].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Center(
@@ -225,7 +227,8 @@ class QuestionScreen extends StatelessWidget {
               content: SizedBox(
                 width: 400,
                 child: TextField(
-                  maxLines: 5,
+                  minLines: 5,
+                  maxLines: null,
                   controller: _commentController,
                   onChanged: (value) {
                     setState(() {}); // テキスト変更時に状態を更新
@@ -254,7 +257,7 @@ class QuestionScreen extends StatelessWidget {
                   child: const Text('キャンセル'),
                 ),
                 ElevatedButton(
-                  onPressed: (genre == 'pg' || genre == 'lang') && _commentController.text.isNotEmpty
+                  onPressed: (genre == item1 || genre == item2) && _commentController.text.isNotEmpty
                       ? () {
                     final commentText = _commentController.text;
                     _addQuestion(commentText, genre);
