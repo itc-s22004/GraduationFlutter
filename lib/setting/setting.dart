@@ -25,6 +25,7 @@ class SettingScreen extends StatelessWidget {
             bottomRight: Radius.elliptical(90, 30),
           ),
         ),
+        centerTitle: false,
         backgroundColor: kAppBarBackground,
         elevation: 0,
         actions: [

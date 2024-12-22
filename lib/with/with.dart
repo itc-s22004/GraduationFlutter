@@ -89,6 +89,7 @@ class _MainAppState extends ConsumerState<MainApp> {
             ),
             const TooltipButton(tooltip: "相性を見る")
           ],
+          centerTitle: false,
           backgroundColor: kAppBarBackground,
           elevation: 0,
         ),

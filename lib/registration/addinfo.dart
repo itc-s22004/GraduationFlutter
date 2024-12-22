@@ -144,7 +144,7 @@ class _AddInfoState extends State<AddInfo> {
                     DropdownButtonFormField<String>(
                       value: _selectedSchool,
                       items: [
-                        'ITカレッジ沖縄', '外語学院', 'Python', 'JavaScript', 'Java', 'Kotlin', 'Dart', 'HTML/CSS', 'security', '基本情報技術者試験'
+                        'Python', 'JavaScript', 'Java', 'Kotlin', 'Dart', 'HTML/CSS', 'security', '基本情報技術者試験'
                       ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
