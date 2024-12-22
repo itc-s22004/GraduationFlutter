@@ -28,7 +28,7 @@ class _LoginValidateState extends State<LoginValidate> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Log in',
+          'ログイン',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         shape: const RoundedRectangleBorder(
@@ -130,63 +130,7 @@ class _LoginValidateState extends State<LoginValidate> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        const Row(
-                          children: [
-                            Expanded(
-                              child: Divider(
-                                color: Colors.grey,
-                                thickness: 1,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                "or continue with",
-                                style: TextStyle(color: Colors.grey, fontSize: 16),
-                              ),
-                            ),
-                            Expanded(
-                              child: Divider(
-                                color: Colors.grey,
-                                thickness: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 26),
-
-                        Center(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // Googleログインの処理をここに追加  ---------------------
-                            },
-                            icon: SvgPicture.asset(
-                              'assets/svg/web_neutral_rd_na.svg',
-                              height: 34,
-                              width: 34,
-                            ),
-                            label: const Text(
-                              "Log in with Google       ",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(350, 40),
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 45),
+                        const SizedBox(height: 30),
                         Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -266,7 +210,63 @@ class _LoginValidateState extends State<LoginValidate> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 20),
+                        const Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: Colors.grey,
+                                thickness: 1,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                "or continue with",
+                                style: TextStyle(color: Colors.grey, fontSize: 16),
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: Colors.grey,
+                                thickness: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 26),
+
+                        Center(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              // Googleログインの処理をここに追加  ---------------------
+                            },
+                            icon: SvgPicture.asset(
+                              'assets/svg/web_neutral_rd_na.svg',
+                              height: 34,
+                              width: 34,
+                            ),
+                            label: const Text(
+                              "Log in with Google       ",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(350, 40),
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 25),
                         Center(
                           child: InkWell(
                             onTap: () {

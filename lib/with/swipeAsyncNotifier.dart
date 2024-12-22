@@ -47,6 +47,28 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         matchedUserIds.add(doc.data()['user1']);
       });
 
+      final nopeSnapshot = await FirebaseFirestore.instance
+          .collection('nope')
+          .where('nopeFrom', isEqualTo: loggedInUserId)
+          .get();
+
+      Map<int, int> nopeCounts = {};
+      for (var doc in nopeSnapshot.docs) {
+        int nopeTo = doc.data()['nopeTo'];
+        nopeCounts[nopeTo] = (nopeCounts[nopeTo] ?? 0) + 1;
+      }
+
+      final nope2Snapshot = await FirebaseFirestore.instance
+          .collection('nope2')
+          .where('nopeFrom', isEqualTo: loggedInUserId)
+          .get();
+
+      Map<int, int> nope2Counts = {};
+      for (var doc in nope2Snapshot.docs) {
+        int nopeTo = doc.data()['nopeTo'];
+        nope2Counts[nopeTo] = (nope2Counts[nopeTo] ?? 0) + 1;
+      }
+
       // usersコレクションから全ユーザーを取得
       final snapshot = await FirebaseFirestore.instance.collection('users').get();
 
@@ -75,13 +97,15 @@ class SwipeAsyncNotifier extends AsyncNotifier<List<User>> {
         // スコア計算
         int mbtiScore = _getMBTIScore(currentUserMBTI, user.mbti);
         int tagScore = _getTagScore(currentUserTags, user.tags);
-        int totalScore = mbtiScore + tagScore;
+        int nopeScore = -(nopeCounts[userId] ?? 0);
+        int nope2Score = -(nope2Counts[userId] ?? 0);
+        int totalScore = mbtiScore + tagScore + nopeScore + nope2Score;
 
-        print("ユーザー ${user.name} (ID: ${user.userId}): MBTIスコア = $mbtiScore, タグスコア = $tagScore, 合計スコア = $totalScore");
+        print("ユーザー ${user.name} (ID: ${user.userId}): MBTIスコア = $mbtiScore, タグスコア = $tagScore, NOTスコア = $nopeScore, NOT2スコア = $nope2Score, 合計スコア = $totalScore");
 
         if (totalScore >= 3) {
           highScoreUsers.add(user);
-        } else {
+        } else if (totalScore >= -2) {
           lowScoreUsers.add(user);
         }
       });

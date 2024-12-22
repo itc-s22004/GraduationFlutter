@@ -38,7 +38,7 @@ class CreateAccountPageState extends State<CreateAccountPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Sign up',
+          '新規登録',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         shape: const RoundedRectangleBorder(

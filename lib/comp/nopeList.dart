@@ -66,7 +66,6 @@ class _NopeListState extends State<NopeList> {
     return nopeUsers;
   }
 
-
   Future<void> _likeUser(int likeToUserId, NopeUser user) async {
     try {
       await FirebaseFirestore.instance.collection('likes').add({
@@ -76,16 +75,19 @@ class _NopeListState extends State<NopeList> {
       });
       print("ユーザー ${likeToUserId} にいいねを送りました");
 
-      // _deleteUserFromList(user);
-      await FirebaseFirestore.instance
-          .collection('nope')
-          .doc(user.nopeDocId)
-          .delete();
-      print("ユーザー ${user.userId} の左スワイプデータを削除しました");
+      final nopeCollection = FirebaseFirestore.instance.collection('nope');
+      final nopeSnapshot = await nopeCollection
+          .where('nopeFrom', isEqualTo: widget.currentUserId)
+          .where('nopeTo', isEqualTo: likeToUserId)
+          .get();
+
+      for (var doc in nopeSnapshot.docs) {
+        await nopeCollection.doc(doc.id).delete();
+        print("nopeコレクションからドキュメントを削除: ${doc.id}");
+      }
 
       setState(() {
-        _nopeUsersFuture =
-            _nopeUsersFuture.then((users) => users..remove(user));
+        _nopeUsersFuture = _nopeUsersFuture.then((users) => users..remove(user));
       });
 
     } catch (e) {
@@ -305,19 +307,6 @@ class _NopeListState extends State<NopeList> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Text(
-                                    //   user.name,
-                                    //   style: const TextStyle(
-                                    //       fontSize: 16,
-                                    //       fontWeight: FontWeight.bold),
-                                    // ),
-                                    // const SizedBox(height: 4.0),
-                                    // Text(
-                                    //   'ユーザID: ${user.userId}',
-                                    //   style: const TextStyle(
-                                    //       fontSize: 14, color: Colors.grey),
-                                    // ),
-                                    // const SizedBox(height: 4.0),
                                     Text(
                                       user.mbti,
                                       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -353,7 +342,7 @@ class _NopeListState extends State<NopeList> {
                     },
                     separatorBuilder: (context, index) => const Divider(),
                   );
-                }
+                } //
               },
             ),
           ],

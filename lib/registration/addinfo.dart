@@ -183,6 +183,7 @@ class _AddInfoState extends State<AddInfo> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
+                        floatingLabelAlignment: FloatingLabelAlignment.center,
                         filled: true,
                         fillColor: Colors.blueGrey.shade50,
                       ),
@@ -202,6 +203,7 @@ class _AddInfoState extends State<AddInfo> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
+                        floatingLabelAlignment: FloatingLabelAlignment.center,
                         filled: true,
                         fillColor: Colors.blueGrey.shade50,
                       ),
@@ -242,7 +244,7 @@ class _AddInfoState extends State<AddInfo> {
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
-                            backgroundColor: Colors.blueAccent,
+                            backgroundColor: kAppBtmBackground,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
@@ -250,7 +252,7 @@ class _AddInfoState extends State<AddInfo> {
                           ),
                           child: const Text(
                             '次へ進む',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            style: TextStyle(fontSize: 16, color: Colors.black87),
                           ),
                         ),
                       ),

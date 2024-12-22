@@ -74,7 +74,13 @@ class SwipeCard extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.grey.shade400, width: 2),
+              // border: Border.all(color: Colors.grey.shade400, width: 2),
+              border: Border.all(
+                color: user.name == 'ginji@a.com'
+                    ? Colors.red
+                    : Colors.grey.shade200,
+                width: 2,
+              ),
               image: DecorationImage(
                 image: AssetImage(
                     user.profileImageURL.isNotEmpty
@@ -109,7 +115,7 @@ class SwipeCard extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // _buildText(user.name, 22, Colors.white),
+                        // _buildText(user.name, 22, Colors.white),  //aa
                         _buildText(user.mbti, 28, Colors.white),
                         const SizedBox(height: 8),
                         if (user.introduction != null &&
@@ -126,7 +132,7 @@ class SwipeCard extends ConsumerWidget {
                           ),
                         Wrap(
                           spacing: 8.0,
-                          children: user.tags.take(4).map((tag) =>
+                          children: user.tags.take(6).map((tag) =>
                               _buildTag(tag)).toList(),
                         ),
                       ],

@@ -1,33 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import '../auth_controller.dart';
-//
-// class LoginNext extends StatelessWidget {
-//   const LoginNext({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final AuthController authController = Get.find<AuthController>();
-//
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('ユーザー情報'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: ElevatedButton(
-//           onPressed: () {
-//             SlideInText(text: 'text',);
-//             print('ボタンが押されました');
-//           },
-//           child: const Text('スワイプ処理開始'),
-//         ),
-//       ),
-//
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:text_3d/text_3d.dart';
@@ -109,8 +79,8 @@ class _SlideInTextState extends State<SlideInText> with SingleTickerProviderStat
     );
 
     _animation = Tween<Offset>(
-      begin: Offset(8.0, 0.0), // 右外（画面外）からスタート
-      end: Offset.zero, // 中央に移動
+      begin: const Offset(8.0, 0.0), // 右外（画面外）からスタート
+      end: const Offset(0.15, 0.0), // 中央より少し右寄りに停止
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
@@ -152,15 +122,15 @@ class _SlideInTextState extends State<SlideInText> with SingleTickerProviderStat
           child: SlideTransition(
             position: _animation,
             child: ThreeDText(
-              text: 'MATCH',
+              text: 'きっかけ',
               textStyle: const TextStyle(
-                fontSize: 50,
+                fontSize: 70,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
               depth: 6,  // 立体感の深さ
               style: ThreeDStyle.perspectiveLeft,  // 立体感のスタイル（視点の設定）
-              perspectiveDepth: -70.0,  // 視点の深さ
+              perspectiveDepth: -90.0,  // 視点の深さ
             ),
           ),
         ),
