@@ -78,7 +78,7 @@ class ChatListScreen extends StatelessWidget {
                                     // ),
                                     // const SizedBox(height: 4.0), // 上下のテキスト間の余白
                                     Text(
-                                      user.mbti,
+                                      "${user.mbti}${user.userId}",
                                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                                     ),
                                   ],
