@@ -606,14 +606,14 @@ class ChatRoom extends StatelessWidget {
           : '自分の番号を登録済みです。',
       'ユーザー: ${userData['email']} さん',
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.green.withOpacity(0.8),
-      colorText: Colors.white,
+      backgroundColor: Colors.white,
+      colorText: Colors.black,
       duration: const Duration(seconds: 3),
       mainButton: TextButton(
         onPressed: () {
           // 詳細情報を見るアクションを実装する（例: プロフィール画面への遷移）
         },
-        child: const Text('詳細を見る', style: TextStyle(color: Colors.white)),
+        child: const Text('', style: TextStyle(color: Colors.white)),
       ),
     );
   }
