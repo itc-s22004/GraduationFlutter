@@ -74,8 +74,14 @@ class SwipeCard extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
+              // border: Border.all(
+              //   color: ['ginji@a.com', 'itcollege@a.com', 'itcollege2@a.com'].contains(user.name)
+              //       ? Colors.red
+              //       : Colors.grey.shade200,
+              //   width: 2,
+              // ),
               border: Border.all(
-                color: ['ginji@a.com', 'itcollege@a.com', 'itcollege2@a.com'].contains(user.name)
+                color: user.name == 'ginji@a.com'
                     ? Colors.red
                     : Colors.grey.shade200,
                 width: 2,
