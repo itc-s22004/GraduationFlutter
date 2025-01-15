@@ -1,8 +1,8 @@
 ## アプリ名 "きっかけ"
-<img src="https://github.com/user-attachments/assets/b8cae4ab-2a28-4fa3-98b3-711de7b1d434" alt="AppScreen1" width="200px">
-<img src="https://github.com/user-attachments/assets/c59bffda-8b1d-4dec-add1-9e9737187334" alt="AppScreen2" width="212px">
-<img src="https://github.com/user-attachments/assets/461516e0-33a1-4e00-951c-8b17398ef2c5" alt="AppScreen3" width="212px">
-<img src="https://github.com/user-attachments/assets/a907c1b2-6fd1-4a52-84ee-0c8694c0772b" alt="AppScreen4" width="212px">
+<img src="https://github.com/user-attachments/assets/b8cae4ab-2a28-4fa3-98b3-711de7b1d434" alt="AppScreen1" width="160px">
+<img src="https://github.com/user-attachments/assets/c59bffda-8b1d-4dec-add1-9e9737187334" alt="AppScreen2" width="170px">
+<img src="https://github.com/user-attachments/assets/461516e0-33a1-4e00-951c-8b17398ef2c5" alt="AppScreen3" width="170px">
+<img src="https://github.com/user-attachments/assets/a907c1b2-6fd1-4a52-84ee-0c8694c0772b" alt="AppScreen4" width="170px">
 
 ## 環境設定
 **開発環境のversion**
