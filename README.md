@@ -1,11 +1,12 @@
 ## アプリ名 "きっかけ"
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/refs/heads/main/assets/images/AppScreen.png?token=GHSAT0AAAAAACUW4KRFGY3OGMTO47CGCFEYZ4HHFSQ" alt="AppScreen1" width="200px">
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/a040c7a42294619ae363c59b0cc36ba7c22b3fe1/assets/images/IMG_7449.jpeg?token=AY5TJ3E4P3PHRQSZCP6HTM3HQ5DFM" alt="AppScreen2" width="212px">
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/a040c7a42294619ae363c59b0cc36ba7c22b3fe1/assets/images/IMG_7452.jpeg?token=AY5TJ3BJ3T7Y7AIKVEAIMPTHQ5DFM" alt="AppScreen3" width="212px">
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/a040c7a42294619ae363c59b0cc36ba7c22b3fe1/assets/images/IMG_7453.jpeg?token=AY5TJ3AS4UUJW7SUVXMFS7DHQ5DFM" alt="AppScreen4" width="212px">
+<img src="https://github.com/user-attachments/assets/b8cae4ab-2a28-4fa3-98b3-711de7b1d434" alt="AppScreen1" width="200px">
+<img src="https://github.com/user-attachments/assets/c59bffda-8b1d-4dec-add1-9e9737187334" alt="AppScreen2" width="212px">
+<img src="https://github.com/user-attachments/assets/461516e0-33a1-4e00-951c-8b17398ef2c5" alt="AppScreen3" width="212px">
+<img src="https://github.com/user-attachments/assets/a907c1b2-6fd1-4a52-84ee-0c8694c0772b" alt="AppScreen4" width="212px">
 
 ## 環境設定
 **開発環境のversion**
+
 dart  --version:
 ```
 Dart SDK version: 3.6.1 (stable) (None) on "linux_x64"
@@ -20,8 +21,11 @@ Tools • Dart 3.6.0 (build 3.6.0-334.4.beta) • DevTools 2.40.1
 
 
 **環境がない方は以下の手順で環境設定を進めてください。**
+
 Flutter公式からzipをダウンロード
+
 [Flutter 公式ドキュメント](https://docs.flutter.dev/get-started/install/linux/web#144-tab-panel)
+
 ↓これをダウンロード
 ```
 flutter_linux_3.27.2-stable.tar.xz
@@ -61,14 +65,18 @@ code .
 vscodeでFlutterを検索してインストールしたら、実行できます。
 
 環境設定したあとに、このリポジトリをクローンした場合は、以下のファイルの**FirebaseOptions**に自分のfireStoreのプロジェクトのキーを入れて。
-**プロジェクトのキーのとり方**
-プロジェクト作って、プロジェクトの設定の下マイアプリでwebを選択して、
+
 ```
 プロジェクト名/lib/firebase_options.dart
 ```
+
+**プロジェクトのキーのとり方**
+
+プロジェクト作って、プロジェクトの設定の下マイアプリでwebを選択して、
+
 ,
 
-**webでの開発をしたい人**は、~/プロジェクト名/lib/の中で開発をしてください。
+**webでの開発をしたい人**は、プロジェクト名/lib/の中で開発をしてください。
 開発中に追加でパッケージを追加したい場合は、~/pubspec.yamlのdependenciesに追加パッケージとversionを追加すると使えます。
 
 
