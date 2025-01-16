@@ -130,9 +130,3 @@ vscodeでFlutterを検索してインストールしたら、実行できます�
     - 性格診断を受け直すことができる
  
  
-<details><summary>すごく長い文章とかプログラムとか</summary>
-```
-git clone https://github.com/itc-s22004/GraduationFlutter.git
-```
-</details>
-
