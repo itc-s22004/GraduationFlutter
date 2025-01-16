@@ -55,6 +55,20 @@ flutter --version
 dart --version
 flutter doctor
 ```
+
+**git clone をしたい方は⬇**
+<details><summary>マッチングアプリ "きっかけ" のコードが欲しい人はここから</summary>
+ 
+```
+git clone https://github.com/itc-s22004/GraduationFlutter.git
+```
+git clone した方は、これより下を行わなくても大丈夫です。
+
+-------------------------------------------------------------------------------
+
+</details>
+
+
 flutterのomgというディレクトリ作成。omgはプロジェクト名で何でも大丈夫です
 ```
 flutter create omg
@@ -114,3 +128,11 @@ vscodeでFlutterを検索してインストールしたら、実行できます�
 - **プロフィール画面**
     - 登録情報の閲覧・編集
     - 性格診断を受け直すことができる
+ 
+ 
+<details><summary>すごく長い文章とかプログラムとか</summary>
+```
+git clone https://github.com/itc-s22004/GraduationFlutter.git
+```
+</details>
+
