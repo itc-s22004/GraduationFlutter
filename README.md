@@ -4,6 +4,7 @@
 <img src="https://github.com/user-attachments/assets/461516e0-33a1-4e00-951c-8b17398ef2c5" alt="AppScreen3" width="170px">
 <img src="https://github.com/user-attachments/assets/a907c1b2-6fd1-4a52-84ee-0c8694c0772b" alt="AppScreen4" width="170px">
 
+,　 スワイプ画面 　　　　チャット画面 　　　　　   つぶやき画面 　　　   プロフィール画面
 
 ## 環境設定
 **開発環境のversion**
