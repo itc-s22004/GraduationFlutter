@@ -1,11 +1,14 @@
 ## アプリ名 "きっかけ"
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/refs/heads/main/assets/images/AppScreen.png?token=GHSAT0AAAAAACUW4KRFGY3OGMTO47CGCFEYZ4HHFSQ" alt="AppScreen1" width="200px">
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/a040c7a42294619ae363c59b0cc36ba7c22b3fe1/assets/images/IMG_7449.jpeg?token=AY5TJ3E4P3PHRQSZCP6HTM3HQ5DFM" alt="AppScreen2" width="212px">
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/a040c7a42294619ae363c59b0cc36ba7c22b3fe1/assets/images/IMG_7452.jpeg?token=AY5TJ3BJ3T7Y7AIKVEAIMPTHQ5DFM" alt="AppScreen3" width="212px">
-<img src="https://raw.githubusercontent.com/itc-s22004/GraduationFlutter/a040c7a42294619ae363c59b0cc36ba7c22b3fe1/assets/images/IMG_7453.jpeg?token=AY5TJ3AS4UUJW7SUVXMFS7DHQ5DFM" alt="AppScreen4" width="212px">
+<img src="https://github.com/user-attachments/assets/b8cae4ab-2a28-4fa3-98b3-711de7b1d434" alt="AppScreen1" width="160px">
+<img src="https://github.com/user-attachments/assets/c59bffda-8b1d-4dec-add1-9e9737187334" alt="AppScreen2" width="170px">
+<img src="https://github.com/user-attachments/assets/461516e0-33a1-4e00-951c-8b17398ef2c5" alt="AppScreen3" width="170px">
+<img src="https://github.com/user-attachments/assets/a907c1b2-6fd1-4a52-84ee-0c8694c0772b" alt="AppScreen4" width="170px">
+
+,　 スワイプ画面 　　　　チャット画面 　　　　　   つぶやき画面 　　　   プロフィール画面
 
 ## 環境設定
 **開発環境のversion**
+
 dart  --version:
 ```
 Dart SDK version: 3.6.1 (stable) (None) on "linux_x64"
@@ -20,8 +23,11 @@ Tools • Dart 3.6.0 (build 3.6.0-334.4.beta) • DevTools 2.40.1
 
 
 **環境がない方は以下の手順で環境設定を進めてください。**
+
 Flutter公式からzipをダウンロード
+
 [Flutter 公式ドキュメント](https://docs.flutter.dev/get-started/install/linux/web#144-tab-panel)
+
 ↓これをダウンロード
 ```
 flutter_linux_3.27.2-stable.tar.xz
@@ -49,7 +55,37 @@ flutter --version
 dart --version
 flutter doctor
 ```
-flutterのomgというディレクトリ作成。omgはプロジェクト名で何でも大丈夫です。
+
+**git clone をしたい方は⬇**
+<details><summary>マッチングアプリ "きっかけ" のコードが欲しい人はここから</summary>
+ 
+```
+git clone https://github.com/itc-s22004/GraduationFlutter.git
+```
+**webでの開発をしたい人**は、<u>プロジェクト名/lib/</u>の中で開発をしてください。
+
+開発中に追加でパッケージを追加したい場合は、<u>プロジェクト名/pubspec.yamlのdependencies</u>に追加パッケージとversionを追加すると使えます。
+
+環境設定したあとに、このリポジトリをクローンした場合は、以下のファイルの**FirebaseOptions**に自分のfireStoreのプロジェクトのキーを入れて。
+
+```
+プロジェクト名/lib/firebase_options.dart
+```
+
+**プロジェクトのキーのとり方**
+
+プロジェクト作って、プロジェクトの設定の下マイアプリでwebを選択して、書かれているコードをコピーして、FirebaseOptionsの中にペーストする
+
+
+git clone した方は、これより下を行わなくても大丈夫です。
+
+-------------------------------------------------------------------------------
+
+</details>
+
+**新しいプロジェクトで始めたい方⬇**
+
+flutterのomgというディレクトリ作成。omgはプロジェクト名で何でも大丈夫です
 ```
 flutter create omg
 ```
@@ -60,47 +96,39 @@ code .
 ```
 vscodeでFlutterを検索してインストールしたら、実行できます。
 
-環境設定したあとに、このリポジトリをクローンした場合は、以下のファイルの**FirebaseOptions**に自分のfireStoreのプロジェクトのキーを入れて。
-**プロジェクトのキーのとり方**
-プロジェクト作って、プロジェクトの設定の下マイアプリでwebを選択して、
-```
-プロジェクト名/lib/firebase_options.dart
-```
 ,
-
-**webでの開発をしたい人**は、~/プロジェクト名/lib/の中で開発をしてください。
-開発中に追加でパッケージを追加したい場合は、~/pubspec.yamlのdependenciesに追加パッケージとversionを追加すると使えます。
 
 
 ## "きっかけ" の使い方
-1. アプリ内に入ったら、ログイン画面が表示されるから、アカウントが無い人は下のアカウント作成からアカウントを作成する。
-2. メールアドレスとパスワードを入力する。
-3. アカウント作成ができたら、情報の入力と、タグ、性格診断を行う。
-4. スワイプの画面に行ったら、右か左にスワイプカードをスワイプする。右にスワイプしたらLIKE,　左にスワイプしたらNOT
-   お互いにLIKEをしたら、チャットをできるようになる。
-5. 仲良くなったら、アプリ内だけではなく、現実であって、交流する。
+1. アプリ内に入ったら、ログイン画面が表示されるから、アカウントが無い人は下のアカウント作成からアカウントを作成する
+2. メールアドレスとパスワードを入力する
+3. アカウント作成ができたら、情報の入力と、タグ、性格診断を行う
+4. スワイプの画面に行ったら、右か左にスワイプカードをスワイプする。LIKEだったら右にスワイプ,NOTだったら左にスワイプ、お互いにLIKEをしたら、チャットをできるようになる
+5. 仲良くなったら、アプリ内だけではなく、現実であって、交流する
 
 ## "きっかけ" の機能一覧
 
 - **新規登録**
-    - メールアドレス、性別、得意な言語、学籍番号、自己紹介、趣味タグ、性格診断を登録。  
+    - メールアドレス、性別、得意な言語、学籍番号、自己紹介、趣味タグ、性格診断を登録
       性格診断は8タイプに分類し、9つの質問に賛成/反対で回答
 
 - **スワイプ画面**
     - スワイプ機能
-    - 自分をLIKE/NOTした人の一覧表示
-    - カードを押して詳細表示
+    - 自分をLIKEした人と自分がNOTした人の一覧
+    - スワイプカードを押して詳細表示
     - マッチングしたら、画面にMATCHとでる
 
 - **個人・グループチャット**
     - LIKEした人同士の個人チャット
     - お互いに自分の学籍番号を入力したら、相手が誰か分かる
-    - 誰でも参加可能なグループチャット。
+    - 誰でも参加可能なグループチャット
 
 - **つぶやき**
     - 思いをつぶやいたり、プログラミングの質問を投稿可能
     - 投稿に対して、コメントを返せる
 
 - **プロフィール画面**
-    - 登録情報の閲覧・編集、
-    - 性格診断を受け直すことができる。
+    - 登録情報の閲覧・編集
+    - 性格診断を受け直すことができる
+ 
+ 
